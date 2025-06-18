@@ -13,6 +13,8 @@ app.get('/', (_req: Request, res: Response) => {
 
 app.use('/user', routerUser);
 
+app.use('/profile-pictures', express.static('public/profile-pictures'));
+
 app.listen(port, () => {
 	console.log(`Listening on port ${port}...`);
 });
