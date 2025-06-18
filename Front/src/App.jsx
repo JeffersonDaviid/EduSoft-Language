@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 import PrivateNavbar from './components/PrivateNavbar';
 import PublicNavbar from './components/PublicNavbar';
 import { Footer } from './components/Footer';

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Footer } from '../../../components/Footer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAuth } from '../../../context/AuthContext';
 
 export const Login = () => {
     const [form, setForm] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-	const navigate = useNavigate();
-	const { login } = useAuth();
+    const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -28,7 +28,7 @@ export const Login = () => {
             const data = await res.json();
             if (res.ok) {
                 setSuccess('Login successful!');
-				login(data.user); 
+                login(data.user); 
                 navigate('/home');
             } else {
                 setError(data.error || 'Login failed');
@@ -82,12 +82,12 @@ export const Login = () => {
                                 />
                             </div>
                             <div className='self-stretch text-left text-[#4f7a96]'>
-								<span
-									className='leading-[21px] cursor-pointer underline'
-									onClick={() => navigate('/recover-password')}
-								>
-									Forgot password?
-								</span>
+                                <span
+                                    className='leading-[21px] cursor-pointer underline'
+                                    onClick={() => navigate('/recover-password')}
+                                >
+                                    Forgot password?
+                                </span>
                             </div>
                             <button
                                 type='submit'
@@ -97,14 +97,17 @@ export const Login = () => {
                             </button>
                             <div className='self-stretch text-center text-[#4f7a96]'>
                                 <span>Don't have an account? </span>
-                                <a href='/register' className='font-medium underline'>
+                                <span
+                                    className='font-medium underline cursor-pointer'
+                                    onClick={() => navigate('/register')}
+                                >
                                     Sign up
-                                </a>
+                                </span>
                             </div>
                         </form>
                     </div>
                 </section>
             </section>
         </main>
-	);
+    );
 };
