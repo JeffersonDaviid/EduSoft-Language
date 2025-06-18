@@ -29,19 +29,19 @@ export const GamesHome = () => {
         {
             title: 'Word Matching',
             desc: 'Match words with their definitions.',
-            src: '/img/vocabulary-matching.png', // Reemplaza con tu imagen
+            src: '/public/vocabulary.jpg', 
             link: '/games/vocabulary',
         },
         {
             title: 'Sentence Completion',
             desc: 'Complete sentences using the correct words.',
-            src: '/img/vocabulary-completion.png', // Reemplaza con tu imagen
+            src: '/img/vocabulary-completion.png', 
             link: '/games/vocabulary',
         },
         {
             title: 'Crossword Puzzle',
             desc: 'Solve the crossword using vocabulary clues.',
-            src: '/img/vocabulary-crossword.png', // Reemplaza con tu imagen
+            src: '/img/vocabulary-crossword.png', 
             link: '/games/vocabulary',
         },
     ];
@@ -51,19 +51,19 @@ export const GamesHome = () => {
         {
             title: 'Tense Trainer',
             desc: 'Practice using different verb tenses.',
-            src: '/img/grammar-tenses.png', // Reemplaza con tu imagen
+            src: '/img/grammar-tenses.png', 
             link: '/games/grammar/tenses',
         },
         {
             title: 'Article Practice',
             desc: 'Choose the correct article (a, an, the).',
-            src: '/img/grammar-articles.png', // Reemplaza con tu imagen
+            src: '/img/grammar-articles.png', 
             link: '/games/grammar/articles',
         },
         {
             title: 'Preposition Challenge',
             desc: 'Select the right preposition to complete the sentence.',
-            src: '/img/grammar-prepositions.png', // Reemplaza con tu imagen
+            src: '/img/grammar-prepositions.png', 
             link: '/games/grammar/prepositions',
         },
     ];
@@ -73,19 +73,19 @@ export const GamesHome = () => {
         {
             title: 'Listen and Choose',
             desc: 'Listen to the audio and choose the correct option.',
-            src: '/img/listening-choose.png', // Reemplaza con tu imagen
+            src: '/public/listen.jpg', 
             link: '/games/listen',
         },
         {
             title: 'Dictation Practice',
             desc: 'Listen and type the sentences you hear.',
-            src: '/img/listening-dictation.png', // Reemplaza con tu imagen
+            src: '/img/listening-dictation.png', 
             link: '/games/listen',
         },
         {
             title: 'Audio Comprehension',
             desc: 'Answer questions based on the audio clip.',
-            src: '/img/listening-comprehension.png', // Reemplaza con tu imagen
+            src: '/img/listening-comprehension.png', 
             link: '/games/listen',
         },
     ];
@@ -95,19 +95,19 @@ export const GamesHome = () => {
         {
             title: 'Reading Comprehension',
             desc: 'Read the passage and answer the questions.',
-            src: '/img/reading-comprehension.png', // Reemplaza con tu imagen
+            src: '/img/reading-comprehension.png', 
             link: '/games/reading/comprehension',
         },
         {
             title: 'Sentence Scramble',
             desc: 'Rearrange the words to form correct sentences.',
-            src: '/img/reading-scramble.png', // Reemplaza con tu imagen
+            src: '/img/reading-scramble.png', 
             link: '/games/reading/scramble',
         },
         {
             title: 'Find the Mistake',
             desc: 'Read the text and identify the grammatical errors.',
-            src: '/img/reading-mistake.png', // Reemplaza con tu imagen
+            src: '/img/reading-mistake.png', 
             link: '/games/reading/mistake',
         },
     ];
@@ -117,19 +117,19 @@ export const GamesHome = () => {
         {
             title: 'Pronunciation Practice',
             desc: 'Record yourself and compare your pronunciation.',
-            src: '/img/speaking-pronunciation.png', // Reemplaza con tu imagen
+            src: '/img/speaking-pronunciation.png', 
             link: '/games/speaking/pronunciation',
         },
         {
             title: 'Role Play',
             desc: 'Practice speaking English in different scenarios.',
-            src: '/img/speaking-roleplay.png', // Reemplaza con tu imagen
+            src: '/img/speaking-roleplay.png', 
             link: '/games/speaking/roleplay',
         },
         {
             title: 'Describe the Image',
             desc: 'Speak and describe the image shown.',
-            src: '/img/speaking-describe.png', // Reemplaza con tu imagen
+            src: '/img/speaking-describe.png', 
             link: '/games/speaking/describe',
         },
     ];

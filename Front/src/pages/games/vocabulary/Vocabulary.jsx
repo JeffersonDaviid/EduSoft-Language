@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
-// **NUEVO**: Lista de palabras y definiciones para el juego de vocabulario.
+//  Lista de palabras y definiciones para el juego de vocabulario.
 const vocabularyWords = [
     { definition: "A person who writes books, stories, or articles as a job or regular activity.", answer: "author" },
     { definition: "A very large, strong building, built in the past by a ruler or important person to protect the people inside from attack.", answer: "castle" },
@@ -134,7 +134,7 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
                                     <div className="flex-shrink-0 bg-gray-200 text-green-600 rounded-full h-8 w-8 flex items-center justify-center font-bold">✓</div>
                                     <div>
                                         <p className="font-semibold text-black">"{result.question}"</p>
-                                        {/* **CAMBIO REALIZADO**: Se aplica el color a la respuesta correcta */}
+                            
                                         <p className="text-sm" style={{ color: '#57788F' }}>Correct Answer: <span className="font-medium">{result.correctAnswer}</span></p>
                                         <p className="text-sm" style={{ color: '#57788F' }}>Your Answer: <span className="font-medium">{result.userAnswer}</span></p>
                                     </div>
@@ -153,7 +153,7 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
                                     <div className="flex-shrink-0 bg-gray-200 text-red-600 rounded-full h-8 w-8 flex items-center justify-center font-bold">✗</div>
                                     <div>
                                         <p className="font-semibold text-black">"{result.question}"</p>
-                                        {/* **CAMBIO REALIZADO**: Se aplica el color a la respuesta correcta */}
+                                       
                                         <p className="text-sm" style={{ color: '#57788F' }}>Correct Answer: <span className="font-medium">{result.correctAnswer}</span></p>
                                         <p className="text-sm" style={{ color: '#57788F' }}>Your Answer: <span className="font-medium">{result.userAnswer}</span></p>
                                     </div>
@@ -183,7 +183,7 @@ const StartScreen = ({ onPlay }) => (
         <h1 className="text-3xl sm:text-4xl font-bold text-blue-600 mb-2">Vocabulary Challenge</h1>
         <p className="text-gray-600 mb-8">Read the definition and type the correct word. Let's test your vocabulary!</p>
          <div className="my-8">
-             <img src="/hero.jpg" alt="Vocabulary game illustration" className="rounded-lg mx-auto" />
+             <img src="vocabulary.jpg" alt="Vocabulary game illustration" className="rounded-lg mx-auto" />
         </div>
         <button onClick={onPlay}
             className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-lg text-xl shadow-lg">
@@ -195,7 +195,7 @@ const StartScreen = ({ onPlay }) => (
     </div>
 );
 
-// **NUEVO**: Componente principal renombrado a 'Vocabulary'
+//  Componente principal renombrado a 'Vocabulary'
 export const Vocabulary = () => {
     const [gameState, setGameState] = useState('start'); // 'start', 'playing', 'over'
     const [gameResults, setGameResults] = useState([]);

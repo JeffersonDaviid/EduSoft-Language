@@ -208,7 +208,7 @@ const StartScreen = ({ onPlay }) => (
         <h1 className="text-3xl sm:text-4xl font-bold text-blue-600 mb-2">Listening Challenge</h1>
         <p className="text-gray-600 mb-8">Listen to the sentence and fill in the blank. Test your skills!</p>
          <div className="my-8">
-             <img src="/hero.jpg" alt="Listening game illustration" className="rounded-lg mx-auto" />
+             <img src="/listen.jpg" alt="Listening game illustration" className="rounded-lg mx-auto" />
         </div>
         <button onClick={onPlay}
             className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-lg text-xl shadow-lg">
