@@ -2,16 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 // --- Componente Reutilizable para la Tarjeta de Juego ---
-// Esto mantiene tu código limpio. Si quieres cambiar el estilo de las tarjetas,
-// solo lo cambias en este único lugar.
 const GameCard = ({ game }) => (
-    <Link to={game.link || '#'}> {/* Usamos '#' como fallback si no hay link */}
+    <Link to={game.link || '#'}>
         <article className='rounded-lg flex flex-col items-start justify-start gap-4 bg-white shadow-md p-3 h-full transition-transform duration-300 hover:scale-105 cursor-pointer'>
             <img
                 className='w-full rounded-xl max-w-full h-48 md:h-[200px] object-cover'
                 alt={game.title}
                 src={game.src}
-                // Si la imagen no carga, muestra un placeholder
                 onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/600x400/e2e8f0/e2e8f0?text=Image" }}
             />
             <div className='flex flex-col items-start'>
@@ -27,55 +24,117 @@ const GameCard = ({ game }) => (
 
 // --- Componente Principal GamesHome ---
 export const GamesHome = () => {
-    // --- Datos Originales de tus Juegos ---
-    // He restaurado los datos exactos que tenías.
-    // También añadí la propiedad 'link' para que la navegación funcione.
-    const originalGamesData = [
+    // --- Datos para Juegos de Vocabulario ---
+    const vocabularyGamesData = [
         {
-            title: 'Tense Master',
-            desc: 'Practice using different tenses correctly.',
-            src: '/depth-7-frame-01@2x.png',
-            link: '/games/grammar', // Ruta para el juego
+            title: 'Word Matching',
+            desc: 'Match words with their definitions.',
+            src: '/img/vocabulary-matching.png', // Reemplaza con tu imagen
+            link: '/games/vocabulary',
         },
         {
-            title: 'Article Adventure',
-            desc: 'Learn the correct use of articles (a, an, the).',
-            src: '/depth-7-frame-02@2x.png',
-            link: '/games/vocabulary', // Ruta para el juego
+            title: 'Sentence Completion',
+            desc: 'Complete sentences using the correct words.',
+            src: '/img/vocabulary-completion.png', // Reemplaza con tu imagen
+            link: '/games/vocabulary',
         },
         {
-            title: 'Preposition Puzzle',
-            desc: 'Complete sentences with the correct prepositions.',
-            src: '/depth-7-frame-03@2x.png',
-            link: '/games/write', // Ruta para el juego
+            title: 'Crossword Puzzle',
+            desc: 'Solve the crossword using vocabulary clues.',
+            src: '/img/vocabulary-crossword.png', // Reemplaza con tu imagen
+            link: '/games/vocabulary',
         },
     ];
 
-    // Datos específicos para la sección "Listening" para que uno lleve a /listen
+    // --- Datos para Juegos de Gramática ---
+    const grammarGamesData = [
+        {
+            title: 'Tense Trainer',
+            desc: 'Practice using different verb tenses.',
+            src: '/img/grammar-tenses.png', // Reemplaza con tu imagen
+            link: '/games/grammar/tenses',
+        },
+        {
+            title: 'Article Practice',
+            desc: 'Choose the correct article (a, an, the).',
+            src: '/img/grammar-articles.png', // Reemplaza con tu imagen
+            link: '/games/grammar/articles',
+        },
+        {
+            title: 'Preposition Challenge',
+            desc: 'Select the right preposition to complete the sentence.',
+            src: '/img/grammar-prepositions.png', // Reemplaza con tu imagen
+            link: '/games/grammar/prepositions',
+        },
+    ];
+
+    // --- Datos para la sección "Listening" ---
     const listeningGamesData = [
         {
-            title: 'Tense Master',
-            desc: 'Practice using different tenses correctly.',
-            src: '/depth-7-frame-01@2x.png',
-            link: '/games/listen', // ¡Esta es la ruta que querías para este juego!
-        },
-        {
-            title: 'Article Adventure',
-            desc: 'Learn the correct use of articles (a, an, the).',
-            src: '/depth-7-frame-02@2x.png',
+            title: 'Listen and Choose',
+            desc: 'Listen to the audio and choose the correct option.',
+            src: '/img/listening-choose.png', // Reemplaza con tu imagen
             link: '/games/listen',
         },
         {
-            title: 'Preposition Puzzle',
-            desc: 'Complete sentences with the correct prepositions.',
-            src: '/depth-7-frame-03@2x.png',
+            title: 'Dictation Practice',
+            desc: 'Listen and type the sentences you hear.',
+            src: '/img/listening-dictation.png', // Reemplaza con tu imagen
+            link: '/games/listen',
+        },
+        {
+            title: 'Audio Comprehension',
+            desc: 'Answer questions based on the audio clip.',
+            src: '/img/listening-comprehension.png', // Reemplaza con tu imagen
             link: '/games/listen',
         },
     ];
 
+    // --- Datos para la sección "Reading" ---
+    const readingGamesData = [
+        {
+            title: 'Reading Comprehension',
+            desc: 'Read the passage and answer the questions.',
+            src: '/img/reading-comprehension.png', // Reemplaza con tu imagen
+            link: '/games/reading/comprehension',
+        },
+        {
+            title: 'Sentence Scramble',
+            desc: 'Rearrange the words to form correct sentences.',
+            src: '/img/reading-scramble.png', // Reemplaza con tu imagen
+            link: '/games/reading/scramble',
+        },
+        {
+            title: 'Find the Mistake',
+            desc: 'Read the text and identify the grammatical errors.',
+            src: '/img/reading-mistake.png', // Reemplaza con tu imagen
+            link: '/games/reading/mistake',
+        },
+    ];
 
-    // --- Renderizado del Componente ---
-    // Esta es la estructura visual que tenías, ahora funcional.
+    // --- Datos para la sección "Speaking" ---
+    const speakingGamesData = [
+        {
+            title: 'Pronunciation Practice',
+            desc: 'Record yourself and compare your pronunciation.',
+            src: '/img/speaking-pronunciation.png', // Reemplaza con tu imagen
+            link: '/games/speaking/pronunciation',
+        },
+        {
+            title: 'Role Play',
+            desc: 'Practice speaking English in different scenarios.',
+            src: '/img/speaking-roleplay.png', // Reemplaza con tu imagen
+            link: '/games/speaking/roleplay',
+        },
+        {
+            title: 'Describe the Image',
+            desc: 'Speak and describe the image shown.',
+            src: '/img/speaking-describe.png', // Reemplaza con tu imagen
+            link: '/games/speaking/describe',
+        },
+    ];
+
+
     return (
         <main className='w-full min-h-screen bg-[#fff] text-left text-sm text-[#0f141a] flex flex-col items-center font-lexend'>
             <section className='w-full max-w-[1280px] bg-[#fafafa] flex-1 flex flex-col items-center justify-center min-h-[600px] md:min-h-[700px] lg:min-h-[800px]'>
@@ -87,9 +146,8 @@ export const GamesHome = () => {
                             </h1>
                             <p className='text-sm md:text-base text-[#57788f]'>
                                 Learn English by playing! At EduSoft Language, our games are designed to
-                                make learning a fun and educational experience. Through multiple-choice
-                                questions, you can test and expand your English vocabulary in an
-                                interactive way.
+                                make learning a fun and educational experience. Through interactive
+                                activities, you can test and improve your English skills.
                             </p>
                         </div>
 
@@ -97,7 +155,7 @@ export const GamesHome = () => {
                         <section className='pt-4 pb-2'>
                             <h2 className='text-lg md:text-xl font-bold mb-2'>Vocabulary Games</h2>
                             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-                                {originalGamesData.map((game) => <GameCard game={game} key={`vocab-${game.title}`} />)}
+                                {vocabularyGamesData.map((game) => <GameCard game={game} key={`vocab-${game.title}`} />)}
                             </div>
                         </section>
 
@@ -105,7 +163,7 @@ export const GamesHome = () => {
                         <section className='pt-4 pb-2'>
                             <h2 className='text-lg md:text-xl font-bold mb-2'>Grammar Games</h2>
                             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-                                {originalGamesData.map((game) => <GameCard game={game} key={`grammar-${game.title}`} />)}
+                                {grammarGamesData.map((game) => <GameCard game={game} key={`grammar-${game.title}`} />)}
                             </div>
                         </section>
 
@@ -116,12 +174,12 @@ export const GamesHome = () => {
                                 {listeningGamesData.map((game) => <GameCard game={game} key={`listen-${game.title}`} />)}
                             </div>
                         </section>
-                        
+
                         {/* Reading */}
                         <section className='pt-4 pb-2'>
                             <h2 className='text-lg md:text-xl font-bold mb-2'>Reading</h2>
                             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-                                {originalGamesData.map((game) => <GameCard game={game} key={`read-${game.title}`} />)}
+                                {readingGamesData.map((game) => <GameCard game={game} key={`read-${game.title}`} />)}
                             </div>
                         </section>
 
@@ -129,9 +187,10 @@ export const GamesHome = () => {
                         <section className='pt-4 pb-2'>
                             <h2 className='text-lg md:text-xl font-bold mb-2'>Speaking</h2>
                             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-                                {originalGamesData.map((game) => <GameCard game={game} key={`speak-${game.title}`} />)}
+                                {speakingGamesData.map((game) => <GameCard game={game} key={`speak-${game.title}`} />)}
                             </div>
                         </section>
+
                     </div>
                 </header>
             </section>
