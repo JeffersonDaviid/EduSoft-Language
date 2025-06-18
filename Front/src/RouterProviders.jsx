@@ -12,6 +12,7 @@ import { UpdateProfile } from './pages/profile/UpdateProfile';
 import { Progress } from './pages/Progress';
 import { About } from './pages/public/About';
 import { Login } from './pages/public/auth/Login';
+import { RecoverPassword } from './pages/public/auth/RecoverPassword';
 import { Register } from './pages/public/auth/Register';
 import { Home } from './pages/public/Home';
 import { useEffect, useState } from 'react';
@@ -36,6 +37,7 @@ const RouterProviders = () => {
 					<Route path='about' element={<About />} />
 					<Route path='register' element={<Register />} />
 					<Route path='login' element={<Login />} />
+					<Route path='recover-password' element={<RecoverPassword />} />
 
 					<Route path='home' element={<HomeUser />} />
 					<Route path='progress' element={<Progress />} />
