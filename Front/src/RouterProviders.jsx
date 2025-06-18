@@ -14,10 +14,19 @@ import { About } from './pages/public/About';
 import { Login } from './pages/public/auth/Login';
 import { Register } from './pages/public/auth/Register';
 import { Home } from './pages/public/Home';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const RouterProviders = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+	useEffect(() => {
+		const token = localStorage.getItem('token');
+		if (token) {
+			setIsAuthenticated(true);
+		} else {
+			setIsAuthenticated(false);
+		}
+	}, []);
 
 	return (
 		<HashRouter>
