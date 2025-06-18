@@ -4,6 +4,7 @@ import App from './App';
 import { GamesHome } from './pages/games/GamesHome';
 import { Grammar } from './pages/games/grammar/Grammar';
 import { Listen } from './pages/games/listen/Listen';
+import { Reading } from './pages/games/reading/Reading';
 import { Speak } from './pages/games/speak/Speak';
 import { Vocabulary } from './pages/games/vocabulary/Vocabulary';
 import { Write } from './pages/games/write/Write';
@@ -50,6 +51,7 @@ const RouterProviders = () => {
 						<Route path='grammar' element={<Grammar />} />
 						<Route path='vocabulary' element={<Vocabulary />} />
 						<Route path='write' element={<Write />} />
+						<Route path='read' element={<Reading />} />
 						<Route path='speak' element={<Speak />} />
 						<Route path='listen' element={<Listen />} />
 					</Route>

@@ -159,22 +159,21 @@ export const GamesHome = () => {
 										src: '/depth-7-frame-03@2x.png',
 									},
 								].map((game, idx) => (
-									<article
-										key={game.title + idx}
-										className='rounded-lg flex flex-col items-start justify-start gap-4 bg-white shadow-md p-3'
-									>
-										<img
-											className='w-full rounded-xl max-w-full h-48 md:h-[301px] object-cover'
-											alt={game.title}
-											src={game.src}
-										/>
-										<div className='flex flex-col items-start'>
-											<h3 className='leading-6 font-medium text-base md:text-lg'>
-												{game.title}
-											</h3>
-											<p className='text-sm text-[#57788f]'>{game.desc}</p>
+									<Link to={'/games/read'} key={game.title + idx}>
+										<div className='rounded-lg flex flex-col items-start justify-start gap-4 bg-white shadow-md p-3'>
+											<img
+												className='w-full rounded-xl max-w-full h-48 md:h-[301px] object-cover'
+												alt={game.title}
+												src={game.src}
+											/>
+											<div className='flex flex-col items-start'>
+												<h3 className='leading-6 font-medium text-base md:text-lg'>
+													{game.title}
+												</h3>
+												<p className='text-sm text-[#57788f]'>{game.desc}</p>
+											</div>
 										</div>
-									</article>
+									</Link>
 								))}
 							</div>
 						</section>
