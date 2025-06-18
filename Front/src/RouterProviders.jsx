@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { HashRouter, Route, Routes } from 'react-router';
 import App from './App';
 import { GamesHome } from './pages/games/GamesHome';
@@ -15,7 +16,6 @@ import { Login } from './pages/public/auth/Login';
 import { RecoverPassword } from './pages/public/auth/RecoverPassword';
 import { Register } from './pages/public/auth/Register';
 import { Home } from './pages/public/Home';
-import { useEffect, useState } from 'react';
 
 const RouterProviders = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);

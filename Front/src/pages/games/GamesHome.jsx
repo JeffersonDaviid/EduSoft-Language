@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 export const GamesHome = () => {
 	return (
 		<main className='w-full min-h-screen bg-[#fff] text-left text-sm text-[#0f141a] flex flex-col items-center font-lexend'>
@@ -76,7 +78,8 @@ export const GamesHome = () => {
 										src: '/depth-7-frame-03@2x.png',
 									},
 								].map((game, idx) => (
-									<article
+									<Link
+										to={'/games/grammar'}
 										key={game.title + idx}
 										className='rounded-lg flex flex-col items-start justify-start gap-4 bg-white shadow-md p-3'
 									>
@@ -91,7 +94,7 @@ export const GamesHome = () => {
 											</h3>
 											<p className='text-sm text-[#57788f]'>{game.desc}</p>
 										</div>
-									</article>
+									</Link>
 								))}
 							</div>
 						</section>

@@ -5,17 +5,17 @@ import { Footer } from './components/Footer';
 import { useAuth } from './context/AuthContext';
 
 const App = () => {
-    const { isAuthenticated } = useAuth();
+	const { isAuthenticated } = useAuth();
 
-    return (
-        <>
-            {isAuthenticated ? <PrivateNavbar /> : <PublicNavbar />}
-            <main>
-                <Outlet />
-            </main>
-            <Footer />
-        </>
-    );
+	return (
+		<>
+			{isAuthenticated ? <PrivateNavbar /> : <PublicNavbar />}
+			<main className='w-full'>
+				<Outlet />
+			</main>
+			<Footer />
+		</>
+	);
 };
 
 export default App;
