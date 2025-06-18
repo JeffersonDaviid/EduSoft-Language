@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
-// **MODIFICADO**: Se vuelve a una única lista de oraciones.
+// lista de oraciones.
 const sentences = [
-    { display: "The cat is on the ____.", speak: "The cat is on the table.", answer: "table" },
-    { display: "I like to ____ apples.", speak: "I like to eat apples.", answer: "eat" },
-    { display: "The sky is ____.", speak: "The sky is blue.", answer: "blue" },
-    { display: "She has two ____.", speak: "She has two dogs.", answer: "dogs" },
-    { display: "He is reading a ____.", speak: "He is reading a book.", answer: "book" },
-    { display: "They are ____ to the park.", speak: "They are going to the park.", answer: "going" },
-    { display: "I ____ my teeth every morning.", speak: "I brush my teeth every morning.", answer: "brush" },
-    { display: "The weather is ____ and sunny.", speak: "The weather is warm and sunny.", answer: "warm" },
-    { display: "It is ____ to arrive on time.", speak: "It is essential to arrive on time.", answer: "essential" },
-    { display: "He received a prestigious ____ for his work.", speak: "He received a prestigious award for his work.", answer: "award" }
+    { display: "The committee needs to ____ the new proposal before approval.", speak: "The committee needs to evaluate the new proposal before approval.", answer: "evaluate" },
+    { display: "Climate change has ____ effects on global ecosystems.", speak: "Climate change has profound effects on global ecosystems.", answer: "profound" },
+    { display: "The study's findings ____ the initial hypothesis.", speak: "The study's findings contradict the initial hypothesis.", answer: "contradict" },
+    { display: "It is ____ that all students attend the mandatory orientation.", speak: "It is imperative that all students attend the mandatory orientation.", answer: "imperative" },
+    { display: "The author uses vivid imagery to ____ his main points.", speak: "The author uses vivid imagery to illustrate his main points.", answer: "illustrate" },
+    { display: "Technological ____ have transformed the way we communicate.", speak: "Technological innovations have transformed the way we communicate.", answer: "innovations" },
+    { display: "The professor provided a ____ explanation of the complex theory.", speak: "The professor provided a comprehensive explanation of the complex theory.", answer: "comprehensive" },
+    { display: "A key ____ of the research is to identify potential solutions.", speak: "A key objective of the research is to identify potential solutions.", answer: "objective" },
+    { display: "The government plans to ____ new policies to reduce pollution.", speak: "The government plans to implement new policies to reduce pollution.", answer: "implement" },
+    { display: "Despite the challenges, they managed to achieve their ____.", speak: "Despite the challenges, they managed to achieve their goals.", answer: "goals" },
+    { display: "The evidence presented was not ____ to support the claim.", speak: "The evidence presented was not sufficient to support the claim.", answer: "sufficient" },
+    { display: "Further research is required to ____ these results.", speak: "Further research is required to validate these results.", answer: "validate" },
+    { display: "The transition to renewable energy is ____.", speak: "The transition to renewable energy is inevitable.", answer: "inevitable" }
 ];
 
 const TOTAL_QUESTIONS = 5;
@@ -24,7 +27,6 @@ const shuffleAndPick = (arr, num) => {
 
 // Componente para la pantalla de juego
 const GameScreen = ({ onGameOver }) => {
-    // **MODIFICADO**: Se obtiene una lista de preguntas aleatorias al inicio.
     const [gameSentences, setGameSentences] = useState([]);
     const [currentSentence, setCurrentSentence] = useState({ display: '', speak: '', answer: '' });
     const [userInput, setUserInput] = useState('');
@@ -32,12 +34,13 @@ const GameScreen = ({ onGameOver }) => {
     const [score, setScore] = useState(0);
     const [questionsAsked, setQuestionsAsked] = useState(0);
     const [isRoundComplete, setIsRoundComplete] = useState(false);
+    //Estado para guardar los resultados de cada ronda.
+    const [results, setResults] = useState([]);
 
     useEffect(() => {
         setGameSentences(shuffleAndPick(sentences, TOTAL_QUESTIONS));
     }, []);
 
-    // Muestra la siguiente oración de la lista barajada.
     useEffect(() => {
         if (gameSentences.length > 0 && questionsAsked < gameSentences.length) {
             setCurrentSentence(gameSentences[questionsAsked]);
@@ -58,22 +61,32 @@ const GameScreen = ({ onGameOver }) => {
         event.preventDefault();
         if (!userInput.trim() || isRoundComplete) return;
 
-        if (userInput.trim().toLowerCase() === currentSentence.answer.toLowerCase()) {
+        const isCorrect = userInput.trim().toLowerCase() === currentSentence.answer.toLowerCase();
+        
+        // Guardar el resultado de la ronda
+        setResults(prev => [...prev, {
+            question: currentSentence.display,
+            userAnswer: userInput.trim(),
+            correctAnswer: currentSentence.answer,
+            isCorrect: isCorrect
+        }]);
+
+        if (isCorrect) {
             setScore(prev => prev + 1);
             setStatusMessage('<p class="text-2xl font-bold text-green-500">✅ Correct!</p>');
-            setIsRoundComplete(true);
         } else {
             setStatusMessage(`
                 <p class="text-red-500">Not quite!</p>
                 <p class="text-gray-700">The correct answer was: <strong class="font-bold text-blue-600">${currentSentence.answer}</strong></p>
             `);
-            setIsRoundComplete(true);
         }
+        setIsRoundComplete(true);
     };
 
     const handleNextClick = () => {
+        //  Pasa el puntaje y los resultados al terminar.
         if (questionsAsked + 1 >= TOTAL_QUESTIONS) {
-            onGameOver(score);
+            onGameOver(results);
         } else {
             setQuestionsAsked(prev => prev + 1);
         }
@@ -85,9 +98,7 @@ const GameScreen = ({ onGameOver }) => {
                 <h1 className="text-xl sm:text-2xl font-bold text-blue-600">Fill in the Blank</h1>
                 <div className="text-xl font-bold text-gray-700">Score: {score}</div>
             </div>
-
             <p className="text-gray-600 mb-8">Round {questionsAsked + 1} of {TOTAL_QUESTIONS}</p>
-
             <div className="mb-8 flex flex-col items-center">
                 <p className="text-2xl sm:text-3xl text-gray-800 mb-4 bg-gray-100 p-4 rounded-lg">
                     {currentSentence.display}
@@ -96,7 +107,6 @@ const GameScreen = ({ onGameOver }) => {
                     <span className="mr-2">🔊</span> Listen
                 </button>
             </div>
-
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
                 <input type="text" value={userInput} onChange={(e) => setUserInput(e.target.value)} disabled={isRoundComplete}
                     className="flex-grow p-4 border-2 border-gray-300 rounded-lg text-xl text-center shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-200"
@@ -107,11 +117,9 @@ const GameScreen = ({ onGameOver }) => {
                     Submit
                 </button>
             </form>
-            
             <div className="h-16 flex flex-col items-center justify-center p-4 rounded-lg bg-gray-100">
                 <div dangerouslySetInnerHTML={{ __html: statusMessage }} />
             </div>
-
             {isRoundComplete && (
                 <button onClick={handleNextClick}
                     className="mt-4 w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-4 px-6 rounded-lg text-xl shadow-lg">
@@ -122,39 +130,90 @@ const GameScreen = ({ onGameOver }) => {
     );
 };
 
-// Componente para la pantalla de fin de juego
-// Componente para la pantalla de fin de juego
-const GameOverScreen = ({ score, onPlayAgain }) => (
-    // **CAMBIO REALIZADO**: Se agregó un margen inferior mb-24 para separarlo del pie de página.
-    <div className="w-full max-w-3xl mx-auto bg-white shadow-2xl rounded-2xl p-8 sm:p-16 text-center mb-33">
-        <h1 className="text-3xl sm:text-4xl font-bold text-blue-600 mb-4">Round Complete!</h1>
-        <p className="text-gray-600 text-2xl mb-8">Your final score is:</p>
-        <p className="text-6xl font-bold text-green-500 mb-12">{score} / {TOTAL_QUESTIONS}</p>
-        <button onClick={onPlayAgain}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded-lg text-xl shadow-lg">
-            Choose Another Level
-        </button>
-         <Link to="/games" className="inline-block mt-8 text-gray-500 hover:text-blue-600 transition-colors">
-            Browse Other Games
-        </Link>
-    </div>
-);
+//  Componente de la pantalla de fin de juego con el nuevo diseño y paleta de colores.
+const GameOverScreen = ({ results, onPlayAgain }) => {
+    const correctAnswers = results.filter(r => r.isCorrect);
+    const incorrectAnswers = results.filter(r => !r.isCorrect);
 
-// **MODIFICADO**: Pantalla de inicio sin selección de nivel.
+    
+    const renderQuestion = (question, answer) => {
+        const parts = question.split('____');
+        return (
+            <p className="font-semibold text-black">
+                {parts[0]}
+                <strong className="font-bold">{answer}</strong>
+                {parts[1]}
+            </p>
+        );
+    };
+
+    return (
+        <div className="w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-8 sm:p-12 text-left">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2 text-center">Review Your Performance</h1>
+            <p className="text-gray-600 text-center mb-10">Let's take a look at how you did. This review will help you understand where you excelled and where you might need a bit more practice.</p>
+            
+            <div className="space-y-8">
+                {correctAnswers.length > 0 && (
+                    <div>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Correct Answers</h2>
+                        <div className="space-y-4">
+                            {correctAnswers.map((result, index) => (
+                                <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-start gap-4">
+                                    <div className="flex-shrink-0 bg-gray-200 text-green-600 rounded-full h-8 w-8 flex items-center justify-center font-bold">✓</div>
+                                    <div>
+                                        {renderQuestion(result.question, result.correctAnswer)}
+                                        <p className="text-sm text-[#57788F]">Your Answer: <span className="font-medium">{result.userAnswer}</span></p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {incorrectAnswers.length > 0 && (
+                     <div>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Incorrect Answers</h2>
+                        <div className="space-y-4">
+                            {incorrectAnswers.map((result, index) => (
+                                <div key={index} className="bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-start gap-4">
+                                    <div className="flex-shrink-0 bg-gray-200 text-red-600 rounded-full h-8 w-8 flex items-center justify-center font-bold">✗</div>
+                                    <div>
+                                        {renderQuestion(result.question, result.correctAnswer)}
+                                        <p className="text-sm text-[#57788F]">Correct Answer: <span className="font-medium">{result.correctAnswer}</span></p>
+                                        <p className="text-sm text-[#57788F]">Your Answer: <span className="font-medium">{result.userAnswer}</span></p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
+                <button onClick={onPlayAgain} className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-lg text-lg">
+                    Play Again
+                </button>
+                 <Link to="/games" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg text-center">
+                    Browse Other Games
+                </Link>
+            </div>
+        </div>
+    );
+};
+
+
+// Pantalla de inicio sin selección de nivel.
 const StartScreen = ({ onPlay }) => (
      <div className="w-full max-w-2xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-6 sm:p-10 text-center">
         <h1 className="text-3xl sm:text-4xl font-bold text-blue-600 mb-2">Listening Challenge</h1>
         <p className="text-gray-600 mb-8">Listen to the sentence and fill in the blank. Test your skills!</p>
-        
          <div className="my-8">
-             <img src="public/hero.jpg" alt="Listening game illustration" className="rounded-lg mx-auto" />
+             <img src="/hero.jpg" alt="Listening game illustration" className="rounded-lg mx-auto" />
         </div>
-        
         <button onClick={onPlay}
             className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-lg text-xl shadow-lg">
             Play
         </button>
-        
         <Link to="/games" className="inline-block mt-8 text-gray-500 hover:text-blue-600 transition-colors">
             Browse Other Games
         </Link>
@@ -163,8 +222,8 @@ const StartScreen = ({ onPlay }) => (
 
 // Componente principal 'Listen' que gestiona el estado del juego
 export const Listen = () => {
-    const [gameState, setGameState] = useState('start'); // 'start', 'playing', 'over'
-    const [finalScore, setFinalScore] = useState(0);
+    const [gameState, setGameState] = useState('start');
+    const [gameResults, setGameResults] = useState([]);
     const [isSupported, setIsSupported] = useState(true);
 
     useEffect(() => {
@@ -173,8 +232,8 @@ export const Listen = () => {
         }
     }, []);
 
-    const handleGameOver = (score) => {
-        setFinalScore(score);
+    const handleGameOver = (results) => {
+        setGameResults(results);
         setGameState('over');
     };
 
@@ -186,15 +245,23 @@ export const Listen = () => {
         return <p>Sorry, your browser does not support Speech Synthesis.</p>;
     }
 
-    switch (gameState) {
-        case 'playing':
-            return <GameScreen onGameOver={handleGameOver} />;
-        case 'over':
-            return <GameOverScreen score={finalScore} onPlayAgain={handlePlayAgain} />;
-        case 'start':
-        default:
-            return <StartScreen onPlay={() => setGameState('playing')} />;
-    }
+    const renderGameState = () => {
+        switch (gameState) {
+            case 'playing':
+                return <GameScreen onGameOver={handleGameOver} />;
+            case 'over':
+                return <GameOverScreen results={gameResults} onPlayAgain={handlePlayAgain} />;
+            case 'start':
+            default:
+                return <StartScreen onPlay={() => setGameState('playing')} />;
+        }
+    };
+
+    return (
+        <div className="w-full flex-grow flex items-center justify-center p-4">
+            {renderGameState()}
+        </div>
+    );
 };
 
 export default Listen;
