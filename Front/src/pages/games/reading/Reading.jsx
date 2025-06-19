@@ -102,7 +102,7 @@ export const Reading = () => {
 			{/* Barra de progreso */}
 			<div className='w-full bg-neutral-200 rounded h-3'>
 				<div
-					className='h-3 bg-emerald-600 rounded transition-all'
+					className='h-3 bg-sky-400 rounded transition-all'
 					style={{ width: `${progress}%` }}
 				/>
 			</div>
