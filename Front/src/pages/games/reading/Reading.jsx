@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { HeaderGame } from '../../../components/HeaderGame';
+import { GameEnd } from '../GameEnd';
 
 const passages = [
 	{
@@ -87,13 +88,7 @@ export const Reading = () => {
 	const handleFinish = () => setFinished(true);
 
 	// UI final
-	if (finished)
-		return (
-			<section className='max-w-xl mx-auto p-8 text-center space-y-4'>
-				<h2 className='text-2xl font-bold text-emerald-700'>🎉 ¡Prueba finalizada!</h2>
-				<p>¡Gracias por participar!</p>
-			</section>
-		);
+	if (finished) return <GameEnd />;
 
 	// UI principal
 	return (
@@ -112,26 +107,39 @@ export const Reading = () => {
 				{current.text.split(/(\{\d\})/g).map((seg, k) => {
 					const m = seg.match(/\{(\d)\}/);
 					if (!m) return seg;
+
 					const i = Number(m[1]);
-					const correct = verified && blanks[i] === current.answers[i];
-					const wrong = verified && !correct;
+					const filled = blanks[i];
+					const correct = current.answers[i];
+					const wrong = verified && filled !== correct;
+
 					return (
-						<select
-							key={k}
-							value={blanks[i]}
-							onChange={(e) => selectWord(i, e.target.value)}
-							disabled={verified}
-							className={`mx-1 border rounded px-2 ${
-								correct ? 'bg-green-100' : wrong ? 'bg-red-100' : ''
-							}`}
-						>
-							<option value=''>___</option>
-							{choices.map((c) => (
-								<option key={c} value={c}>
-									{c}
-								</option>
-							))}
-						</select>
+						<span key={k} className='inline-flex items-center'>
+							<select
+								value={filled}
+								disabled={verified}
+								onChange={(e) => selectWord(i, e.target.value)}
+								className={`mx-1 border rounded px-2 ${
+									verified && filled === correct
+										? 'bg-green-100'
+										: wrong
+										? 'bg-red-100'
+										: ''
+								}`}
+							>
+								<option value=''>___</option>
+								{choices.map((c) => (
+									<option key={c} value={c}>
+										{c}
+									</option>
+								))}
+							</select>
+
+							{/* 💡 Corrección visible al verificar si estaba mal */}
+							{wrong && (
+								<span className='text-emerald-700 text-sm italic ml-1'>{correct}</span>
+							)}
+						</span>
 					);
 				})}
 			</div>
@@ -155,7 +163,7 @@ export const Reading = () => {
 						onClick={handleNext}
 						className='bg-emerald-600 text-white px-4 py-2 rounded'
 					>
-						Next
+						Next ➔
 					</button>
 				)}
 

@@ -1,144 +1,144 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { HeaderGame } from '../../../components/HeaderGame';
+import { GameEnd } from '../GameEnd';
 
+/* -------- 3 oraciones B2 -------- */
 const sentences = [
 	'Paola has already visited the Galápagos',
 	'Quito University will launch a new research hub next semester',
 	'If students recycle properly, the campus will stay cleaner',
 ];
-
 const shuffled = sentences.map((s) => s.split(' ').sort(() => Math.random() - 0.5));
 
 export const Grammar = () => {
 	const total = sentences.length;
+	const [step, setStep] = useState(0);
+	const [dock, setDock] = useState(shuffled[0]);
+	const [placed, setPlaced] = useState([]);
+	const [verified, setVerified] = useState(false);
+	const [completed, setComp] = useState(0);
+	const [finished, setFin] = useState(false);
 
-	const [step, setStep] = useState(0); // índice de oración activa
-	const [dock, setDock] = useState(shuffled[0]); // palabras sueltas
-	const [placed, setPlaced] = useState([]); // palabras ordenadas
-	const [checked, setChecked] = useState(false); // ya pulsó Verify
-	const [finished, setFinished] = useState(false); // juego concluido
-	const [completed, setCompleted] = useState(0); // oraciones verificadas ✔️
+	const correctArr = sentences[step].split(' ');
+	const progressPct = Math.round((completed / total) * 100);
 
-	const correctSentence = sentences[step];
-	const progress = Math.round((completed / total) * 100); // 🚀 barra
-
-	// mover palabras
+	/* --- mover palabras --- */
 	const move = (w, fromDock) => {
-		if (checked) return; // bloquea tras Verify
-		if (fromDock) {
-			setDock(dock.filter((x) => x !== w));
-			setPlaced([...placed, w]);
-		} else {
-			setPlaced(placed.filter((x) => x !== w));
-			setDock([...dock, w]);
-		}
+		if (verified) return;
+		fromDock
+			? (setDock(dock.filter((x) => x !== w)), setPlaced([...placed, w]))
+			: (setPlaced(placed.filter((x) => x !== w)), setDock([...dock, w]));
 	};
 
-	// helpers UI
-	const isCorrect = placed.join(' ') === correctSentence;
-
-	// acciones
+	/* --- acciones --- */
 	const verify = () => {
-		setChecked(true);
-		setCompleted((c) => c + 1); // ⬆️ progreso aquí
+		setVerified(true);
+		setComp((c) => c + 1);
 	};
-
 	const next = () => {
-		const nxt = step + 1;
-		setStep(nxt);
-		setDock(shuffled[nxt]);
+		setStep((s) => s + 1);
+		setDock(shuffled[step + 1]);
 		setPlaced([]);
-		setChecked(false);
+		setVerified(false);
+	};
+	const finish = () => setFin(true);
+
+	/* --- estilos palabra tras verificar --- */
+	const wordStyle = (i) => {
+		if (!verified) return 'bg-white';
+		return placed[i] === correctArr[i] ? 'bg-green-300' : 'bg-red-300';
 	};
 
-	const finish = () => setFinished(true);
-
-	// mini-componente btn
-	const Word = ({ w, fromDock }) => (
+	/* --- botón palabra --- */
+	const Word = ({ w, fromDock, idx }) => (
 		<motion.button
 			layout
 			whileTap={{ scale: 0.9 }}
-			disabled={checked}
+			disabled={verified}
 			onClick={() => move(w, fromDock)}
-			className='px-3 py-1 m-1 rounded bg-amber-100 shadow hover:bg-amber-200'
+			className={`${wordStyle(idx)} px-3 py-1 m-1 rounded shadow`}
 		>
 			{w}
 		</motion.button>
 	);
 
-	/* ---------- pantalla final ---------- */
-	if (finished) {
-		return (
-			<section className='max-w-xl mx-auto p-8 text-center space-y-4'>
-				<h2 className='text-2xl font-bold text-emerald-700'>
-					🎉 ¡Has finalizado el juego de oraciones!
-				</h2>
-				<p>Gracias por participar.</p>
-			</section>
-		);
-	}
+	/* --- FIN --- */
+	if (finished) return <GameEnd />;
 
+	/* --- UI principal --- */
 	return (
-		<section className='max-w-2xl mx-auto p-6 space-y-6 select-none'>
+		<section className='max-w-2xl mx-auto p-4 sm:p-6 space-y-6 select-none'>
 			<HeaderGame typeGame={'Grammar'} title={'Arrange the words in order'} />
-			{/* Barra de progreso */}
-			<div className='w-full bg-neutral-200 rounded h-3'>
+			{/* barra de progreso */}
+			<div className='w-full bg-gray-200 rounded h-3'>
 				<div
-					className='h-3 bg-sky-400 rounded transition-all'
-					style={{ width: `${progress}%` }}
+					className='h-3 bg-green-500 rounded transition-all'
+					style={{ width: `${progressPct}%` }}
 				/>
 			</div>
-			<p className='text-sm text-right'>{progress}%</p>
+			<p className='text-sm text-right'>{progressPct}%</p>
 
-			{/* Oración armada */}
-			<div className='border p-2 min-h-[3rem] rounded flex flex-wrap'>
-				{placed.map((w) => (
-					<Word key={w} w={w} fromDock={false} />
+			{/* oración armada */}
+			<div className='w-full border-2 border-green-400 rounded-xl flex flex-wrap  gap-0 bg-gradient-to-r from-green-50 via-green-100 to-green-50 shadow-inner py-4 px-2 min-h-[56px] transition-all duration-300'>
+				{placed.map((w, i) => (
+					<span key={w + i} className='inline-flex items-center'>
+						<Word w={w} fromDock={false} idx={i} />
+						{/* corrección en línea si está mal */}
+						{verified && placed[i] !== correctArr[i] && (
+							<span className='ml-1 italic text-green-700 text-sm'>{correctArr[i]}</span>
+						)}
+					</span>
 				))}
 			</div>
-
-			{/* Palabras en Dock */}
-			<div className='border p-2 rounded flex flex-wrap bg-slate-50'>
-				{dock.map((w) => (
-					<Word key={w} w={w} fromDock={true} />
-				))}
-			</div>
-
-			{/* Botonera */}
-			<div className='flex gap-4'>
-				{!checked && (
+			{/* dock mejorado */}
+			{dock.length > 0 && (
+				<div className='w-full border-2 border-sky-400 rounded-xl flex flex-wrap justify-center items-center gap-2 bg-gradient-to-r from-sky-100 via-sky-200 to-sky-100 shadow-inner py-4 px-2 min-h-[56px] transition-all duration-300'>
+					{dock.map((w) => (
+						<Word key={w} w={w} fromDock={true} />
+					))}
+				</div>
+			)}
+			{/* botones */}
+			<div className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
+				{!verified && (
 					<button
 						onClick={verify}
 						disabled={placed.length === 0}
-						className='bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-40'
+						className='bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 disabled:opacity-40 transition-colors duration-150'
 					>
 						Verify
 					</button>
 				)}
 
-				{checked && step < total - 1 && (
-					<button onClick={next} className='bg-emerald-600 text-white px-4 py-2 rounded'>
-						Next
+				{verified && step < total - 1 && (
+					<button
+						onClick={next}
+						className='bg-green-500 text-white px-4 py-2 rounded shadow hover:bg-green-600 transition-colors duration-150'
+					>
+						Next ➔
 					</button>
 				)}
 
-				{checked && step === total - 1 && (
+				{verified && step === total - 1 && (
 					<button
 						onClick={finish}
-						className='bg-neutral-700 text-white px-4 py-2 rounded'
+						className='bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-900 transition-colors duration-150'
 					>
 						Finish
 					</button>
 				)}
 			</div>
-
-			{/* Feedback */}
-			{checked && (
-				<p className={`font-semibold ${isCorrect ? 'text-emerald-600' : 'text-red-600'}`}>
-					{isCorrect
+			{/* feedback general */}
+			{verified && (
+				<p
+					className={`font-semibold text-center text-base sm:text-lg mt-2 ${
+						placed.join(' ') === correctArr.join(' ') ? 'text-green-600' : 'text-red-600'
+					}`}
+				>
+					{placed.join(' ') === correctArr.join(' ')
 						? 'Great! The sentence is correct.'
-						: 'Oops! The order is not correct.'}
+						: 'Some words are in the wrong place — see corrections above.'}
 				</p>
 			)}
 		</section>
