@@ -1,7 +1,7 @@
 // Front/src/pages/games/speak/Speak.jsx
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 // --- Global Data (sentences for pronunciation) ---
 const pronunciationSentences = [
