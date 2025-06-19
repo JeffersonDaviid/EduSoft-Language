@@ -9,7 +9,7 @@ const GameCard = ({ game }) => (
                 className='w-full rounded-xl max-w-full h-48 md:h-[200px] object-cover'
                 alt={game.title}
                 src={game.src}
-                onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/600x400/e2e8f0/e2e8f0?text=Image" }}
+                onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400/e2e8f0/e2e8f0?text=Image" }}
             />
             <div className='flex flex-col items-start'>
                 <h3 className='leading-6 font-medium text-base md:text-lg'>
@@ -29,19 +29,19 @@ export const GamesHome = () => {
         {
             title: 'Word Matching',
             desc: 'Match words with their definitions.',
-            src: '/public/vocabulary.jpg', 
+            src: '/public/vocabulary.jpg',
             link: '/games/vocabulary',
         },
         {
             title: 'Sentence Completion',
             desc: 'Complete sentences using the correct words.',
-            src: '/img/vocabulary-completion.png', 
+            src: '/img/vocabulary-completion.png',
             link: '/games/vocabulary',
         },
         {
             title: 'Crossword Puzzle',
             desc: 'Solve the crossword using vocabulary clues.',
-            src: '/img/vocabulary-crossword.png', 
+            src: '/img/vocabulary-crossword.png',
             link: '/games/vocabulary',
         },
     ];
@@ -51,19 +51,19 @@ export const GamesHome = () => {
         {
             title: 'Tense Trainer',
             desc: 'Practice using different verb tenses.',
-            src: '/img/grammar-tenses.png', 
+            src: '/img/grammar-tenses.png',
             link: '/games/grammar/tenses',
         },
         {
             title: 'Article Practice',
             desc: 'Choose the correct article (a, an, the).',
-            src: '/img/grammar-articles.png', 
+            src: '/img/grammar-articles.png',
             link: '/games/grammar/articles',
         },
         {
             title: 'Preposition Challenge',
             desc: 'Select the right preposition to complete the sentence.',
-            src: '/img/grammar-prepositions.png', 
+            src: '/img/grammar-prepositions.png',
             link: '/games/grammar/prepositions',
         },
     ];
@@ -73,19 +73,19 @@ export const GamesHome = () => {
         {
             title: 'Listen and Choose',
             desc: 'Listen to the audio and choose the correct option.',
-            src: '/public/listen.jpg', 
+            src: '/public/listen.jpg',
             link: '/games/listen',
         },
         {
             title: 'Dictation Practice',
             desc: 'Listen and type the sentences you hear.',
-            src: '/img/listening-dictation.png', 
+            src: '/img/listening-dictation.png',
             link: '/games/listen',
         },
         {
             title: 'Audio Comprehension',
             desc: 'Answer questions based on the audio clip.',
-            src: '/img/listening-comprehension.png', 
+            src: '/img/listening-comprehension.png',
             link: '/games/listen',
         },
     ];
@@ -95,19 +95,19 @@ export const GamesHome = () => {
         {
             title: 'Reading Comprehension',
             desc: 'Read the passage and answer the questions.',
-            src: '/img/reading-comprehension.png', 
+            src: '/img/reading-comprehension.png',
             link: '/games/reading/comprehension',
         },
         {
             title: 'Sentence Scramble',
             desc: 'Rearrange the words to form correct sentences.',
-            src: '/img/reading-scramble.png', 
+            src: '/img/reading-scramble.png',
             link: '/games/reading/scramble',
         },
         {
             title: 'Find the Mistake',
             desc: 'Read the text and identify the grammatical errors.',
-            src: '/img/reading-mistake.png', 
+            src: '/img/reading-mistake.png',
             link: '/games/reading/mistake',
         },
     ];
@@ -117,19 +117,19 @@ export const GamesHome = () => {
         {
             title: 'Pronunciation Practice',
             desc: 'Record yourself and compare your pronunciation.',
-            src: '/img/speaking-pronunciation.png', 
-            link: '/games/speaking/pronunciation',
+            src: '/public/speak.png',
+            link: '/games/speak',
         },
         {
             title: 'Role Play',
             desc: 'Practice speaking English in different scenarios.',
-            src: '/img/speaking-roleplay.png', 
+            src: '/img/speaking-roleplay.png',
             link: '/games/speaking/roleplay',
         },
         {
             title: 'Describe the Image',
             desc: 'Speak and describe the image shown.',
-            src: '/img/speaking-describe.png', 
+            src: '/img/speaking-describe.png',
             link: '/games/speaking/describe',
         },
     ];
