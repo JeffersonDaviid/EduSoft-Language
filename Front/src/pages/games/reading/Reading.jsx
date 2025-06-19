@@ -47,7 +47,6 @@ export const Reading = () => {
 	const [blanks, setBlanks] = useState([]);
 	const [verified, setVerified] = useState(false);
 	const [finished, setFinished] = useState(false);
-	const [progress, setProgress] = useState(0); // porcentaje barra
 	const [alert, setAlert] = useState(''); // aviso “faltan espacios”
 
 	const current = passages[idx];
@@ -80,7 +79,6 @@ export const Reading = () => {
 			return;
 		}
 		setVerified(true);
-		setProgress(((idx + 1) / total) * 100); // 🚀 sube la barra aquí
 	};
 
 	const handleNext = () => setIdx((i) => i + 1);
@@ -93,15 +91,12 @@ export const Reading = () => {
 	// UI principal
 	return (
 		<section className='max-w-2xl mx-auto p-6 space-y-6'>
-			<HeaderGame typeGame={'Reading'} title={'Choose the correct word'} />
-			{/* Barra de progreso */}
-			<div className='w-full bg-neutral-200 rounded h-3'>
-				<div
-					className='h-3 bg-sky-400 rounded transition-all'
-					style={{ width: `${progress}%` }}
-				/>
-			</div>
-			<p className='text-sm text-right'>{Math.round(progress)}%</p>
+			<HeaderGame
+				typeGame={'Reading'}
+				title={'Choose the correct word'}
+				currentStep={idx + 1}
+				totalSteps={total}
+			/>
 
 			<div className='leading-relaxed'>
 				{current.text.split(/(\{\d\})/g).map((seg, k) => {
