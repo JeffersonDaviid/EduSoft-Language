@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { HeaderGame } from '../../../components/HeaderGame';
 
 const passages = [
 	{
@@ -97,6 +98,7 @@ export const Reading = () => {
 	// UI principal
 	return (
 		<section className='max-w-2xl mx-auto p-6 space-y-6'>
+			<HeaderGame typeGame={'Reading'} title={'Choose the correct word'} />
 			{/* Barra de progreso */}
 			<div className='w-full bg-neutral-200 rounded h-3'>
 				<div

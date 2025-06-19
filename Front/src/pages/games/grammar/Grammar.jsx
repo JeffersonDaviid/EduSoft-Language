@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { HeaderGame } from '../../../components/HeaderGame';
 
 const sentences = [
 	'Paola has already visited the Galápagos',
@@ -80,6 +81,7 @@ export const Grammar = () => {
 
 	return (
 		<section className='max-w-2xl mx-auto p-6 space-y-6 select-none'>
+			<HeaderGame typeGame={'Grammar'} title={'Arrange the words in order'} />
 			{/* Barra de progreso */}
 			<div className='w-full bg-neutral-200 rounded h-3'>
 				<div
