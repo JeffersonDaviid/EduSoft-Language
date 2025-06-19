@@ -123,13 +123,13 @@ export const GamesHome = () => {
         {
             title: 'Role Play',
             desc: 'Practice speaking English in different scenarios.',
-            src: '/img/speaking-roleplay.png',
+            src: '/public/coming_soon.png',
             link: '/games/speaking/roleplay',
         },
         {
             title: 'Describe the Image',
             desc: 'Speak and describe the image shown.',
-            src: '/img/speaking-describe.png',
+            src: '/public/coming_soon.png',
             link: '/games/speaking/describe',
         },
     ];
