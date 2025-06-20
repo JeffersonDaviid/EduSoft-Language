@@ -71,6 +71,7 @@ const sentences = [
 ];
 
 const TOTAL_QUESTIONS = 5;
+const POINTS_PER_QUESTION = 100 / TOTAL_QUESTIONS; // Cada pregunta vale 20 puntos
 
 // Función para barajar un arreglo y tomar los primeros N elementos.
 const shuffleAndPick = (arr, num) => {
@@ -132,7 +133,8 @@ const GameScreen = ({ onGameOver }) => {
         ]);
 
         if (isCorrect) {
-            setScore((prev) => prev + 1);
+            // Se suman los puntos por pregunta 
+            setScore((prev) => prev + POINTS_PER_QUESTION);
             setStatusMessage('<p class="text-2xl font-bold text-green-500">✅ Correct!</p>');
         } else {
             setStatusMessage(`
@@ -144,7 +146,7 @@ const GameScreen = ({ onGameOver }) => {
     };
 
     const handleNextClick = () => {
-        //  Pasa el puntaje y los resultados al terminar.
+        //  Pasa los resultados al terminar.
         if (questionsAsked + 1 >= TOTAL_QUESTIONS) {
             onGameOver(results);
         } else {
@@ -212,6 +214,8 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
     const correctAnswers = results.filter((r) => r.isCorrect);
     const incorrectAnswers = results.filter((r) => !r.isCorrect);
 
+    const finalScore = correctAnswers.length * POINTS_PER_QUESTION;
+
     const renderQuestion = (question, answer) => {
         const parts = question.split('____');
         return (
@@ -228,6 +232,9 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
             <h1 className='text-3xl sm:text-4xl font-bold text-gray-800 mb-2 text-center'>
                 Review Your Performance
             </h1>
+            <p className='text-gray-600 text-center mb-2'>
+                Your final score is: <strong className="text-blue-600">{finalScore}</strong>
+            </p>
             <p className='text-gray-600 text-center mb-10'>
                 Let's take a look at how you did. This review will help you understand where you
                 excelled and where you might need a bit more practice.
@@ -342,7 +349,7 @@ export const Listen = () => {
             case 'over':
                 return <GameOverScreen results={gameResults} onPlayAgain={handlePlayAgain} />;
             default:
-                // El caso 'start' ya no es necesario, pero mantenemos un default por si acaso.
+                
                 return <GameScreen onGameOver={handleGameOver} />;
         }
     };

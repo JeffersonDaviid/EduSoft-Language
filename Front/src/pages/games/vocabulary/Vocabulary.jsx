@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 
-//  Lista de palabras y definiciones para el juego de vocabulario.
+// Lista de palabras y definiciones para el juego de vocabulario.
 const vocabularyWords = [
     {
         definition:
@@ -40,6 +40,7 @@ const vocabularyWords = [
 ];
 
 const TOTAL_QUESTIONS = 5;
+const POINTS_PER_QUESTION = 100 / TOTAL_QUESTIONS; // Cada pregunta vale 20 puntos
 
 // Función para barajar un arreglo y tomar los primeros N elementos.
 const shuffleAndPick = (arr, num) => {
@@ -87,7 +88,8 @@ const GameScreen = ({ onGameOver }) => {
         ]);
 
         if (isCorrect) {
-            setScore((prev) => prev + 1);
+            // CAMBIO AQUÍ: Se suman los puntos por pregunta en lugar de 1
+            setScore((prev) => prev + POINTS_PER_QUESTION);
             setStatusMessage('<p class="text-2xl font-bold text-green-500">✅ Correct!</p>');
         } else {
             setStatusMessage(`
@@ -162,11 +164,17 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
     const correctAnswers = results.filter((r) => r.isCorrect);
     const incorrectAnswers = results.filter((r) => !r.isCorrect);
 
+    // Calcula el puntaje final para mostrarlo en el resumen
+    const finalScore = correctAnswers.length * POINTS_PER_QUESTION;
+
     return (
         <div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-8 sm:p-12 text-left'>
             <h1 className='text-3xl sm:text-4xl font-bold text-gray-800 mb-2 text-center'>
                 Review Your Performance
             </h1>
+            <p className='text-gray-600 text-center mb-2'>
+                Your final score is: <strong className="text-blue-600">{finalScore}</strong>
+            </p>
             <p className='text-gray-600 text-center mb-10'>
                 Let's take a look at how you did. This review will help you understand where you
                 excelled and where you might need a bit more practice.
@@ -256,7 +264,7 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
 //  Componente principal renombrado a 'Vocabulary'
 export const Vocabulary = () => {
     // El estado del juego ahora comienza en 'playing'
-    const [gameState, setGameState] = useState('playing'); 
+    const [gameState, setGameState] = useState('playing');
     const [gameResults, setGameResults] = useState([]);
 
     const handleGameOver = (results) => {
@@ -277,7 +285,7 @@ export const Vocabulary = () => {
             case 'over':
                 return <GameOverScreen results={gameResults} onPlayAgain={handlePlayAgain} />;
             default:
-                // El caso 'start' ya no es necesario
+            
                 return <GameScreen onGameOver={handleGameOver} />;
         }
     };
