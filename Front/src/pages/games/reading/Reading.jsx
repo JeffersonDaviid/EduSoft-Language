@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { HeaderGame } from '../../../components/HeaderGame';
-import { GameEnd } from '../GameEnd';
 import { useAuth } from '../../../context/AuthContext';
 
 const passages = [
@@ -42,18 +41,15 @@ const passages = [
 	},
 ];
 
-const TOTAL_ANSWERS = passages.reduce((acc, p) => acc + p.answers.length, 0); 
-
 export const Reading = () => {
 	const total = passages.length;
-	const [idx, setIdx] = useState(0); // paso actual
+	const [idx, setIdx] = useState(0);
 	const [blanks, setBlanks] = useState([]);
 	const [verified, setVerified] = useState(false);
+	const [alert, setAlert] = useState('');
+	const [results, setResults] = useState([]);
+	const [score, setScore] = useState(0);
 	const [finished, setFinished] = useState(false);
-	const [alert, setAlert] = useState(''); // aviso “faltan espacios”
-	const [allBlanks, setAllBlanks] = useState([]);
-	const [currentScore, setCurrentScore] = useState(0);
-	const [finalScore, setFinalScore] = useState(-1); 
 	const { user } = useAuth();
 
 	const current = passages[idx];
@@ -79,54 +75,57 @@ export const Reading = () => {
 			return copy;
 		});
 
-const handleVerify = () => {
-        if (!allFilled) {
-            setAlert('Please complete all spaces before checking.');
-            return;
-        }
-        setVerified(true);
-
-        let totalCorrect = 0;
-        allBlanks.forEach((blankArr, idxP) => {
-            const passage = passages[idxP];
-            blankArr.forEach((ans, i) => {
-                if (ans === passage.answers[i]) totalCorrect += 1;
-            });
-        });
-        blanks.forEach((ans, i) => {
-            if (ans === current.answers[i]) totalCorrect += 1;
-        });
-        setCurrentScore(Math.round((totalCorrect / TOTAL_ANSWERS) * 100));
-    };
-
-    const handleNext = () => {
-        setAllBlanks((prev) => [...prev, blanks]);
-        setIdx((i) => i + 1);
-        setVerified(false);
-    };
-
-	const handleFinish = async () => {
-		const userAnswers = [...allBlanks, blanks];
-		let totalCorrect = 0;
-
-		for (let i = 0; i < passages.length; i++) {
-			for (let j = 0; j < passages[i].answers.length; j++) {
-				if (userAnswers[i] && userAnswers[i][j] === passages[i].answers[j]) {
-					totalCorrect += 1;
-				}
-			}
+	const handleVerify = () => {
+		if (!allFilled) {
+			setAlert('Please complete all spaces before checking.');
+			return;
 		}
+		setVerified(true);
 
-		const score = Math.round((totalCorrect / TOTAL_ANSWERS) * 100);
+		/* se crea un resultado POR LECTURA */
+		const readingResult = {
+			idx: idx,
+			text: current.text,
+			userAnswers: [...blanks],
+			correctAnswers: [...current.answers],
+			isCorrect: allCorrect, // sigue siendo incorrecta si hay alguna errónea
+		};
+		setResults((prev) => [...prev, readingResult]);
 
-		if (user && user.id) {
+		// Calcular el score usando una variable temporal para incluir crédito parcial
+		const tempResults = [...results, readingResult];
+		const totalTempScore = tempResults.reduce((acc, r) => {
+			const maxPoints = 100 / passages.length;
+			// Calcula cuántas respuestas fueron correctas
+			const numCorrect = r.userAnswers.reduce(
+				(count, ans, i) => (ans === r.correctAnswers[i] ? count + 1 : count),
+				0
+			);
+			// Si se escogió al menos una correcta, se asigna crédito parcial,
+			// pero la lectura se marca como incorrecta si alguna falla.
+			const points =
+				numCorrect > 0 ? (numCorrect / r.correctAnswers.length) * maxPoints : 0;
+			return acc + points;
+		}, 0);
+
+		setScore(Math.round(totalTempScore));
+	};
+
+	const handleNext = () => {
+		setIdx((i) => i + 1);
+	};
+
+	/* ---------- Finish ---------- */
+	const handleFinish = async () => {
+		// score ya está calculado en state «score»
+		if (user?.id) {
 			await fetch('http://localhost:8080/user/game-history', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					userId: user.id,
-					game: 'Reading Challenge',
-					score: score
+					game: 'Reading',
+					score,
 				}),
 			});
 		}
@@ -134,17 +133,24 @@ const handleVerify = () => {
 	};
 
 	// UI final
-	if (finished) return <GameEnd />;
+	if (finished)
+		return (
+			<GameResumeDetails
+				results={results} // [{index, text, userAnswers, correctAnswers, isCorrect}, …]
+				score={score} // 0-100
+				onPlayAgain={() => window.location.reload()}
+			/>
+		);
 
 	// UI principal
 	return (
 		<section className='max-w-2xl mx-auto p-6 space-y-6'>
 			<HeaderGame
-				typeGame={'Reading'}
-				title={'Choose the correct word'}
+				typeGame='Reading'
+				title='Choose the correct word'
 				currentStep={idx + 1}
 				totalSteps={total}
-				score={currentScore}
+				score={score}
 			/>
 
 			<div className='leading-relaxed'>
@@ -192,6 +198,7 @@ const handleVerify = () => {
 			{alert && !verified && <p className='text-red-600 text-sm'>{alert}</p>}
 
 			{/* Botonera */}
+			{/* Botonera */}
 			<div className='flex gap-4'>
 				{!verified && (
 					<button
@@ -220,17 +227,108 @@ const handleVerify = () => {
 					</button>
 				)}
 			</div>
+		</section>
+	);
+};
 
-			{/* Feedback tras verificar */}
-			{verified && (
-				<p
-					className={`font-semibold ${allCorrect ? 'text-emerald-600' : 'text-red-600'}`}
+import { Link } from 'react-router';
+
+const ReadingCard = ({ idx, text, userAnswers, correctAnswers, isCorrect }) => {
+	const badge = isCorrect ? '✓' : '✗';
+	const badgeColor = isCorrect ? 'text-green-600' : 'text-red-600';
+
+	return (
+		<div
+			className={`p-4 flex flex-col gap-2 rounded-lg sm:bg-gray-50 sm:border sm:border-gray-200`}
+		>
+			{/* Encabezado */}
+			<div className='flex items-center gap-3 mb-2'>
+				<span
+					className={`flex-shrink-0 bg-gray-200 ${badgeColor} rounded-full h-8 w-8 flex items-center justify-center font-bold`}
 				>
-					{allCorrect
-						? 'Great! All answers are correct.'
-						: 'Some answers are incorrect — check the red highlights.'}
+					{badge}
+				</span>
+				<h3 className='font-bold text-gray-800'>Reading {idx + 1}</h3>
+			</div>
+
+			{/* Texto con placeholders */}
+			<p className='text-black mb-2'>{text}</p>
+
+			{/* Respuestas */}
+			<p className='text-sm text-[#57788F]'>
+				<span className='font-medium'>Your answers:&nbsp;</span>
+				{userAnswers.join(', ')}
+			</p>
+
+			{!isCorrect && (
+				<p className='text-sm text-[#57788F]'>
+					<span className='font-medium'>Correct answers:&nbsp;</span>
+					{correctAnswers.join(', ')}
 				</p>
 			)}
-		</section>
+		</div>
+	);
+};
+
+const GameResumeDetails = ({ results, score, onPlayAgain }) => {
+	const correctReadings = results.filter((r) => r.isCorrect);
+	const incorrectReadings = results.filter((r) => !r.isCorrect);
+
+	return (
+		<div className='w-full max-w-4xl mx-auto my-16 bg-white lg:shadow-2xl rounded-2xl p-4 sm:p-8 md:p-12 text-left'>
+			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-2 text-center'>
+				Review Your Performance
+			</h1>
+
+			{/* Puntaje global */}
+			<p className='text-3xl sm:text-4xl font-extrabold text-green-600 text-center mb-8'>
+				{score} / 100
+			</p>
+
+			<p className='text-gray-600 text-center mb-8 sm:mb-10'>
+				Let's take a look at how you did. This review will help you understand where you
+				excelled and where you might need a bit more practice.
+			</p>
+
+			{/* Lecturas correctas */}
+			{correctReadings.length > 0 && (
+				<section className='space-y-4 mb-8'>
+					<h2 className='text-xl sm:text-2xl font-bold text-gray-800'>
+						Correct Readings
+					</h2>
+					{correctReadings.map((r) => (
+						<ReadingCard key={r.idx} {...r} />
+					))}
+				</section>
+			)}
+
+			{/* Lecturas con errores */}
+			{incorrectReadings.length > 0 && (
+				<section className='space-y-4'>
+					<h2 className='text-xl sm:text-2xl font-bold text-gray-800'>
+						Readings to Review
+					</h2>
+					{incorrectReadings.map((r) => (
+						<ReadingCard key={r.idx} {...r} />
+					))}
+				</section>
+			)}
+
+			{/* Botones */}
+			<div className='mt-10 sm:mt-12 flex flex-col sm:flex-row gap-4 justify-center'>
+				<button
+					onClick={onPlayAgain}
+					className='bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-lg text-lg cursor-pointer'
+				>
+					Play Again
+				</button>
+				<Link
+					to='/games'
+					className='bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg text-center cursor-pointer'
+				>
+					Browse Other Games
+				</Link>
+			</div>
+		</div>
 	);
 };
