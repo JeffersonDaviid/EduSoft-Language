@@ -21,7 +21,7 @@ export const Grammar = () => {
 	const [verified, setVerified] = useState(false);
 	const [results, setResults] = useState([]);
 	const [finished, setFinished] = useState(false);
-	const [score, setScore] = useState(100);
+	const [score, setScore] = useState(0);
 	const { user } = useAuth(); // 5 ejercicios x 20 pts
 
 	const correctSentence = sentences[step];
@@ -38,22 +38,26 @@ export const Grammar = () => {
 	const handleVerify = () => {
 		const userAnswer = placed.join(' ');
 		setVerified(true);
-		// Calcular errores en este ejercicio
 		const correctArr = correctSentence.split(' ');
-		let errors = 0;
+		let correctCount = 0;
 		for (let i = 0; i < correctArr.length; i++) {
-			if (placed[i] !== correctArr[i]) errors++;
+			if (placed[i] === correctArr[i]) correctCount++;
 		}
-		// Restar puntos por errores (cada error = -2 puntos, ajustable)
-		setScore((prev) => Math.max(0, prev - errors * 2));
+		// Calcular la puntuación del ejercicio en base a respuestas correctas parciales
+		// Cada ejercicio vale 20 puntos como máximo
+		const exerciseScore = Math.round((correctCount / correctArr.length) * 20);
+		// Se marca como correcto solo si todas las palabras están en la posición correcta
+		setScore((prev) => prev + exerciseScore);
 		setResults([
 			...results,
 			{
 				question: 'Arrange the words to form a correct sentence:',
 				userAnswer,
 				correctAnswer: correctSentence,
-				isCorrect: userAnswer === correctSentence,
-				errors,
+				isCorrect: correctCount === correctArr.length,
+				exerciseScore,
+				correctCount,
+				totalWords: correctArr.length,
 			},
 		]);
 	};
@@ -68,19 +72,19 @@ export const Grammar = () => {
 
 	/* terminar */
 	const handleFinish = async () => {
-    if (user && user.id) {
-        await fetch('http://localhost:8080/user/game-history', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userId: user.id,
-                game: 'Grammar Challenge',
-                score: score
-            }),
-        });
-    }
-    setFinished(true);
-};
+		if (user && user.id) {
+			await fetch('http://localhost:8080/user/game-history', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					userId: user.id,
+					game: 'Grammar Challenge',
+					score: score,
+				}),
+			});
+		}
+		setFinished(true);
+	};
 
 	/* componente palabra */
 	const Word = ({ w, fromDock, idx }) => {
@@ -205,6 +209,10 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-2 text-center'>
 				Review Your Performance
 			</h1>
+			<p className='text-3xl sm:text-4xl font-extrabold text-green-600 text-center mb-8'>
+				{score} / 100
+			</p>
+
 			<p className='text-gray-600 text-center mb-8 sm:mb-10'>
 				Let's take a look at how you did. This review will help you understand where you
 				excelled and where you might need a bit more practice.
