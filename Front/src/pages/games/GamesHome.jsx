@@ -10,12 +10,12 @@ import grammar2Icon from '../../../public/grammar2.png';
 import grammar3Icon from '../../../public/grammar3.jpg';
 
 import listen1Icon from '../../../public/listen.jpg';
-import listen2Icon from '../../../public/listen.jpg';
-import listen3Icon from '../../../public/listen.jpg';
+import listen2Icon from '../../../public/listen2.jpg';
+import listen3Icon from '../../../public/listen3.png';
 
 import vocabulary1Icon from '../../../public/vocabulary.jpg';
-import vocabulary2Icon from '../../../public/vocabulary.jpg';
-import vocabulary3Icon from '../../../public/vocabulary.jpg';
+import vocabulary2Icon from '../../../public/vocabulary2.jpg';
+import vocabulary3Icon from '../../../public/vocabulary3.jpg';
 
 import speaking1Icon from '../../../public/speak.png';
 import speaking2Icon from '../../../public/speak.png';
@@ -37,7 +37,7 @@ const gamesData = [
 			{
 				title: 'Article Adventure',
 				desc: 'Learn the correct use of articles (a, an, the).',
-				src: commingSoonIcon,
+				src: vocabulary2Icon,
 				path: '/games/vocabulary',
 				enable: false,
 			},
