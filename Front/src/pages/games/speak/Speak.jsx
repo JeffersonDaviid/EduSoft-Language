@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
+import { useAuth } from '../../../context/AuthContext';
 
 // --- Global Data (sentences for pronunciation) ---
 const pronunciationSentences = [
@@ -84,7 +85,6 @@ const calculateSentenceScore = (originalSentence, transcribedSentence, confidenc
 const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 	const [gameSentences, setGameSentences] = useState([]);
 	const [currentSentence, setCurrentSentence] = useState('');
-	const [score, setScore] = useState(0);
 	const [roundsPlayed, setRoundsPlayed] = useState(0);
 	const [statusMessage, setStatusMessage] = useState(
 		'Ready? Press "Listen" to hear the sentence!'
@@ -116,10 +116,8 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			if (window.speechSynthesis.speaking) {
 				window.speechSynthesis.cancel();
 			}
-		} else if (roundsPlayed >= TOTAL_PRONUNCIATION_ROUNDS) {
-			onGameOver(score, results);
-		}
-	}, [roundsPlayed, gameSentences, onGameOver, score, results]);
+		} 
+	}, [roundsPlayed, gameSentences]);
 
 	// Speech Recognition Setup
 	useEffect(() => {
@@ -268,18 +266,13 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 		}
 	}, [isListening, isSupported]);
 
-	// Function to handle Next button click
 	const handleNextClick = useCallback(() => {
 		if (!hasRecorded || !currentTranscript) {
 			setStatusMessage('Please record your pronunciation first!');
 			return;
 		}
 
-		// Calculate score using enhanced scoring system
-		const scoreResult = calculateSentenceScore(currentSentence, currentTranscript, 0.85); // Default confidence for now
-
-		// Get actual confidence from speech recognition if available
-		// (This would need to be stored from the onresult event)
+		const scoreResult = calculateSentenceScore(currentSentence, currentTranscript, 0.85);
 
 		let roundResult = {
 			sentence: currentSentence,
@@ -290,13 +283,17 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			finalScore: scoreResult.finalScore,
 		};
 
-		setResults((prev) => [...prev, roundResult]);
-
-		if (roundResult.isCorrect) {
-			setScore((prev) => prev + 1);
+		if (roundsPlayed + 1 >= TOTAL_PRONUNCIATION_ROUNDS) {
+			const updatedResults = [...results, roundResult];
+			const totalFinalScore = updatedResults.reduce((acc, r) => acc + ((r.finalScore || 0)), 0);
+			const normalizedScore = Math.round((totalFinalScore / TOTAL_PRONUNCIATION_ROUNDS) * 100);
+			setResults(updatedResults); 
+			onGameOver(normalizedScore, updatedResults); 
+		} else {
+			setResults((prev) => [...prev, roundResult]);
+			setRoundsPlayed((prev) => prev + 1);
 		}
 
-		// Stop any ongoing recognition
 		if (isListening && recognitionRef.current) {
 			try {
 				recognitionRef.current.abort();
@@ -305,23 +302,36 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			}
 			setIsListening(false);
 		}
-
-		const nextRound = roundsPlayed + 1;
-		if (nextRound >= TOTAL_PRONUNCIATION_ROUNDS) {
-			onGameOver(score + (roundResult.isCorrect ? 1 : 0), [...results, roundResult]);
-		} else {
-			setRoundsPlayed(nextRound);
-		}
 	}, [
 		roundsPlayed,
 		onGameOver,
-		score,
-		results,
 		isListening,
 		hasRecorded,
 		currentTranscript,
 		currentSentence,
+		results, 
 	]);
+
+	const getAverageScore = () => {
+    let tempResults = results;
+    if (hasRecorded && currentTranscript && roundsPlayed < TOTAL_PRONUNCIATION_ROUNDS) {
+        const scoreResult = calculateSentenceScore(currentSentence, currentTranscript, 0.85);
+        tempResults = [
+            ...results,
+            {
+                sentence: currentSentence,
+                transcript: currentTranscript,
+                isCorrect: scoreResult.finalScore >= 0.7,
+                confidence: scoreResult.confidence,
+                wordSimilarity: scoreResult.wordSimilarity,
+                finalScore: scoreResult.finalScore,
+            },
+        ];
+    }
+    if (tempResults.length === 0) return 0;
+    const total = tempResults.reduce((acc, r) => acc + ((r.finalScore || 0) * 100), 0);
+    return Math.round(total / tempResults.length);
+};
 
 	return (
 		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-6 sm:p-10 text-center'>
@@ -329,7 +339,7 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 				<h1 className='text-xl sm:text-2xl font-bold text-blue-600'>
 					Pronunciation Challenge
 				</h1>
-				<div className='text-xl font-bold text-gray-700'>Score: {score}</div>
+				<div className='text-xl font-bold text-gray-700'>Score: {getAverageScore()}</div>
 			</div>
 			<p className='text-gray-600 mb-8'>
 				Round {roundsPlayed + 1} of {TOTAL_PRONUNCIATION_ROUNDS}
@@ -393,13 +403,6 @@ const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
 			</h1>
 			<p className='text-gray-600 text-center mb-10'>
 				You finished the Pronunciation Challenge. Here's how you did!
-			</p>
-
-			<p className='text-2xl font-bold text-center mb-8'>
-				Final Score:{' '}
-				<span className='text-blue-600'>
-					{finalScore} / {TOTAL_PRONUNCIATION_ROUNDS}
-				</span>
 			</p>
 
 			<div className='space-y-6'>
@@ -516,6 +519,8 @@ export const PronunciationChallenge = () => {
 	const [finalScore, setFinalScore] = useState(0);
 	const [gameResults, setGameResults] = useState([]);
 	const [isSupported, setIsSupported] = useState(true);
+	const { user } = useAuth();
+	
 
 	useEffect(() => {
 		if (
@@ -526,11 +531,28 @@ export const PronunciationChallenge = () => {
 		}
 	}, []);
 
-	const handleGameOver = (score, results) => {
-		setFinalScore(score);
-		setGameResults(results);
-		setGameState('over');
-	};
+	const handleGameOver = async (score, results) => {
+        setFinalScore(score);
+        setGameResults(results);
+        setGameState('over');
+
+        // Registrar el puntaje en el backend si hay usuario
+        if (user && user.id) {
+            try {
+                await fetch('http://localhost:8080/user/game-history', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        game: 'Speaking Challenge',
+                        score: score
+                    }),
+                });
+            } catch (e) {
+                console.warn('Could not save pronunciation score:', e);
+            }
+        }
+    };
 
 	const handlePlayAgain = () => {
 		setGameState('start');

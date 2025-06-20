@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { HeaderGame } from '../../../components/HeaderGame';
+import { useAuth } from '../../../context/AuthContext';
 
 const sentences = [
 	'Paola has already visited the Galápagos',
@@ -20,7 +21,8 @@ export const Grammar = () => {
 	const [verified, setVerified] = useState(false);
 	const [results, setResults] = useState([]);
 	const [finished, setFinished] = useState(false);
-	const [score, setScore] = useState(100); // 5 ejercicios x 20 pts
+	const [score, setScore] = useState(100);
+	const { user } = useAuth(); // 5 ejercicios x 20 pts
 
 	const correctSentence = sentences[step];
 
@@ -65,7 +67,20 @@ export const Grammar = () => {
 	};
 
 	/* terminar */
-	const handleFinish = () => setFinished(true);
+	const handleFinish = async () => {
+    if (user && user.id) {
+        await fetch('http://localhost:8080/user/game-history', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: user.id,
+                game: 'Grammar Challenge',
+                score: score
+            }),
+        });
+    }
+    setFinished(true);
+};
 
 	/* componente palabra */
 	const Word = ({ w, fromDock, idx }) => {
@@ -194,11 +209,6 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 				Let's take a look at how you did. This review will help you understand where you
 				excelled and where you might need a bit more practice.
 			</p>
-			<div className='text-center mb-8'>
-				<span className='inline-block bg-green-100 text-green-700 font-bold text-lg md:text-2xl rounded-full px-6 py-2 shadow'>
-					Your Score: {score} / 100
-				</span>
-			</div>
 
 			<div className='space-y-8'>
 				{correctAnswers.length > 0 && (

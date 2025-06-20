@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { HeaderGame } from '../../../components/HeaderGame';
 import { GameEnd } from '../GameEnd';
+import { useAuth } from '../../../context/AuthContext';
 
 const passages = [
 	{
@@ -41,6 +42,8 @@ const passages = [
 	},
 ];
 
+const TOTAL_ANSWERS = passages.reduce((acc, p) => acc + p.answers.length, 0); 
+
 export const Reading = () => {
 	const total = passages.length;
 	const [idx, setIdx] = useState(0); // paso actual
@@ -48,6 +51,10 @@ export const Reading = () => {
 	const [verified, setVerified] = useState(false);
 	const [finished, setFinished] = useState(false);
 	const [alert, setAlert] = useState(''); // aviso “faltan espacios”
+	const [allBlanks, setAllBlanks] = useState([]);
+	const [currentScore, setCurrentScore] = useState(0);
+	const [finalScore, setFinalScore] = useState(-1); 
+	const { user } = useAuth();
 
 	const current = passages[idx];
 	const choices = [...current.answers, ...current.distractors].sort(
@@ -72,18 +79,59 @@ export const Reading = () => {
 			return copy;
 		});
 
-	// acciones
-	const handleVerify = () => {
-		if (!allFilled) {
-			setAlert('Por favor completa todos los espacios antes de verificar.');
-			return;
+const handleVerify = () => {
+        if (!allFilled) {
+            setAlert('Please complete all spaces before checking.');
+            return;
+        }
+        setVerified(true);
+
+        let totalCorrect = 0;
+        allBlanks.forEach((blankArr, idxP) => {
+            const passage = passages[idxP];
+            blankArr.forEach((ans, i) => {
+                if (ans === passage.answers[i]) totalCorrect += 1;
+            });
+        });
+        blanks.forEach((ans, i) => {
+            if (ans === current.answers[i]) totalCorrect += 1;
+        });
+        setCurrentScore(Math.round((totalCorrect / TOTAL_ANSWERS) * 100));
+    };
+
+    const handleNext = () => {
+        setAllBlanks((prev) => [...prev, blanks]);
+        setIdx((i) => i + 1);
+        setVerified(false);
+    };
+
+	const handleFinish = async () => {
+		const userAnswers = [...allBlanks, blanks];
+		let totalCorrect = 0;
+
+		for (let i = 0; i < passages.length; i++) {
+			for (let j = 0; j < passages[i].answers.length; j++) {
+				if (userAnswers[i] && userAnswers[i][j] === passages[i].answers[j]) {
+					totalCorrect += 1;
+				}
+			}
 		}
-		setVerified(true);
+
+		const score = Math.round((totalCorrect / TOTAL_ANSWERS) * 100);
+
+		if (user && user.id) {
+			await fetch('http://localhost:8080/user/game-history', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					userId: user.id,
+					game: 'Reading Challenge',
+					score: score
+				}),
+			});
+		}
+		setFinished(true);
 	};
-
-	const handleNext = () => setIdx((i) => i + 1);
-
-	const handleFinish = () => setFinished(true);
 
 	// UI final
 	if (finished) return <GameEnd />;
@@ -96,6 +144,7 @@ export const Reading = () => {
 				title={'Choose the correct word'}
 				currentStep={idx + 1}
 				totalSteps={total}
+				score={currentScore}
 			/>
 
 			<div className='leading-relaxed'>

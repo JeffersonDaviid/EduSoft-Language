@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
+import { useAuth } from '../../../context/AuthContext';
 
 //  Lista de palabras y definiciones para el juego de vocabulario.
 const vocabularyWords = [
@@ -287,11 +288,31 @@ const StartScreen = ({ onPlay }) => (
 export const Vocabulary = () => {
 	const [gameState, setGameState] = useState('start'); // 'start', 'playing', 'over'
 	const [gameResults, setGameResults] = useState([]);
+	const { user } = useAuth();
 
-	const handleGameOver = (results) => {
-		setGameResults(results);
-		setGameState('over');
-	};
+	const handleGameOver = async (results) => {
+        setGameResults(results);
+        setGameState('over');
+
+        const correct = results.filter(r => r.isCorrect).length;
+        const score = Math.round((correct / TOTAL_QUESTIONS) * 100);
+
+        if (user && user.id) {
+            try {
+                await fetch('http://localhost:8080/user/game-history', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        game: 'Vocabulary Challenge',
+                        score: score
+                    }),
+                });
+            } catch (e) {
+                console.warn('No se pudo guardar el puntaje de vocabulary:', e);
+            }
+        }
+    };
 
 	const handlePlayAgain = () => {
 		setGameState('start');

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../../context/AuthContext';
 
@@ -9,6 +9,52 @@ export const Profile = () => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const username = user?.username || 'Your Profile';
     const createdAt = user?.createdAt;
+
+    // Estado para progreso
+    const [progress, setProgress] = useState({
+        gamesPlayed: 0,
+        averageScore: 0,
+        history: [],
+    });
+    const [loading, setLoading] = useState(true);
+    const [ranking, setRanking] = useState(null);
+
+    const totalScore = progress.history.reduce((acc, row) => acc + (row.score || 0), 0);
+    const level = Math.floor(totalScore / 500);
+    const scoreInLevel = totalScore % 500;
+    
+    useEffect(() => {
+        const fetchProgress = async () => {
+            if (!user || !user.id) return;
+            try {
+                const res = await fetch(`http://localhost:8080/user/progress?userId=${user.id}`);
+                const data = await res.json();
+                setProgress({
+                    gamesPlayed: data.gamesPlayed || 0,
+                    averageScore: data.averageScore || 0,
+                    history: data.history || [],
+                });
+            } catch (e) {
+                setProgress({ gamesPlayed: 0, averageScore: 0, history: [] });
+            }
+            setLoading(false);
+        };
+        fetchProgress();
+    }, [user]);
+
+    useEffect(() => {
+        const fetchRanking = async () => {
+            if (!user || !user.id) return;
+            try {
+                const res = await fetch(`http://localhost:8080/user/ranking?userId=${user.id}`);
+                const data = await res.json();
+                setRanking(data.ranking);
+            } catch (e) {
+                setRanking(null);
+            }
+        };
+        fetchRanking();
+    }, [user, totalScore]);
 
     let joinedText = '';
     if (createdAt) {
@@ -30,6 +76,8 @@ export const Profile = () => {
         navigate('/');
     };
 
+    
+
     return (
         <main className='w-full relative bg-[#fff] flex flex-col items-start justify-start text-left text-sm text-[#000] font-lexend'>
             <section className='self-stretch bg-[#fafafa] overflow-hidden flex flex-col items-start justify-start min-h-[800px]'>
@@ -42,7 +90,7 @@ export const Profile = () => {
                                         className='leading-10 font-bold text-2xl md:text-3xl lg:text-4xl'
                                         tabIndex={0}
                                     >
-                                        {username}
+                                        Profile
                                     </h1>
                                     <p className='text-sm text-[#57788f]'>
                                         Here you can view and customize your learning experience. In your
@@ -55,15 +103,15 @@ export const Profile = () => {
                             <section className='self-stretch flex flex-row items-start justify-start p-4 text-center'>
                                 <div className='flex-1 flex flex-col md:flex-row items-center justify-between gap-4'>
                                     <div className='flex flex-row items-start justify-start gap-4 text-left text-base text-[#57788f]'>
-											<img
-											className='w-24 h-24 md:w-32 md:h-32 rounded-full object-cover min-h-[96px] md:min-h-[128px] border border-[#d4dee3]'
-											alt='Profile picture'
-											src={
-												user.profilePicture && user.profilePicture.startsWith('profile-pictures/')
-												? `http://localhost:8080/${user.profilePicture}`
-												: '/default-profile-picture.jpg'
-											}
-											/>
+                                        <img
+                                            className='w-24 h-24 md:w-32 md:h-32 rounded-full object-cover min-h-[96px] md:min-h-[128px] border border-[#d4dee3]'
+                                            alt='Profile picture'
+                                            src={
+                                                user.profilePicture && user.profilePicture.startsWith('profile-pictures/')
+                                                    ? `http://localhost:8080/${user.profilePicture}`
+                                                    : '/default-profile-picture.jpg'
+                                            }
+                                        />
                                         <div className='h-24 md:h-32 flex flex-col items-start justify-center'>
                                             <h2
                                                 className='text-lg md:text-[22px] text-[#0f141a] font-bold leading-7'
@@ -71,7 +119,9 @@ export const Profile = () => {
                                             >
                                                 {username}
                                             </h2>
-                                            <div className='leading-6'>Level 7</div>
+                                            <div className='leading-6'>
+                                                Level {level} ({scoreInLevel}/500 score)
+                                            </div>
                                             <div className='leading-6'>{joinedText}</div>
                                         </div>
                                     </div>
@@ -98,28 +148,36 @@ export const Profile = () => {
                                     </nav>
                                 </div>
                             </section>
-                            {/* ...resto del componente permanece igual... */}
+                            {/* Progress Summary */}
                             <section className='self-stretch pt-5 px-4 pb-3'>
                                 <h2 className='leading-7 font-bold text-lg md:text-[22px]' tabIndex={0}>
                                     Progress Summary
                                 </h2>
                                 <div className='flex flex-row flex-wrap gap-3 text-2xl'>
-                                    {[
-                                        { value: 150, label: 'Games Played' },
-                                        { value: 75, label: 'Lessons Completed' },
-                                        { value: 20, label: 'Achievements Earned' },
-                                    ].map((item, idx) => (
-                                        <article
-                                            key={item.label + idx}
-                                            className='flex-1 rounded-lg border-[#d4dee3] border-solid border-[1px] box-border flex flex-col items-start justify-start p-3 gap-2 min-w-[111px] bg-white shadow-sm'
-                                            aria-label={item.label}
-                                        >
-                                            <b className='text-2xl leading-[30px]'>{item.value}</b>
-                                            <span className='text-sm text-[#57788f]'>{item.label}</span>
-                                        </article>
-                                    ))}
+                                    <article
+                                        className='flex-1 rounded-lg border-[#d4dee3] border-solid border-[1px] box-border flex flex-col items-start justify-start p-3 gap-2 min-w-[111px] bg-white shadow-sm'
+                                        aria-label='Games Played'
+                                    >
+                                        <b className='text-2xl leading-[30px]'>{loading ? '...' : progress.gamesPlayed}</b>
+                                        <span className='text-sm text-[#57788f]'>Games Played</span>
+                                    </article>
+                                    <article
+                                        className='flex-1 rounded-lg border-[#d4dee3] border-solid border-[1px] box-border flex flex-col items-start justify-start p-3 gap-2 min-w-[111px] bg-white shadow-sm'
+                                        aria-label='Average Score'
+                                    >
+                                        <b className='text-2xl leading-[30px]'>{loading ? '...' : progress.averageScore}</b>
+                                        <span className='text-sm text-[#57788f]'>Average Score</span>
+                                    </article>
+                                    <article
+                                        className='flex-1 rounded-lg border-[#d4dee3] border-solid border-[1px] box-border flex flex-col items-start justify-start p-3 gap-2 min-w-[111px] bg-white shadow-sm'
+                                        aria-label='Ranking'
+                                    >
+                                        <b className='text-2xl leading-[30px]'>{loading || ranking == null ? '...' : `#${ranking}`}</b>
+                                        <span className='text-sm text-[#57788f]'>Ranking</span>
+                                    </article>
                                 </div>
                             </section>
+                            {/* Game History */}
                             <section className='self-stretch pt-5 px-4 pb-3'>
                                 <h2 className='leading-7 font-bold text-lg md:text-[22px]' tabIndex={0}>
                                     Game History
@@ -141,35 +199,27 @@ export const Profile = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {[
-                                                {
-                                                    game: 'Vocabulary Challenge',
-                                                    date: '2025-06-05',
-                                                    score: '85/100',
-                                                },
-                                                { game: 'Grammar Quest', date: '2025-06-06', score: '70/100' },
-                                                {
-                                                    game: 'Vocabulary Challenge',
-                                                    date: '2025-06-07',
-                                                    score: '90/100',
-                                                },
-                                                {
-                                                    game: 'Reading Comprehension',
-                                                    date: '2025-06-08',
-                                                    score: '75/100',
-                                                },
-                                                { game: 'Grammar Quest', date: '2025-06-09', score: '80/100' },
-                                            ].map((row, idx) => (
-                                                <tr
-                                                    key={row.game + row.date + idx}
-                                                    tabIndex={0}
-                                                    className='focus:outline-2 focus:outline-blue-400'
-                                                >
-                                                    <td className='py-2 px-4 text-[#0d171c]'>{row.game}</td>
-                                                    <td className='py-2 px-4 text-[#4f7a96]'>{row.date}</td>
-                                                    <td className='py-2 px-4 text-[#57788f]'>{row.score}</td>
+                                            {loading ? (
+                                                <tr>
+                                                    <td colSpan={3} className='py-2 px-4 text-center'>Loading...</td>
                                                 </tr>
-                                            ))}
+                                            ) : progress.history.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan={3} className='py-2 px-4 text-center'>No games played yet.</td>
+                                                </tr>
+                                            ) : (
+                                                progress.history.map((row, idx) => (
+                                                    <tr
+                                                        key={row.id || idx}
+                                                        tabIndex={0}
+                                                        className='focus:outline-2 focus:outline-blue-400'
+                                                    >
+                                                        <td className='py-2 px-4 text-[#0d171c]'>{row.game}</td>
+                                                        <td className='py-2 px-4 text-[#4f7a96]'>{new Date(row.playedAt).toLocaleDateString()}</td>
+                                                        <td className='py-2 px-4 text-[#57788f]'>{row.score}/100</td>
+                                                    </tr>
+                                                ))
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>

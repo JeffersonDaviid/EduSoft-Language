@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
+import { useAuth } from '../../../context/AuthContext'; 
 
 // lista de oraciones.
 const sentences = [
@@ -343,6 +344,7 @@ export const Listen = () => {
 	const [gameState, setGameState] = useState('start');
 	const [gameResults, setGameResults] = useState([]);
 	const [isSupported, setIsSupported] = useState(true);
+	const { user } = useAuth();
 
 	useEffect(() => {
 		if (!('speechSynthesis' in window)) {
@@ -350,10 +352,22 @@ export const Listen = () => {
 		}
 	}, []);
 
-	const handleGameOver = (results) => {
-		setGameResults(results);
-		setGameState('over');
-	};
+	const handleGameOver = async (results) => {
+        const score = results.filter(r => r.isCorrect).length * 20;
+        if (user && user.id) {
+            await fetch('http://localhost:8080/user/game-history', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: user.id,
+                    game: 'Listening Challenge',
+                    score: score
+                }),
+            });
+        }
+        setGameResults(results);
+        setGameState('over');
+    };
 
 	const handlePlayAgain = () => {
 		setGameState('start');
