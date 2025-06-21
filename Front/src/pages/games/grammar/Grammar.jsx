@@ -4,13 +4,63 @@ import { Link } from 'react-router';
 import { HeaderGame } from '../../../components/HeaderGame';
 import { useAuth } from '../../../context/AuthContext';
 
-const sentences = [
-	'Paola has already visited the Galápagos',
-	'Quito University will launch a new research hub next semester',
-	'Paola has already visited the Galápagos',
-	'If students recycle properly, the campus will stay cleaner',
-	'Paola has already visited the Galápagos',
+const sentencesStack = [
+	'Big data is being analyzed in real time to predict customer behavior.',
+	'Augmented-reality headsets have been adopted by several hospitals to train surgeons.',
+	'Will quantum computing be embraced by mainstream businesses within the decade?',
+	'These constant pop-up ads aren’t annoying, are they?',
+	'Moreover, video conferencing, which facilitates remote collaboration, is reshaping office culture.',
+	'In my opinion, the Internet of Things will revolutionize urban planning.',
+	'Participating in the debate, she argued that social-media platforms must be regulated.',
+	'Streaming services are being preferred over traditional broadcasting worldwide.',
+	'Nevertheless, cyber-security remains a pressing concern; furthermore, data breaches damage trust.',
+	'Isn’t it true that e-mail has become less popular among teenagers?',
+	'Cloud computing has been heralded as the backbone of digital transformation.',
+	'By 2030, remote workspaces will be managed entirely through virtual-reality dashboards.',
+	'Applicants fluent in Python, certified in AWS, and experienced with machine learning stand out immediately.',
+	'My colleague, who is undeniably visionary, suggested prototyping early to identify flaws.',
+	'To solve connectivity issues, one practical solution is installing a mesh network.',
+	'Employees motivated by curiosity often generate breakthrough ideas.',
+	'Lack of feedback, analyzed carefully, shows why the project stalled.',
+	'Her résumé, which was meticulously formatted, highlighted transferable skills.',
+	'Designers known for their adaptability frequently pivot during development.',
+	'Frankly, the fact remains that the cost-benefit ratio favors automation.',
+	'When bandwidth drops, rebooting the router is a quick fix.',
+	'The prototype, tested repeatedly, proved viable.',
+	'Innovative thinkers, who thrive under pressure, often cultivate a culture of experimentation.',
+	'Root-cause analysis revealed that inadequate training led to errors.',
+	'While people in Quito greet with a handshake, those in Tokyo bow politely.',
+	'We used to gather around the radio in the evenings, but now we stream podcasts individually.',
+	'Some professionals stay calm under stress, whereas others keep complaining about minor issues.',
+	'Generally speaking, community-oriented cultures place a higher value on collective success.',
+	'Except for a few regional differences, holiday traditions remain remarkably similar across the country.',
+	'He would always bring home-made desserts to meetings when he worked here.',
+	'Tourists keep asking for eco-friendly options, so hotels stay competitive by adopting green policies.',
+	'On the other hand, city dwellers dine out frequently, whereas rural families cook at home.',
+	'Accepting change is difficult; nevertheless, many employees embrace automation.',
+	'Back then, we used to write postcards, and we’d wait weeks for a reply.',
+	'Although smartphones simplify communication, they also keep users constantly distracted.',
+	'By and large, people prefer flexible schedules over rigid nine-to-five routines.',
+	'Slow-loading webpages drive me crazy during rush hours.',
+	'I get irritated when automated voices mispronounce my name.',
+	'Long queues at the bank make me feel exhausted.',
+	'Could you tell me why the printer keeps jamming every morning?',
+	'The colleague who never replies to emails is my biggest source of frustration.',
+	'What bothers her most is that meetings start late.',
+	'If customers feel annoyed, sending a quick apology email may avoid further problems.',
+	'He politely suggested that we double-check the cables before calling support.',
+	'Was the issue resolved after the update, or is it still causing errors?',
+	'Broken coffee machines, outdated keyboards, and flickering monitors were mentioned in the complaint list.',
+	'Our supervisor, who is typically even-tempered, sounded disappointed during today’s briefing.',
+	'May I ask where I can submit a formal request for quieter workspaces?',
+	'The constant notifications are getting on everyone’s nerves, so silent mode was activated.',
+	'Satisfied and relieved, the team celebrated once the bug had been fixed.',
 ];
+
+// mezclar el orden de las oraciones y tomar 5 primeras
+const sentences = sentencesStack.sort(() => Math.random() - 0.5).slice(0, 5);
+console.log(sentences); // TODO: Eliminar esto en producción
+
 const shuffled = sentences.map((s) => s.split(' ').sort(() => Math.random() - 0.5));
 
 export const Grammar = () => {
@@ -72,6 +122,8 @@ export const Grammar = () => {
 
 	/* terminar */
 	const handleFinish = async () => {
+		setFinished(true);
+
 		if (user && user.id) {
 			await fetch('http://localhost:8080/user/game-history', {
 				method: 'POST',
@@ -83,7 +135,6 @@ export const Grammar = () => {
 				}),
 			});
 		}
-		setFinished(true);
 	};
 
 	/* componente palabra */
