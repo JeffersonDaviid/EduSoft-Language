@@ -37,7 +37,7 @@ const pronunciationSentences = [
 ];
 
 // Ajustamos el número total de rondas al nuevo total de párrafos.
-const TOTAL_PRONUNCIATION_ROUNDS = 8;
+const TOTAL_PRONUNCIATION_ROUNDS = 5;
 
 const shuffleAndPick = (arr, num) => {
 	return [...arr].sort(() => 0.5 - Math.random()).slice(0, num);
@@ -132,7 +132,7 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			if (window.speechSynthesis.speaking) {
 				window.speechSynthesis.cancel();
 			}
-		} 
+		}
 	}, [roundsPlayed, gameSentences]);
 
 	// Speech Recognition Setup
@@ -303,8 +303,8 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			const updatedResults = [...results, roundResult];
 			const totalFinalScore = updatedResults.reduce((acc, r) => acc + ((r.finalScore || 0)), 0);
 			const normalizedScore = Math.round((totalFinalScore / TOTAL_PRONUNCIATION_ROUNDS) * 100);
-			setResults(updatedResults); 
-			onGameOver(normalizedScore, updatedResults); 
+			setResults(updatedResults);
+			onGameOver(normalizedScore, updatedResults);
 		} else {
 			setResults((prev) => [...prev, roundResult]);
 			setRoundsPlayed((prev) => prev + 1);
@@ -325,29 +325,29 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 		hasRecorded,
 		currentTranscript,
 		currentSentence,
-		results, 
+		results,
 	]);
 
 	const getAverageScore = () => {
-    let tempResults = results;
-    if (hasRecorded && currentTranscript && roundsPlayed < TOTAL_PRONUNCIATION_ROUNDS) {
-        const scoreResult = calculateSentenceScore(currentSentence, currentTranscript, 0.85);
-        tempResults = [
-            ...results,
-            {
-                sentence: currentSentence,
-                transcript: currentTranscript,
-                isCorrect: scoreResult.finalScore >= 0.7,
-                confidence: scoreResult.confidence,
-                wordSimilarity: scoreResult.wordSimilarity,
-                finalScore: scoreResult.finalScore,
-            },
-        ];
-    }
-    if (tempResults.length === 0) return 0;
-    const total = tempResults.reduce((acc, r) => acc + ((r.finalScore || 0) * 100), 0);
-    return Math.round(total / tempResults.length);
-};
+		let tempResults = results;
+		if (hasRecorded && currentTranscript && roundsPlayed < TOTAL_PRONUNCIATION_ROUNDS) {
+			const scoreResult = calculateSentenceScore(currentSentence, currentTranscript, 0.85);
+			tempResults = [
+				...results,
+				{
+					sentence: currentSentence,
+					transcript: currentTranscript,
+					isCorrect: scoreResult.finalScore >= 0.7,
+					confidence: scoreResult.confidence,
+					wordSimilarity: scoreResult.wordSimilarity,
+					finalScore: scoreResult.finalScore,
+				},
+			];
+		}
+		if (tempResults.length === 0) return 0;
+		const total = tempResults.reduce((acc, r) => acc + ((r.finalScore || 0) * 100), 0);
+		return Math.round(total / tempResults.length);
+	};
 
 	return (
 		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-6 sm:p-10 text-center'>
@@ -502,7 +502,7 @@ export const PronunciationChallenge = () => {
 	const [gameResults, setGameResults] = useState([]);
 	const [isSupported, setIsSupported] = useState(true);
 	const { user } = useAuth();
-	
+
 
 	useEffect(() => {
 		if (
@@ -514,27 +514,27 @@ export const PronunciationChallenge = () => {
 	}, []);
 
 	const handleGameOver = async (score, results) => {
-        setFinalScore(score);
-        setGameResults(results);
-        setGameState('over');
+		setFinalScore(score);
+		setGameResults(results);
+		setGameState('over');
 
-        // Registrar el puntaje en el backend si hay usuario
-        if (user && user.id) {
-            try {
-                await fetch(`${API_URL}/user/game-history`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: user.id,
-                        game: 'Speaking Challenge',
-                        score: score
-                    }),
-                });
-            } catch (e) {
-                console.warn('Could not save pronunciation score:', e);
-            }
-        }
-    };
+		// Registrar el puntaje en el backend si hay usuario
+		if (user && user.id) {
+			try {
+				await fetch(`${API_URL}/user/game-history`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						userId: user.id,
+						game: 'Speaking Challenge',
+						score: score
+					}),
+				});
+			} catch (e) {
+				console.warn('Could not save pronunciation score:', e);
+			}
+		}
+	};
 
 	// 2. Para reiniciar el juego, simplemente recargamos la página.
 	// Es una estrategia simple y efectiva, igual a la de tu componente 'Grammar'.
