@@ -4,40 +4,55 @@ import { useAuth } from '../../../context/AuthContext';
 
 // Lista de palabras y definiciones para el juego de vocabulario.
 const vocabularyWords = [
-	{
-		definition:
-			'A person who writes books, stories, or articles as a job or regular activity.',
-		answer: 'author',
-	},
-	{
-		definition:
-			'A very large, strong building, built in the past by a ruler or important person to protect the people inside from attack.',
-		answer: 'castle',
-	},
-	{
-		definition: 'An area of land that has its own government, army, etc.',
-		answer: 'country',
-	},
-	{ definition: 'To find an answer to a problem.', answer: 'solve' },
-	{
-		definition:
-			'A journey in which you go somewhere, usually for a short time, and come back again.',
-		answer: 'trip',
-	},
-	{ definition: 'Relating to the whole world.', answer: 'global' },
-	{ definition: 'A long period when there is little or no rain.', answer: 'drought' },
-	{
-		definition: 'Able to be easily hurt, influenced, or attacked.',
-		answer: 'vulnerable',
-	},
-	{
-		definition: 'The scientific study of the mind and how it influences behaviour.',
-		answer: 'psychology',
-	},
-	{
-		definition: 'A substance that is used to treat or prevent disease or pain.',
-		answer: 'medicine',
-	},
+    {
+        definition:
+            'A set of rules a computer follows to solve problems or make calculations.',
+        answer: 'algorithm', // Technology buzzwords
+    },
+    {
+        definition:
+            'A formal word used to add another piece of information to an idea you are developing.',
+        answer: 'furthermore', // Expressions for connecting ideas formally
+    },
+    {
+        definition:
+            'A digital audio file, like a radio show, that you can download and listen to whenever you want.',
+        answer: 'podcast', // Words for forms of communication
+    },
+    {
+        definition:
+            'Describes a person who is good at finding clever ways to overcome difficulties.',
+        answer: 'resourceful', // Qualities of creative people
+    },
+    {
+        definition:
+            'A verb that means to confront or start dealing with a difficult issue.',
+        answer: 'tackle', // Collocations for problem solving
+    },
+    {
+        definition:
+            'Using a network of remote servers hosted on the Internet to store, manage, and process data, rather than a local server or a personal computer.',
+        answer: 'cloud computing', // Technology buzzwords
+    },
+    {
+        definition:
+            'A formal word that means "as a result" or "therefore".',
+        answer: 'consequently', // Expressions for connecting ideas formally
+    },
+    {
+        definition:
+            'Describes a person or a new idea that introduces new methods and is original.',
+        answer: 'innovative', // Qualities of creative people
+    },
+    {
+        definition: 'To put a decision, plan, or agreement into effect.',
+        answer: 'implement', // Collocations for problem solving
+    },
+    {
+        definition:
+            'A brief written message, typically used in a business or professional setting.',
+        answer: 'memo', // Words for forms of communication
+    },
 ];
 
 const TOTAL_QUESTIONS = 5;
