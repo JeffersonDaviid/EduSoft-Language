@@ -224,7 +224,7 @@ export const Reading = () => {
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					userId: user.id,
-					game: 'Reading',
+					game: 'Reading Challenge',
 					score,
 				}),
 			});
