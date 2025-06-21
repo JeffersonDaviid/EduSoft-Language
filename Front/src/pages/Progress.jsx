@@ -1,4 +1,76 @@
+import { useEffect, useState } from 'react';
+
 export const Progress = () => {
+
+    const [progress, setProgress] = useState({ history: [] });
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (!user || !user.id) return;
+        fetch(`http://localhost:8080/user/progress?userId=${user.id}`)
+            .then(res => res.json())
+            .then(data => setProgress({ history: data.history || [] }));
+    }, []);
+
+    const GAME_TYPES = [
+        'Vocabulary Challenge',
+        'Reading Challenge',
+        'Grammar Challenge',
+        'Listening Challenge',
+        'Speaking Challenge',
+    ];
+
+    const playedTypes = new Set(
+        progress.history
+            .filter(row => GAME_TYPES.includes(row.game))
+            .map(row => row.game)
+    );
+    const percent = Math.min(playedTypes.size * 20, 100);
+
+    const getAverage = (type) => {
+        const games = progress.history.filter(row => row.game === type);
+        if (!games.length) return null;
+        const avg = Math.round(games.reduce((acc, row) => acc + (row.score || 0), 0) / games.length);
+        return avg;
+    };
+
+	const minAvgType = (() => {
+    let minType = null;
+    let minAvg = Infinity;
+    GAME_TYPES.forEach(type => {
+        const avg = getAverage(type);
+        if (avg !== null && avg < minAvg) {
+            minAvg = avg;
+            minType = type;
+        }
+    });
+    return minType;
+})();
+
+	const getPracticeStreak = () => {
+    	const dates = Array.from(
+        	new Set(
+            	progress.history
+                	.map(row => new Date(row.playedAt).toDateString())
+        	)
+    ).sort((a, b) => new Date(b) - new Date(a));
+    if (dates.length === 0) return 0;
+    let streak = 1;
+    let prev = new Date(dates[0]);
+    for (let i = 1; i < dates.length; i++) {
+        const curr = new Date(dates[i]);
+        const diff = (prev - curr) / (1000 * 60 * 60 * 24);
+        if (diff === 1) {
+            streak++;
+            prev = curr;
+        } else if (diff > 1) {
+            break;
+        }
+    }
+    return streak;
+};
+const streak = getPracticeStreak();
+
 	return (
 		<main className='w-full min-h-screen bg-[#fff] flex flex-col items-center text-left text-sm text-[#000] font-lexend'>
 			<section className='w-full max-w-[1280px] bg-[#f7fafc] flex-1 flex flex-col items-center justify-center min-h-[600px] md:min-h-[700px] lg:min-h-[800px]'>
@@ -10,103 +82,56 @@ export const Progress = () => {
 									Your Progress
 								</h1>
 								<p className='text-sm md:text-base text-[#4f7a96]'>
-									See how you're progressing on your journey to mastering English! In
-									EduSoft Language, you can track your progress and see how you're
-									improving every day. Here you can see your achievements, the number of
-									words learned, and the level you've reached in each of our games.
+									Track your learning journey in EduSoft Language! Here you can view your
+									overall progress, see your average scores for each game type,
+									check your daily practice streak, and get friendly tips to helper
+									you improve even more.
 								</p>
 							</div>
-							<section className='w-full flex flex-col items-start justify-start p-4 gap-3'>
-								<div className='w-full flex flex-row items-center justify-between gap-2'>
-									<h2 className='leading-6 font-medium'>Overall Progress</h2>
-									<span className='h-6 text-sm'>75%</span>
-								</div>
-								<progress value='75' max='100' className='w-full rounded h-2'></progress>
-							</section>
+                            <section className='w-full flex flex-col items-start justify-start p-4 gap-3'>
+                                <div className='w-full flex flex-row items-center justify-between gap-2'>
+                                    <h2 className='leading-6 font-medium'>Complete all game types to reach 100% progress</h2>
+                                    <span className='h-6 text-sm'>{percent}%</span>
+                                </div>
+                                <progress value={percent} max='100' className='w-full rounded h-2'></progress>
+                            </section>
 							<section className='w-full flex flex-col items-start justify-start pt-5 px-4 pb-3'>
 								<h2 className='leading-7 font-bold text-lg md:text-[22px]'>
-									Achievements
+									Average Scores by Game Type
 								</h2>
 							</section>
-							<section className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-4'>
-								{[
-									{
-										img: '/depth-5-frame-0.svg',
-										title: 'Lesson Master',
-										desc: 'Completed 10 lessons',
-									},
-									{
-										img: '/depth-5-frame-01.svg',
-										title: 'Vocabulary Ace',
-										desc: 'Learned 100 new words',
-									},
-									{
-										img: '/depth-5-frame-02.svg',
-										title: 'Daily Streak',
-										desc: 'Practiced for 30 days',
-									},
-									{
-										img: '/depth-5-frame-03.svg',
-										title: 'Level 3',
-										desc: 'You have reached level 3',
-									},
-								].map((ach, idx) => (
-									<article
-										key={ach.title + idx}
-										className='bg-[#f7fafc] flex flex-row items-center gap-4 min-h-[72px] rounded-lg shadow p-3'
-									>
-										<img className='w-12 h-12 rounded-lg' alt={ach.title} src={ach.img} />
-										<div className='flex flex-col items-start justify-center'>
-											<h3 className='font-medium leading-6'>{ach.title}</h3>
-											<p className='text-sm text-[#4f7a96]'>{ach.desc}</p>
-										</div>
-									</article>
-								))}
-							</section>
+							<section className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 px-4'>
+                                {GAME_TYPES.map((type) => {
+                                    const avg = getAverage(type);
+                                    return (
+                                        <article
+                                            key={type}
+                                            className='bg-[#f7fafc] flex flex-col items-center gap-2 min-h-[72px] rounded-lg shadow p-3'
+                                        >
+                                            <h3 className='font-medium leading-6 text-base text-[#0d171c]'>{type.replace(' Challenge', '')}</h3>
+                                            <p className='text-2xl font-bold text-blue-700'>
+                                                {avg !== null ? `${avg}/100` : <span className='text-gray-400'>–</span>}
+                                            </p>
+                                            <p className='text-xs text-[#4f7a96]'>Average Score</p>
+                                        </article>
+                                    );
+                                })}
+                            </section>
 							<section className='w-full flex flex-col items-start justify-start pt-5 px-4 pb-3'>
 								<h2 className='leading-7 font-bold text-lg md:text-[22px]'>
-									Achievement History
+									Practice Summary
 								</h2>
 							</section>
-							<section className='w-full flex flex-col items-start justify-start py-3 px-4 text-sm'>
-								<div className='w-full rounded-xl bg-[#f7fafc] border-[#d1dee8] border-solid border-[1px] overflow-x-auto'>
-									<table className='w-full text-left min-w-[500px]'>
-										<thead>
-											<tr>
-												<th className='py-3 px-4 font-medium'>Activity</th>
-												<th className='py-3 px-4 font-medium'>Date</th>
-												<th className='py-3 px-4 font-medium'>Result</th>
-											</tr>
-										</thead>
-										<tbody className='text-[#4f7a96]'>
-											<tr>
-												<td className='py-2 px-4 text-[#0d171c]'>Lesson 1</td>
-												<td className='py-2 px-4'>2025-06-05</td>
-												<td className='py-2 px-4'>Completed</td>
-											</tr>
-											<tr>
-												<td className='py-2 px-4 text-[#0d171c]'>Practice Session</td>
-												<td className='py-2 px-4'>2025-06-06</td>
-												<td className='py-2 px-4'>100 points</td>
-											</tr>
-											<tr>
-												<td className='py-2 px-4 text-[#0d171c]'>Lesson 2</td>
-												<td className='py-2 px-4'>2025-06-09</td>
-												<td className='py-2 px-4'>Completed</td>
-											</tr>
-											<tr>
-												<td className='py-2 px-4 text-[#0d171c]'>Quiz</td>
-												<td className='py-2 px-4'>2025-06-09</td>
-												<td className='py-2 px-4'>90%</td>
-											</tr>
-											<tr>
-												<td className='py-2 px-4 text-[#0d171c]'>Lesson 3</td>
-												<td className='py-2 px-4'>2025-06-10</td>
-												<td className='py-2 px-4'>Completed</td>
-											</tr>
-										</tbody>
-									</table>
+							<section className='w-full flex flex-row items-center justify-start gap-4 px-4 py-2'>
+								<div className='bg-white rounded-lg shadow p-4 flex flex-col items-center min-w-[120px]'>
+									<span className='text-3xl font-bold text-emerald-600'>{streak}</span>
+									<span className='text-xs text-[#4f7a96]'>Day Streak</span>
 								</div>
+								{minAvgType && (
+									<div className="bg-blue-100 text-blue-800 rounded p-3 text-sm font-medium flex-1">
+										<span className="font-bold">{minAvgType.replace(' Challenge', '')}</span> could use a little extra practice! Give it another try to boost your overall progress. 🚀
+									</div>
+								)}
 							</section>
 						</div>
 					</header>

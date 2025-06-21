@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { createUserCtrl, loginUserCtrl, recoverPasswordCtrl, updateProfileCtrl } from '../controllers/user-ctrl';
+import { createUserCtrl, loginUserCtrl, recoverPasswordCtrl, updateProfileCtrl, addGameHistory, getUserProgress, getUserRanking } from '../controllers/user-ctrl';
 
 const routerUser = express.Router();
 
@@ -22,11 +22,17 @@ routerUser.post('/recover-password', recoverPasswordCtrl as express.RequestHandl
 
 routerUser.post('/upload-profile-picture', upload.single('profilePicture'), (req, res) => {
     if (!req.file) {
-        return res.status(400).json({ error: 'No file uploaded' });
+      res.status(400).json({ error: 'No file uploaded' });
+      return;
     }
     res.json({ filename: `profile-pictures/${req.file.filename}` });
 });
 
 routerUser.put('/update-profile', updateProfileCtrl as express.RequestHandler);
+
+routerUser.post('/game-history', addGameHistory as express.RequestHandler);
+routerUser.get('/progress', getUserProgress as express.RequestHandler);
+routerUser.get('/ranking', getUserRanking as express.RequestHandler);
+
 
 export { routerUser };

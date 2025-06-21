@@ -18,8 +18,8 @@ import vocabulary2Icon from '../../../public/vocabulary2.jpg';
 import vocabulary3Icon from '../../../public/vocabulary3.jpg';
 
 import speaking1Icon from '../../../public/speak.png';
-import speaking2Icon from '../../../public/speak.png';
-import speaking3Icon from '../../../public/speak.png';
+import speaking2Icon from '../../../public/coming_soon.png';
+import speaking3Icon from '../../../public/coming_soon.png';
 
 import commingSoonIcon from '../../../public/coming_soon.png';
 

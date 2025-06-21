@@ -113,4 +113,66 @@ const updateProfileCtrl = async (req: Request, res: Response) => {
     }
 };
 
-export { createUserCtrl, loginUserCtrl, recoverPasswordCtrl, updateProfileCtrl };
+const addGameHistory = async (req: Request, res: Response) => {
+    const { userId, game, score } = req.body;
+    try {
+        const record = await prisma.gameHistory.create({
+            data: { userId, game, score }
+        });
+        res.json(record);
+    } catch (err) {
+        res.status(500).json({ error: 'Error saving game history' });
+    }
+};
+
+const getUserProgress = async (req: Request, res: Response) => {
+    const { userId } = req.query;
+
+    try {
+        const history = await prisma.gameHistory.findMany({
+            where: { userId: String(userId) },
+            orderBy: { playedAt: 'desc' }
+        });
+
+        const gamesPlayed = history.length;
+        const averageScore = gamesPlayed
+            ? Math.round(history.reduce((acc, h) => acc + h.score, 0) / gamesPlayed)
+            : 0;
+
+        res.json({ gamesPlayed, averageScore, history });
+    } catch (err) {
+        res.status(500).json({ error: 'Error fetching progress' });
+    }
+};
+
+const getUserRanking = async (req: Request, res: Response) => {
+    const { userId } = req.query;
+    if (!userId) return res.status(400).json({ error: 'userId required' });
+
+    try {
+        // Suma total de score por usuario
+        const users = await prisma.user.findMany({
+            include: {
+                gameHistory: true
+            }
+        });
+
+        // Array de { userId, totalScore }
+        const scores = users.map(u => ({
+            userId: u.id,
+            totalScore: u.gameHistory.reduce((acc, h) => acc + h.score, 0)
+        }));
+
+        // Ordena de mayor a menor score
+        scores.sort((a, b) => b.totalScore - a.totalScore);
+
+        // Busca el ranking (posición + 1)
+        const ranking = scores.findIndex(u => u.userId === userId) + 1;
+
+        res.json({ ranking });
+    } catch (err) {
+        res.status(500).json({ error: 'Error calculating ranking' });
+    }
+};
+
+export { createUserCtrl, loginUserCtrl, recoverPasswordCtrl, updateProfileCtrl, addGameHistory, getUserProgress, getUserRanking };

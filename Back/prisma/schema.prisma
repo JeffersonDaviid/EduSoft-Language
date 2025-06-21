@@ -23,4 +23,14 @@ model User {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   profilePicture String   @default("default-profile-picture.jpg")
+  gameHistory    GameHistory[]
+}
+
+model GameHistory {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  game      String
+  score     Int
+  playedAt  DateTime @default(now())
 }
