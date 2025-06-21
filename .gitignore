@@ -64,4 +64,3 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 Back/prisma/migrations
 */src/generated/prisma
-package-lock.json
