@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../API';
 
 export const UpdateProfile = () => {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ export const UpdateProfile = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(() => {
         if (user.profilePicture && user.profilePicture.startsWith('profile-pictures/')) {
-            return `http://localhost:8080/${user.profilePicture}`;
+            return `${API_URL}/${user.profilePicture}`;
         }
         return '/default-profile-picture.jpg';
     });
@@ -34,7 +35,7 @@ export const UpdateProfile = () => {
             setPreviewUrl(objectUrl);
             return () => URL.revokeObjectURL(objectUrl);
         } else if (profilePicture && profilePicture.startsWith('profile-pictures/')) {
-            setPreviewUrl(`http://localhost:8080/${profilePicture}`);
+            setPreviewUrl(`${API_URL}/${profilePicture}`);
         } else {
             setPreviewUrl('/default-profile-picture.jpg');
         }
@@ -67,7 +68,7 @@ export const UpdateProfile = () => {
                 const formData = new FormData();
                 formData.append('profilePicture', selectedFile);
 
-                const uploadRes = await fetch('http://localhost:8080/user/upload-profile-picture', {
+                const uploadRes = await fetch(`${API_URL}/user/upload-profile-picture`, {
                     method: 'POST',
                     body: formData,
                 });
@@ -81,7 +82,7 @@ export const UpdateProfile = () => {
                 }
             }
 
-            const res = await fetch('http://localhost:8080/user/update-profile', {
+            const res = await fetch(`${API_URL}/user/update-profile`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

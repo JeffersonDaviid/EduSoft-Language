@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Footer } from '../../../components/Footer';
 import { Link } from 'react-router';
+import { API_URL } from '../../../API';
 
 export const Register = () => {
     const [form, setForm] = useState({
@@ -33,7 +34,7 @@ export const Register = () => {
         }
 
         try {
-            const res = await fetch('http://localhost:8080/user/create', {
+            const res = await fetch(`${API_URL}/user/create`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

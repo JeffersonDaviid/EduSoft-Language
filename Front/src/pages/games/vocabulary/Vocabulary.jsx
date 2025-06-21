@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useAuth } from '../../../context/AuthContext';
+import { API_URL } from '../../../API';
 
 // Lista de palabras y definiciones para el juego de vocabulario.
 const vocabularyWords = [
@@ -292,7 +293,7 @@ export const Vocabulary = () => {
 
 		if (user && user.id) {
 			try {
-				await fetch('http://localhost:8080/user/game-history', {
+				await fetch(`${API_URL}/user/game-history`, {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({

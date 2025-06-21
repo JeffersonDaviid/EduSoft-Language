@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { API_URL } from '../API';
 
 export const Progress = () => {
 
@@ -7,7 +8,7 @@ export const Progress = () => {
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         if (!user || !user.id) return;
-        fetch(`http://localhost:8080/user/progress?userId=${user.id}`)
+        fetch(`${API_URL}/user/progress?userId=${user.id}`)
             .then(res => res.json())
             .then(data => setProgress({ history: data.history || [] }));
     }, []);

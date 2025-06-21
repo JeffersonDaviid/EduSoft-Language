@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../../context/AuthContext';
+import { API_URL } from '../../API';
 
 export const Profile = () => {
     const { logout } = useAuth();
@@ -27,7 +28,7 @@ export const Profile = () => {
         const fetchProgress = async () => {
             if (!user || !user.id) return;
             try {
-                const res = await fetch(`http://localhost:8080/user/progress?userId=${user.id}`);
+                const res = await fetch(`${API_URL}/user/progress?userId=${user.id}`);
                 const data = await res.json();
                 setProgress({
                     gamesPlayed: data.gamesPlayed || 0,
@@ -40,13 +41,13 @@ export const Profile = () => {
             setLoading(false);
         };
         fetchProgress();
-    }, [user]);
+    }, []);
 
     useEffect(() => {
         const fetchRanking = async () => {
             if (!user || !user.id) return;
             try {
-                const res = await fetch(`http://localhost:8080/user/ranking?userId=${user.id}`);
+                const res = await fetch(`${API_URL}/user/ranking?userId=${user.id}`);
                 const data = await res.json();
                 setRanking(data.ranking);
             } catch (e) {
@@ -54,7 +55,7 @@ export const Profile = () => {
             }
         };
         fetchRanking();
-    }, [user, totalScore]);
+    }, []);
 
     let joinedText = '';
     if (createdAt) {
@@ -108,7 +109,7 @@ export const Profile = () => {
                                             alt='Profile picture'
                                             src={
                                                 user.profilePicture && user.profilePicture.startsWith('profile-pictures/')
-                                                    ? `http://localhost:8080/${user.profilePicture}`
+                                                    ? `${API_URL}/${user.profilePicture}`
                                                     : '/default-profile-picture.jpg'
                                             }
                                         />

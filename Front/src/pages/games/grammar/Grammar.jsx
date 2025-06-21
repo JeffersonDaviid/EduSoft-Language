@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { HeaderGame } from '../../../components/HeaderGame';
 import { useAuth } from '../../../context/AuthContext';
+import { API_URL } from '../../../API';
 
 const sentencesStack = [
 	'Big data is being analyzed in real time to predict customer behavior.',
@@ -125,7 +126,7 @@ export const Grammar = () => {
 		setFinished(true);
 
 		if (user && user.id) {
-			await fetch('http://localhost:8080/user/game-history', {
+			await fetch(`${API_URL}/user/game-history`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({

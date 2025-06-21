@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  // output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -15,22 +15,22 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(cuid())
-  email          String   @unique
+  id             String        @id @default(cuid())
+  email          String        @unique
   username       String
   password       String
   answerSecret   String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  profilePicture String   @default("default-profile-picture.jpg")
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  profilePicture String        @default("default-profile-picture.jpg")
   gameHistory    GameHistory[]
 }
 
 model GameHistory {
-  id        String   @id @default(cuid())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  game      String
-  score     Int
-  playedAt  DateTime @default(now())
+  id       String   @id @default(cuid())
+  user     User     @relation(fields: [userId], references: [id])
+  userId   String
+  game     String
+  score    Int
+  playedAt DateTime @default(now())
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useAuth } from '../../../context/AuthContext';
+import { API_URL } from '../../../API';
 
 // lista de oraciones.
 const sentences = [
@@ -147,7 +148,7 @@ const GameScreen = ({ onGameOver }) => {
 	};
 
 	const handleNextClick = () => {
-		//  Pasa los resultados al terminar.
+		// Pasa los resultados al terminar.
 		if (questionsAsked + 1 >= TOTAL_QUESTIONS) {
 			onGameOver(results);
 		} else {
@@ -210,7 +211,7 @@ const GameScreen = ({ onGameOver }) => {
 	);
 };
 
-//  Componente de la pantalla de fin de juego con el nuevo diseño y paleta de colores.
+// Componente de la pantalla de fin de juego con el nuevo diseño y paleta de colores.
 const GameOverScreen = ({ results, onPlayAgain }) => {
 	const correctAnswers = results.filter((r) => r.isCorrect);
 	const incorrectAnswers = results.filter((r) => !r.isCorrect);
@@ -332,7 +333,7 @@ export const Listen = () => {
 	const handleGameOver = async (results) => {
 		const score = results.filter((r) => r.isCorrect).length * 20;
 		if (user && user.id) {
-			await fetch('http://localhost:8080/user/game-history', {
+			await fetch(`${API_URL}/user/game-history`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({

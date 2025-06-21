@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { useAuth } from '../../../context/AuthContext';
+import { API_URL } from '../../../API';
 
 // --- Global Data (paragraphs for pronunciation) ---
 // Contenido basado en las unidades 7-10 para un nivel de dificultad avanzado.
@@ -520,7 +521,7 @@ export const PronunciationChallenge = () => {
         // Registrar el puntaje en el backend si hay usuario
         if (user && user.id) {
             try {
-                await fetch('http://localhost:8080/user/game-history', {
+                await fetch(`${API_URL}/user/game-history`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

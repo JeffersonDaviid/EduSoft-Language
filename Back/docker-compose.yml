@@ -1,0 +1,11 @@
+services:
+  edusoft:
+    container_name: EduSoft
+    build:
+      target: production
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env

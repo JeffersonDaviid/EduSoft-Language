@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Footer } from '../../../components/Footer';
+import { API_URL } from '../../../API';
 
 export const RecoverPassword = () => {
     const [form, setForm] = useState({
@@ -26,7 +27,7 @@ export const RecoverPassword = () => {
         }
 
         try {
-            const res = await fetch('http://localhost:8080/user/recover-password', {
+            const res = await fetch(`${API_URL}/user/recover-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

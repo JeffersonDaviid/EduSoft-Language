@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Footer } from '../../../components/Footer';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../../../context/AuthContext';
+import { API_URL } from '../../../API';
 
 export const Login = () => {
     const [form, setForm] = useState({ email: '', password: '' });
@@ -20,7 +21,7 @@ export const Login = () => {
         setSuccess('');
 
         try {
-            const res = await fetch('http://localhost:8080/user/login', {
+            const res = await fetch(`${API_URL}/user/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form),
