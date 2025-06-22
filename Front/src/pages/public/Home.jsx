@@ -1,14 +1,32 @@
 import { Link } from 'react-router';
+import React, { useEffect, useState } from 'react';
 
 import hero from '../../../public/hero.jpg';
 
 export const Home = () => {
+
+	const [logoutMessage, setLogoutMessage] = useState('');
+
+    useEffect(() => {
+        const msg = localStorage.getItem('logoutSuccess');
+        if (msg) {
+            setLogoutMessage(msg);
+            localStorage.removeItem('logoutSuccess');
+        }
+    }, []);
+
 	return (
 		<main
 			className='w-full relative bg-[#fff] min-h-screen flex flex-col items-center justify-between text-center text-sm text-[#61a1c9] font-lexend'
 			aria-label='Home page'
 		>
-			<section className='w-full max-w-[1280px] flex-1 flex flex-col items-center justify-center min-h-[600px] md:min-h-[700px] lg:min-h-[800px]'>
+			{logoutMessage && (
+                <div className="flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 mb-6 mt-8 max-w-xl mx-auto z-20">
+                    <img src="/check-circle.png" alt="Success" className="w-6 h-6" />
+                    <span>{logoutMessage}</span>
+                </div>
+            )}
+			<section className='w-full max-w-[1280px] flex-1 flex flex-col items-center justify-center min-h-[400px] md:min-h-[500px] lg:min-h-[600px]'>
 				<section className='w-full flex flex-row items-center justify-center py-5 px-4 md:px-16 lg:px-40 box-border text-2xl md:text-4xl lg:text-5xl text-[#fff]'>
 					<div className='w-full max-w-[960px] relative flex flex-col justify-center'>
 						<div className='relative w-full flex flex-col items-center justify-center'>

@@ -29,7 +29,8 @@ export const Login = () => {
             const data = await res.json();
             if (res.ok) {
                 setSuccess('Login successful!');
-                login(data.user); 
+                login(data.user);
+                localStorage.setItem('loginSuccess', `Successful login, welcome back ${data.user.username}`);
                 navigate('/home');
             } else {
                 setError(data.error || 'Login failed');
@@ -50,8 +51,6 @@ export const Login = () => {
                             </h1>
                         </header>
                         <form className='w-full max-w-[480px] mx-auto flex flex-col gap-4' onSubmit={handleSubmit}>
-                            {error && <div className="text-red-500">{error}</div>}
-                            {success && <div className="text-green-600">{success}</div>}
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='email' className='leading-6 font-medium'>
                                     Email
@@ -90,6 +89,12 @@ export const Login = () => {
                                     Forgot password?
                                 </span>
                             </div>
+                            {error && (
+                            <div className="flex items-center gap-3 text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-2 mt-1">
+                                <img src="/x-circle.png" alt="Error" className="w-6 h-6" />
+                                <span>{error}</span>
+                            </div>
+                            )}
                             <button
                                 type='submit'
                                 className='w-full rounded-[20px] bg-[#42a6eb] h-10 md:h-12 flex items-center justify-center py-0 px-4 min-w-[84px] max-w-[480px] cursor-pointer text-[#fafafa] font-bold leading-[21px] text-base md:text-lg transition-colors duration-150 hover:bg-[#1d7fc1] focus:outline-2 focus:outline-[#0d171c]'

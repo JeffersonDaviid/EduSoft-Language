@@ -73,8 +73,18 @@ export const Register = () => {
                             </h1>
                         </header>
                         <form className='w-full max-w-[480px] mx-auto flex flex-col gap-4' onSubmit={handleSubmit}>
-                            {error && <div className="text-red-500">{error}</div>}
-                            {success && <div className="text-green-600">{success}</div>}
+                            {success && (
+                                <div className="flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 mb-2">
+                                    <img src="/check-circle.png" alt="Success" className="w-6 h-6" />
+                                    <span>{success}</span>
+                                </div>
+                            )}
+                            {error && (
+                                <div className="flex items-center gap-3 text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-2">
+                                    <img src="/x-circle.png" alt="Error" className="w-6 h-6" />
+                                    <span>{error}</span>
+                                </div>
+                            )}
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='email' className='leading-6 font-medium'>
                                     Email

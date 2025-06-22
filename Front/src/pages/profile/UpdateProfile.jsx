@@ -94,7 +94,7 @@ export const UpdateProfile = () => {
             });
             const data = await res.json();
             if (res.ok) {
-                setSuccess('Profile updated successfully!');
+                localStorage.setItem('profileUpdateSuccess', 'Profile updated successfully!');  
                 localStorage.setItem('user', JSON.stringify(data.user));
                 updateUser(data.user);
                 setTimeout(() => navigate('/profile'), 1200);
@@ -214,8 +214,12 @@ export const UpdateProfile = () => {
                                         onChange={handleChange}
                                     />
                                 </div>
-                                {error && <div className='text-red-500'>{error}</div>}
-                                {success && <div className='text-green-600'>{success}</div>}
+                                {error && (
+                                    <div className="flex items-center gap-3 text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-2">
+                                        <img src="/x-circle.png" alt="Error" className="w-6 h-6" />
+                                        <span>{error}</span>
+                                    </div>
+                                )}
                                 <button
                                     type='submit'
                                     className='rounded-3xl bg-[#42a6eb] h-12 flex items-center justify-center px-5 min-w-[84px] max-w-[480px] font-bold text-white mt-4 focus:outline-2 focus:outline-blue-400 hover:bg-[#1d7fc2] transition-colors duration-150'

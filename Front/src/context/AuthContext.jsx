@@ -26,8 +26,10 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = () => {
+        localStorage.setItem('logoutSuccess', 'Session closed successfully, see you soon!');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('loginSuccess');
         setIsAuthenticated(false);
         setUser(null);
     };
