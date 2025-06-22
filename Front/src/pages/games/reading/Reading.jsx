@@ -253,7 +253,7 @@ export const Reading = () => {
 				score={score}
 			/>
 
-			<div className='leading-relaxed'>
+			<div className='leading-relaxed text-md'>
 				{current.text.split(/(\{\d\})/g).map((seg, k) => {
 					const m = seg.match(/\{(\d)\}/);
 					if (!m) return seg;
@@ -298,12 +298,11 @@ export const Reading = () => {
 			{alert && !verified && <p className='text-red-600 text-sm'>{alert}</p>}
 
 			{/* Botonera */}
-			{/* Botonera */}
-			<div className='flex gap-4'>
+			<div className='flex flex-col justify-center sm:flex-row gap-3 sm:gap-4'>
 				{!verified && (
 					<button
 						onClick={handleVerify}
-						className='bg-blue-600 text-white px-4 py-2 rounded cursor-pointer'
+						className='bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-40 cursor-pointer'
 					>
 						Verify
 					</button>
@@ -312,7 +311,7 @@ export const Reading = () => {
 				{verified && idx < total - 1 && (
 					<button
 						onClick={handleNext}
-						className='bg-emerald-600 text-white px-4 py-2 rounded cursor-pointer'
+						className='bg-green-500 text-white px-4 py-2 rounded shadow hover:bg-green-600 transition-colors duration-150 cursor-pointer'
 					>
 						Next ➔
 					</button>

@@ -201,7 +201,7 @@ export const Grammar = () => {
 				</div>
 			)}
 			{/* botones */}
-			<div className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
+			<div className='flex flex-col justify-center sm:flex-row gap-3 sm:gap-4'>
 				{!verified && (
 					<button
 						onClick={handleVerify}
@@ -224,7 +224,7 @@ export const Grammar = () => {
 				{verified && step === total - 1 && (
 					<button
 						onClick={handleFinish}
-						className='bg-gray-800 text-white px-4 py-2 rounded cursor-pointer'
+						className='bg-neutral-700 text-white px-4 py-2 rounded cursor-pointer'
 					>
 						Finish
 					</button>

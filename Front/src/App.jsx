@@ -10,7 +10,7 @@ const App = () => {
 	return (
 		<>
 			{isAuthenticated ? <PrivateNavbar /> : <PublicNavbar />}
-			<main className='w-full'>
+			<main className='w-full min-h-[calc(100vh-4rem)]'>
 				<Outlet />
 			</main>
 			<Footer />

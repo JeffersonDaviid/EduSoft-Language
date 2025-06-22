@@ -378,7 +378,7 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			/>
 
 			<div className='mb-8 flex flex-col items-center'>
-				<div className='text-2xl sm:text-3xl font-bold text-gray-800 mb-6 bg-gray-100 p-6 rounded-lg min-w-[300px] text-center leading-relaxed'>
+				<div className='text-lg md:text-3xl font-bold text-gray-800 mb-6 bg-gray-100 p-6 rounded-lg min-w-[300px] text-center leading-relaxed'>
 					{currentSentence}
 				</div>
 
@@ -430,9 +430,14 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
 	return (
 		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-8 sm:p-12 text-left'>
-			<h1 className='text-3xl sm:text-4xl font-bold text-gray-800 mb-2 text-center'>
-				Challenge Complete!
+			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-2 text-center'>
+				Review Your Performance
 			</h1>
+
+			{/* Puntaje global */}
+			<p className='text-3xl sm:text-4xl font-extrabold text-green-600 text-center mb-8'>
+				{finalScore} / 100
+			</p>
 			<p className='text-gray-600 text-center mb-10'>
 				You finished the Pronunciation Challenge. Here's how you did!
 			</p>
