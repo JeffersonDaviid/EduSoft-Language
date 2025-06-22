@@ -3,41 +3,59 @@ import { Link } from 'react-router';
 import { useAuth } from '../../../context/AuthContext';
 import { API_URL } from '../../../API';
 
-// --- Global Data (paragraphs for pronunciation) ---
-// Contenido basado en las unidades 7-10 para un nivel de dificultad avanzado.
+// --- C1 Level Academic Sentences ---
+// Advanced topics suitable for C1 English learners
 const pronunciationSentences = [
-	// --- UNIT 7: The Information Age ---
 	{
-		sentence: "In our weird, wired world, new social media features are constantly being added. This trend will be discussed in our next debate, won't it? Information overload is a real issue; therefore, learning to filter content is an essential skill."
+		sentence: "Contemporary economic theories suggest that sustainable development requires comprehensive policy reform."
 	},
 	{
-		sentence: "It seems our personal data has already been collected by numerous apps. For connecting ideas formally, we can argue that privacy regulations will be needed soon. Isn't it strange how many forms of communication now depend entirely on technology?"
-	},
-	// --- UNIT 8: Putting the Mind to Work ---
-	{
-		sentence: "For this job, we need a creative person capable of offering solutions to complex problems. Qualities of creative people include curiosity and resilience, which helps them analyze reasons behind failures without giving up. We seek a candidate skilled in design."
+		sentence: "Artificial intelligence has revolutionized data analysis across multiple scientific disciplines."
 	},
 	{
-		sentence: "The project was a success, which shows that our team has great problem-solving skills. The final prototype, developed after months of research, works perfectly. We should hire people who have a history of generating ideas that work."
-	},
-	// --- UNIT 9: Generally Speaking ---
-	{
-		sentence: "Generally speaking, comparing customs and habits can be insightful. In my home country, people would always greet strangers, whereas the local custom here is more reserved. I used to find it awkward, but now I understand it."
+		sentence: "Environmental conservation efforts must address both climate change and biodiversity preservation simultaneously."
 	},
 	{
-		sentence: "Despite the challenges, making generalizations helps us understand cultural patterns. Except for a few individuals, most people in this community value punctuality. It's a key difference in contrast to my old neighborhood."
-	},
-	// --- UNIT 10: The Art of Complaining ---
-	{
-		sentence: "That really bugs me! I'd like to ask a simple indirect question: could you tell me why the service is so slow? My main annoyance is having to wait. I try to keep calm, but sometimes it's hard to stay patient."
+		sentence: "Advanced research methodologies enable scientists to investigate complex psychological phenomena."
 	},
 	{
-		sentence: "Let's do something about it. I wonder if you could give me some advice. To avoid problems, it's best to complain politely. You should keep a record of your complaints and stay focused on the facts. This is the best way to get a resolution."
+		sentence: "International cooperation is essential for addressing global challenges in the twenty-first century."
 	},
+	{
+		sentence: "Technological innovations have transformed communication patterns in modern professional environments."
+	},
+	{
+		sentence: "Academic institutions increasingly emphasize critical thinking and analytical reasoning skills."
+	},
+	{
+		sentence: "Sophisticated marketing strategies leverage consumer psychology to influence purchasing decisions effectively."
+	},
+	{
+		sentence: "Medical breakthroughs demonstrate the importance of interdisciplinary collaboration in scientific research."
+	},
+	{
+		sentence: "Cultural diversity enriches educational experiences and promotes intellectual growth among students."
+	},
+	{
+		sentence: "Financial markets exhibit complex behavioral patterns that economists continue to analyze extensively."
+	},
+	{
+		sentence: "Urban planning requires balancing economic development with environmental sustainability concerns."
+	},
+	{
+		sentence: "Digital transformation has fundamentally altered traditional business models across various industries."
+	},
+	{
+		sentence: "Educational technology facilitates personalized learning experiences for students with diverse academic needs."
+	},
+	{
+		sentence: "Professional development opportunities enhance employee satisfaction and organizational productivity significantly."
+	}
 ];
 
-// Ajustamos el número total de rondas al nuevo total de párrafos.
-const TOTAL_PRONUNCIATION_ROUNDS = 8;
+
+// Solo 5 rondas como solicitaste
+const TOTAL_PRONUNCIATION_ROUNDS = 5;
 
 const shuffleAndPick = (arr, num) => {
 	return [...arr].sort(() => 0.5 - Math.random()).slice(0, num);
@@ -132,7 +150,7 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			if (window.speechSynthesis.speaking) {
 				window.speechSynthesis.cancel();
 			}
-		} 
+		}
 	}, [roundsPlayed, gameSentences]);
 
 	// Speech Recognition Setup
@@ -303,8 +321,8 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			const updatedResults = [...results, roundResult];
 			const totalFinalScore = updatedResults.reduce((acc, r) => acc + ((r.finalScore || 0)), 0);
 			const normalizedScore = Math.round((totalFinalScore / TOTAL_PRONUNCIATION_ROUNDS) * 100);
-			setResults(updatedResults); 
-			onGameOver(normalizedScore, updatedResults); 
+			setResults(updatedResults);
+			onGameOver(normalizedScore, updatedResults);
 		} else {
 			setResults((prev) => [...prev, roundResult]);
 			setRoundsPlayed((prev) => prev + 1);
@@ -325,37 +343,40 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 		hasRecorded,
 		currentTranscript,
 		currentSentence,
-		results, 
+		results,
 	]);
 
 	const getAverageScore = () => {
-    let tempResults = results;
-    if (hasRecorded && currentTranscript && roundsPlayed < TOTAL_PRONUNCIATION_ROUNDS) {
-        const scoreResult = calculateSentenceScore(currentSentence, currentTranscript, 0.85);
-        tempResults = [
-            ...results,
-            {
-                sentence: currentSentence,
-                transcript: currentTranscript,
-                isCorrect: scoreResult.finalScore >= 0.7,
-                confidence: scoreResult.confidence,
-                wordSimilarity: scoreResult.wordSimilarity,
-                finalScore: scoreResult.finalScore,
-            },
-        ];
-    }
-    if (tempResults.length === 0) return 0;
-    const total = tempResults.reduce((acc, r) => acc + ((r.finalScore || 0) * 100), 0);
-    return Math.round(total / tempResults.length);
-};
+		let tempResults = results;
+		if (hasRecorded && currentTranscript && roundsPlayed < TOTAL_PRONUNCIATION_ROUNDS) {
+			const scoreResult = calculateSentenceScore(currentSentence, currentTranscript, 0.85);
+			tempResults = [
+				...results,
+				{
+					sentence: currentSentence,
+					transcript: currentTranscript,
+					isCorrect: scoreResult.finalScore >= 0.7,
+					confidence: scoreResult.confidence,
+					wordSimilarity: scoreResult.wordSimilarity,
+					finalScore: scoreResult.finalScore,
+				},
+			];
+		}
+		if (tempResults.length === 0) return 0;
+		const total = tempResults.reduce((acc, r) => acc + ((r.finalScore || 0) * 100), 0);
+		return Math.round(total / tempResults.length);
+	};
 
 	return (
 		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-6 sm:p-10 text-center'>
-			<div className='flex justify-between items-center mb-4'>
-				<h1 className='text-xl sm:text-2xl font-bold text-blue-600'>
+			<div className='flex justify-between items-start mb-4'>
+				<h1 className='text-xl sm:text-2xl font-bold text-blue-600 text-left'>
 					Pronunciation Challenge
 				</h1>
-				<div className='text-xl font-bold text-gray-700'>Score: {getAverageScore()}</div>
+				<div className='text-right'>
+					<div className='text-sm font-bold text-gray-500 uppercase'>Score</div>
+					<div className='text-3xl font-bold text-gray-700'>{getAverageScore()}</div>
+				</div>
 			</div>
 			<p className='text-gray-600 mb-8'>
 				Round {roundsPlayed + 1} of {TOTAL_PRONUNCIATION_ROUNDS}
@@ -409,83 +430,149 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 	);
 };
 
-// --- PronunciationGameOverScreen Component ---
+// --- PronunciationGameOverScreen Component (Pantalla de resultados mejorada y con nueva paleta de colores) ---
 const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
+	const correctAnswers = results.filter((r) => r.isCorrect);
+	const incorrectAnswers = results.filter((r) => !r.isCorrect);
+	const accuracy = results.length > 0 ? Math.round((correctAnswers.length / results.length) * 100) : 0;
+	const avgConfidence = results.length > 0 ? Math.round((results.reduce((acc, r) => acc + (r.confidence || 0), 0) / results.length) * 100) : 0;
+
+	const getPerformanceLevel = (score) => {
+		if (score >= 90) return { level: "Excellent", color: "text-green-600", bg: "bg-green-100" };
+		if (score >= 75) return { level: "Good", color: "text-blue-600", bg: "bg-blue-100" };
+		if (score >= 60) return { level: "Fair", color: "text-yellow-600", bg: "bg-yellow-100" };
+		return { level: "Needs Practice", color: "text-gray-600", bg: "bg-gray-100" }; // Cambiado de rojo a gris
+	};
+
+	const performance = getPerformanceLevel(finalScore);
+
 	return (
-		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-8 sm:p-12 text-left'>
-			<h1 className='text-3xl sm:text-4xl font-bold text-gray-800 mb-2 text-center'>
+		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-4 sm:p-8 md:p-12 text-left'>
+			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center'>
 				Challenge Complete!
 			</h1>
-			<p className='text-gray-600 text-center mb-10'>
-				You finished the Pronunciation Challenge. Here's how you did!
-			</p>
 
-			<div className='space-y-6'>
-				<h2 className='text-2xl font-bold text-gray-800 mb-4 text-center'>
-					Review Your Pronunciations
-				</h2>
-				{results.map((result, index) => (
-					<div key={index} className='bg-gray-50 p-4 rounded-lg border border-gray-200'>
-						<div className='flex items-start gap-4'>
-							<div
-								className={`flex-shrink-0 rounded-full h-8 w-8 flex items-center justify-center font-bold text-white ${result.isCorrect ? 'bg-green-600' : 'bg-red-600'
-									}`}
-							>
-								{result.isCorrect ? '✓' : '✗'}
-							</div>
-							<div className='flex-grow'>
-								<p className='font-semibold text-lg text-gray-900 mb-2'>
-									Sentence: <span className='text-blue-600'>"{result.sentence}"</span>
-								</p>
-								<p className='text-base text-gray-700 mb-2'>
-									What you said:{' '}
-									<span className='font-medium italic'>
-										"{result.transcript || 'N/A'}"
-									</span>
-								</p>
+			{/* Resumen de puntaje principal */}
+			<div className='text-center mb-8'>
+				{/* Etiqueta para el puntaje */}
+				<div className='text-lg font-medium text-gray-600 mb-1'>Score</div>
 
-								<div className='flex flex-wrap gap-4 text-sm text-gray-600'>
-									<span>
-										Confidence:{' '}
-										{result.confidence ? (result.confidence * 100).toFixed(1) : 'N/A'}%
-									</span>
-									<span>
-										Word Match:{' '}
-										{result.wordSimilarity
-											? (result.wordSimilarity * 100).toFixed(1)
-											: 'N/A'}
-										%
-									</span>
-									<span>
-										Final Score:{' '}
-										{result.finalScore ? (result.finalScore * 100).toFixed(1) : 'N/A'}%
-									</span>
-								</div>
+				{/* Resultado del puntaje */}
+				<div className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2'>{finalScore}</div>
 
-								<div
-									className={`mt-2 px-3 py-1 rounded-full text-sm font-medium inline-block ${result.isCorrect
-										? 'bg-green-100 text-green-800'
-										: 'bg-red-100 text-red-800'
-										}`}
-								>
-									{result.isCorrect ? 'Great pronunciation!' : 'Keep practicing!'}
-								</div>
-							</div>
-						</div>
-					</div>
-				))}
+				{/* Nivel de rendimiento */}
+				<div className={`inline-block px-4 py-2 rounded-full font-semibold ${performance.bg} ${performance.color}`}>
+					{performance.level}
+				</div>
 			</div>
 
-			<div className='mt-12 flex flex-col sm:flex-row gap-4 justify-center'>
+			{/* Estadísticas detalladas */}
+			<div className='grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8'>
+				<div className='bg-gray-50 p-4 rounded-lg text-center'>
+					<div className='text-2xl font-bold text-gray-800'>{correctAnswers.length}/{results.length}</div>
+					<div className='text-sm text-gray-600'>Correct Pronunciations</div>
+				</div>
+				<div className='bg-gray-50 p-4 rounded-lg text-center'>
+					<div className='text-2xl font-bold text-gray-800'>{accuracy}%</div>
+					<div className='text-sm text-gray-600'>Accuracy Rate</div>
+				</div>
+				<div className='bg-gray-50 p-4 rounded-lg text-center'>
+					<div className='text-2xl font-bold text-gray-800'>{avgConfidence}%</div>
+					<div className='text-sm text-gray-600'>Avg. Confidence</div>
+				</div>
+			</div>
+
+			<p className='text-gray-600 text-center mb-8 sm:mb-10'>
+				Let's review your pronunciation performance. Use this feedback to improve your speaking skills.
+			</p>
+
+			<div className='space-y-8'>
+				{/* Sección de respuestas correctas */}
+				{correctAnswers.length > 0 && (
+					<section>
+						<h2 className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center'>
+							<span className='bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>✓</span>
+							Well Pronounced ({correctAnswers.length})
+						</h2>
+						<div className='space-y-3'>
+							{correctAnswers.map((r, i) => (
+								<div key={i} className='p-4 bg-green-50 border border-green-200 rounded-lg'>
+									<div className='flex items-start gap-3'>
+										<div className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+											{results.indexOf(r) + 1}
+										</div>
+										<div>
+											<p className='font-semibold text-gray-900 mb-1'>"{r.sentence}"</p>
+											<p className='text-sm text-gray-600'>
+												Your pronunciation: <span className='font-medium text-green-700'>"{r.transcript}"</span>
+											</p>
+											<div className='flex gap-4 text-xs text-gray-500 mt-1'>
+												<span>Confidence: {Math.round((r.confidence || 0) * 100)}%</span>
+												<span>Word Match: {Math.round((r.wordSimilarity || 0) * 100)}%</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+					</section>
+				)}
+
+				{/* Sección de respuestas incorrectas (con colores ajustados) */}
+				{incorrectAnswers.length > 0 && (
+					<section>
+						<h2 className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center'>
+							<span className='bg-gray-200 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>✗</span>
+							Areas for Improvement ({incorrectAnswers.length})
+						</h2>
+						<div className='space-y-3'>
+							{incorrectAnswers.map((r, i) => (
+								<div key={i} className='p-4 bg-gray-50 border border-gray-200 rounded-lg'>
+									<div className='flex items-start gap-3'>
+										<div className='flex-shrink-0 bg-gray-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+											{results.indexOf(r) + 1}
+										</div>
+										<div>
+											<p className='font-semibold text-gray-900 mb-1'>"{r.sentence}"</p>
+											<p className='text-sm text-gray-600 mb-2'>
+												Your pronunciation: <span className='font-medium text-blue-700'>"{r.transcript || 'No speech detected'}"</span>
+											</p>
+											<div className='flex gap-4 text-xs text-gray-500 mb-2'>
+												<span>Confidence: {Math.round((r.confidence || 0) * 100)}%</span>
+												<span>Word Match: {Math.round((r.wordSimilarity || 0) * 100)}%</span>
+											</div>
+											<p className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300'>
+												💡 Tip: Try pronouncing each word slowly and clearly. Focus on consonant clusters and vowel sounds.
+											</p>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+					</section>
+				)}
+			</div>
+
+			{/* Mensaje motivacional basado en el rendimiento */}
+			<div className={`mt-8 p-4 rounded-lg ${performance.bg} border border-opacity-30`}>
+				<div className={`text-center ${performance.color} font-semibold`}>
+					{finalScore >= 90 && "🎉 Outstanding! Your pronunciation is excellent. Keep up the great work!"}
+					{finalScore >= 75 && finalScore < 90 && "👏 Good job! You're showing strong pronunciation skills. A little more practice and you'll be perfect!"}
+					{finalScore >= 60 && finalScore < 75 && "💪 You're making progress! Focus on the areas for improvement and you'll see great results."}
+					{finalScore < 60 && "🎯 Keep practicing! Pronunciation takes time to master. Review the feedback and try again."}
+				</div>
+			</div>
+
+			<div className='mt-10 sm:mt-12 flex flex-col sm:flex-row gap-4 justify-center'>
 				<button
 					onClick={onPlayAgain}
-					className='bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-lg text-lg'
+					className='bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-lg text-lg cursor-pointer'
 				>
 					Play Again
 				</button>
 				<Link
 					to='/games'
-					className='bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg text-center'
+					className='bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg text-center cursor-pointer'
 				>
 					Browse Other Games
 				</Link>
@@ -494,15 +581,14 @@ const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
 	);
 };
 
+
 // --- Main Component 'PronunciationChallenge' (Manages Game State) ---
 export const PronunciationChallenge = () => {
-	// 1. Cambiamos el estado inicial a 'playing' para que el juego comience de inmediato.
 	const [gameState, setGameState] = useState('playing');
 	const [finalScore, setFinalScore] = useState(0);
 	const [gameResults, setGameResults] = useState([]);
 	const [isSupported, setIsSupported] = useState(true);
 	const { user } = useAuth();
-	
 
 	useEffect(() => {
 		if (
@@ -514,30 +600,28 @@ export const PronunciationChallenge = () => {
 	}, []);
 
 	const handleGameOver = async (score, results) => {
-        setFinalScore(score);
-        setGameResults(results);
-        setGameState('over');
+		setFinalScore(score);
+		setGameResults(results);
+		setGameState('over');
 
-        // Registrar el puntaje en el backend si hay usuario
-        if (user && user.id) {
-            try {
-                await fetch(`${API_URL}/user/game-history`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: user.id,
-                        game: 'Speaking Challenge',
-                        score: score
-                    }),
-                });
-            } catch (e) {
-                console.warn('Could not save pronunciation score:', e);
-            }
-        }
-    };
+		// Registrar el puntaje en el backend si hay usuario
+		if (user && user.id) {
+			try {
+				await fetch(`${API_URL}/user/game-history`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						userId: user.id,
+						game: 'Speaking Challenge',
+						score: score
+					}),
+				});
+			} catch (e) {
+				console.warn('Could not save pronunciation score:', e);
+			}
+		}
+	};
 
-	// 2. Para reiniciar el juego, simplemente recargamos la página.
-	// Es una estrategia simple y efectiva, igual a la de tu componente 'Grammar'.
 	const handlePlayAgain = () => {
 		window.location.reload();
 	};
@@ -555,8 +639,6 @@ export const PronunciationChallenge = () => {
 		);
 	}
 
-	// 3. Actualizamos la lógica para renderizar los componentes.
-	// Ya no necesitamos el caso 'start'.
 	const renderGameState = () => {
 		switch (gameState) {
 			case 'playing':
@@ -575,7 +657,6 @@ export const PronunciationChallenge = () => {
 					/>
 				);
 			default:
-				// Por defecto, mostramos la pantalla de juego.
 				return (
 					<PronunciationGameScreen
 						onGameOver={handleGameOver}
