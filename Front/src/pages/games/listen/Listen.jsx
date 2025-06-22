@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useAuth } from '../../../context/AuthContext';
 import { API_URL } from '../../../API';
+import { HeaderGame } from '../../../components/HeaderGame';
 
 // lista de oraciones.
 const sentences = [
@@ -157,15 +158,16 @@ const GameScreen = ({ onGameOver }) => {
 	};
 
 	return (
-		<div className='w-full max-w-2xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-6 sm:p-10 text-center'>
-			<div className='flex justify-between items-center mb-4'>
-				<h1 className='text-xl sm:text-2xl font-bold text-blue-600'>Fill in the Blank</h1>
-				<div className='text-xl font-bold text-gray-700'>Score: {score}</div>
-			</div>
-			<p className='text-gray-600 mb-8'>
-				Round {questionsAsked + 1} of {TOTAL_QUESTIONS}
-			</p>
-			<div className='mb-8 flex flex-col items-center'>
+		<div className='max-w-2xl mx-auto p-4 sm:p-6 space-y-6 select-none'>
+			<HeaderGame
+				typeGame='Listen'
+				title='Listening Challenge'
+				currentStep={questionsAsked + 1}
+				totalSteps={TOTAL_QUESTIONS}
+				score={score}
+			/>
+
+			<div className='my-8 flex flex-col items-center'>
 				<p className='text-2xl sm:text-3xl text-gray-800 mb-4 bg-gray-100 p-4 rounded-lg'>
 					{currentSentence.display}
 				</p>

@@ -2,37 +2,46 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { useAuth } from '../../../context/AuthContext';
 import { API_URL } from '../../../API';
+import { HeaderGame } from '../../../components/HeaderGame';
 
 // --- Global Data (paragraphs for pronunciation) ---
 // Contenido basado en las unidades 7-10 para un nivel de dificultad avanzado.
 const pronunciationSentences = [
 	// --- UNIT 7: The Information Age ---
 	{
-		sentence: "In our weird, wired world, new social media features are constantly being added. This trend will be discussed in our next debate, won't it? Information overload is a real issue; therefore, learning to filter content is an essential skill."
+		sentence:
+			"In our weird, wired world, new social media features are constantly being added. This trend will be discussed in our next debate, won't it? Information overload is a real issue; therefore, learning to filter content is an essential skill.",
 	},
 	{
-		sentence: "It seems our personal data has already been collected by numerous apps. For connecting ideas formally, we can argue that privacy regulations will be needed soon. Isn't it strange how many forms of communication now depend entirely on technology?"
+		sentence:
+			"It seems our personal data has already been collected by numerous apps. For connecting ideas formally, we can argue that privacy regulations will be needed soon. Isn't it strange how many forms of communication now depend entirely on technology?",
 	},
 	// --- UNIT 8: Putting the Mind to Work ---
 	{
-		sentence: "For this job, we need a creative person capable of offering solutions to complex problems. Qualities of creative people include curiosity and resilience, which helps them analyze reasons behind failures without giving up. We seek a candidate skilled in design."
+		sentence:
+			'For this job, we need a creative person capable of offering solutions to complex problems. Qualities of creative people include curiosity and resilience, which helps them analyze reasons behind failures without giving up. We seek a candidate skilled in design.',
 	},
 	{
-		sentence: "The project was a success, which shows that our team has great problem-solving skills. The final prototype, developed after months of research, works perfectly. We should hire people who have a history of generating ideas that work."
+		sentence:
+			'The project was a success, which shows that our team has great problem-solving skills. The final prototype, developed after months of research, works perfectly. We should hire people who have a history of generating ideas that work.',
 	},
 	// --- UNIT 9: Generally Speaking ---
 	{
-		sentence: "Generally speaking, comparing customs and habits can be insightful. In my home country, people would always greet strangers, whereas the local custom here is more reserved. I used to find it awkward, but now I understand it."
+		sentence:
+			'Generally speaking, comparing customs and habits can be insightful. In my home country, people would always greet strangers, whereas the local custom here is more reserved. I used to find it awkward, but now I understand it.',
 	},
 	{
-		sentence: "Despite the challenges, making generalizations helps us understand cultural patterns. Except for a few individuals, most people in this community value punctuality. It's a key difference in contrast to my old neighborhood."
+		sentence:
+			"Despite the challenges, making generalizations helps us understand cultural patterns. Except for a few individuals, most people in this community value punctuality. It's a key difference in contrast to my old neighborhood.",
 	},
 	// --- UNIT 10: The Art of Complaining ---
 	{
-		sentence: "That really bugs me! I'd like to ask a simple indirect question: could you tell me why the service is so slow? My main annoyance is having to wait. I try to keep calm, but sometimes it's hard to stay patient."
+		sentence:
+			"That really bugs me! I'd like to ask a simple indirect question: could you tell me why the service is so slow? My main annoyance is having to wait. I try to keep calm, but sometimes it's hard to stay patient.",
 	},
 	{
-		sentence: "Let's do something about it. I wonder if you could give me some advice. To avoid problems, it's best to complain politely. You should keep a record of your complaints and stay focused on the facts. This is the best way to get a resolution."
+		sentence:
+			"Let's do something about it. I wonder if you could give me some advice. To avoid problems, it's best to complain politely. You should keep a record of your complaints and stay focused on the facts. This is the best way to get a resolution.",
 	},
 ];
 
@@ -301,8 +310,13 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 
 		if (roundsPlayed + 1 >= TOTAL_PRONUNCIATION_ROUNDS) {
 			const updatedResults = [...results, roundResult];
-			const totalFinalScore = updatedResults.reduce((acc, r) => acc + ((r.finalScore || 0)), 0);
-			const normalizedScore = Math.round((totalFinalScore / TOTAL_PRONUNCIATION_ROUNDS) * 100);
+			const totalFinalScore = updatedResults.reduce(
+				(acc, r) => acc + (r.finalScore || 0),
+				0
+			);
+			const normalizedScore = Math.round(
+				(totalFinalScore / TOTAL_PRONUNCIATION_ROUNDS) * 100
+			);
 			setResults(updatedResults);
 			onGameOver(normalizedScore, updatedResults);
 		} else {
@@ -331,7 +345,11 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 	const getAverageScore = () => {
 		let tempResults = results;
 		if (hasRecorded && currentTranscript && roundsPlayed < TOTAL_PRONUNCIATION_ROUNDS) {
-			const scoreResult = calculateSentenceScore(currentSentence, currentTranscript, 0.85);
+			const scoreResult = calculateSentenceScore(
+				currentSentence,
+				currentTranscript,
+				0.85
+			);
 			tempResults = [
 				...results,
 				{
@@ -345,21 +363,19 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			];
 		}
 		if (tempResults.length === 0) return 0;
-		const total = tempResults.reduce((acc, r) => acc + ((r.finalScore || 0) * 100), 0);
+		const total = tempResults.reduce((acc, r) => acc + (r.finalScore || 0) * 100, 0);
 		return Math.round(total / tempResults.length);
 	};
 
 	return (
-		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-6 sm:p-10 text-center'>
-			<div className='flex justify-between items-center mb-4'>
-				<h1 className='text-xl sm:text-2xl font-bold text-blue-600'>
-					Pronunciation Challenge
-				</h1>
-				<div className='text-xl font-bold text-gray-700'>Score: {getAverageScore()}</div>
-			</div>
-			<p className='text-gray-600 mb-8'>
-				Round {roundsPlayed + 1} of {TOTAL_PRONUNCIATION_ROUNDS}
-			</p>
+		<div className='max-w-2xl mx-auto p-4 sm:p-6 space-y-6 select-none'>
+			<HeaderGame
+				typeGame={'Speak'}
+				title={'Pronunciation Challenge'}
+				currentStep={roundsPlayed + 1}
+				totalSteps={TOTAL_PRONUNCIATION_ROUNDS}
+				score={getAverageScore()}
+			/>
 
 			<div className='mb-8 flex flex-col items-center'>
 				<div className='text-2xl sm:text-3xl font-bold text-gray-800 mb-6 bg-gray-100 p-6 rounded-lg min-w-[300px] text-center leading-relaxed'>
@@ -384,10 +400,11 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 					<button
 						onClick={handleSpeakClick}
 						disabled={isSpeaking || !isSupported}
-						className={`font-bold py-3 px-6 rounded-lg text-xl shadow-md ${isListening
-							? 'bg-red-500 hover:bg-red-600 text-white'
-							: 'bg-blue-600 hover:bg-blue-700 text-white'
-							} disabled:opacity-50 disabled:cursor-not-allowed`}
+						className={`font-bold py-3 px-6 rounded-lg text-xl shadow-md ${
+							isListening
+								? 'bg-red-500 hover:bg-red-600 text-white'
+								: 'bg-blue-600 hover:bg-blue-700 text-white'
+						} disabled:opacity-50 disabled:cursor-not-allowed`}
 						title={!isSupported ? 'Speech Recognition not supported' : ''}
 					>
 						{isListening ? '🛑 Stop' : '🎤 Speak'}
@@ -428,8 +445,9 @@ const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
 					<div key={index} className='bg-gray-50 p-4 rounded-lg border border-gray-200'>
 						<div className='flex items-start gap-4'>
 							<div
-								className={`flex-shrink-0 rounded-full h-8 w-8 flex items-center justify-center font-bold text-white ${result.isCorrect ? 'bg-green-600' : 'bg-red-600'
-									}`}
+								className={`flex-shrink-0 rounded-full h-8 w-8 flex items-center justify-center font-bold text-white ${
+									result.isCorrect ? 'bg-green-600' : 'bg-red-600'
+								}`}
 							>
 								{result.isCorrect ? '✓' : '✗'}
 							</div>
@@ -463,10 +481,11 @@ const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
 								</div>
 
 								<div
-									className={`mt-2 px-3 py-1 rounded-full text-sm font-medium inline-block ${result.isCorrect
-										? 'bg-green-100 text-green-800'
-										: 'bg-red-100 text-red-800'
-										}`}
+									className={`mt-2 px-3 py-1 rounded-full text-sm font-medium inline-block ${
+										result.isCorrect
+											? 'bg-green-100 text-green-800'
+											: 'bg-red-100 text-red-800'
+									}`}
 								>
 									{result.isCorrect ? 'Great pronunciation!' : 'Keep practicing!'}
 								</div>
@@ -503,7 +522,6 @@ export const PronunciationChallenge = () => {
 	const [isSupported, setIsSupported] = useState(true);
 	const { user } = useAuth();
 
-
 	useEffect(() => {
 		if (
 			!('speechSynthesis' in window) ||
@@ -527,7 +545,7 @@ export const PronunciationChallenge = () => {
 					body: JSON.stringify({
 						userId: user.id,
 						game: 'Speaking Challenge',
-						score: score
+						score: score,
 					}),
 				});
 			} catch (e) {
