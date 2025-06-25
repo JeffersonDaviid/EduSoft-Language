@@ -68,6 +68,17 @@ export const UpdateProfile = () => {
             return;
         }
 
+        if (form.newPassword) {
+            if (form.newPassword.length < 8 || form.newPassword.length > 15) {
+                setError('Password must be between 8 and 15 characters');
+                return;
+            }
+            if (form.newPassword !== form.confirmNewPassword) {
+                setError('Passwords do not match');
+                return;
+            }
+        }
+
         try {
             let updatedProfilePicture = profilePicture;
 
