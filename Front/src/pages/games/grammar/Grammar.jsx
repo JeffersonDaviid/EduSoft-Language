@@ -18,28 +18,28 @@ const sentencesStack = [
 	'Isn’t it true that e-mail has become less popular among teenagers?',
 	'Cloud computing has been heralded as the backbone of digital transformation.',
 	'By 2030, remote workspaces will be managed entirely through virtual-reality dashboards.',
-	'Applicants fluent in Python, certified in AWS, and experienced with machine learning stand out immediately.',
+	'Applicants fluent in Python, possessing AWS certification, and boasting machine-learning experience stand out immediately.',
 	'My colleague, who is undeniably visionary, suggested prototyping early to identify flaws.',
 	'To solve connectivity issues, one practical solution is installing a mesh network.',
 	'Employees motivated by curiosity often generate breakthrough ideas.',
 	'Lack of feedback, analyzed carefully, shows why the project stalled.',
 	'Her résumé, which was meticulously formatted, highlighted transferable skills.',
 	'Designers known for their adaptability frequently pivot during development.',
-	'Frankly, the fact remains that the cost-benefit ratio favors automation.',
+	'Frankly, the fact remains: our cost-benefit ratio favors automation.',
 	'When bandwidth drops, rebooting the router is a quick fix.',
 	'The prototype, tested repeatedly, proved viable.',
 	'Innovative thinkers, who thrive under pressure, often cultivate a culture of experimentation.',
 	'Root-cause analysis revealed that inadequate training led to errors.',
-	'While people in Quito greet with a handshake, those in Tokyo bow politely.',
-	'We used to gather around the radio in the evenings, but now we stream podcasts individually.',
+	'While residents of Quito greet with a handshake, people from Tokyo bow politely.',
+	'Back then, our family gathered around a radio during the evenings, but now everyone streams podcasts individually.',
 	'Some professionals stay calm under stress, whereas others keep complaining about minor issues.',
 	'Generally speaking, community-oriented cultures place a higher value on collective success.',
 	'Except for a few regional differences, holiday traditions remain remarkably similar across the country.',
-	'He would always bring home-made desserts to meetings when he worked here.',
+	'He always brought home-made desserts to meetings while employed here.',
 	'Tourists keep asking for eco-friendly options, so hotels stay competitive by adopting green policies.',
 	'On the other hand, city dwellers dine out frequently, whereas rural families cook at home.',
 	'Accepting change is difficult; nevertheless, many employees embrace automation.',
-	'Back then, we used to write postcards, and we’d wait weeks for a reply.',
+	'Years ago, our group wrote postcards and waited weeks for a reply.',
 	'Although smartphones simplify communication, they also keep users constantly distracted.',
 	'By and large, people prefer flexible schedules over rigid nine-to-five routines.',
 	'Slow-loading webpages drive me crazy during rush hours.',
@@ -50,12 +50,12 @@ const sentencesStack = [
 	'What bothers her most is that meetings start late.',
 	'If customers feel annoyed, sending a quick apology email may avoid further problems.',
 	'He politely suggested that we double-check the cables before calling support.',
-	'Was the issue resolved after the update, or is it still causing errors?',
+	'Did that issue get resolved following the update, or does it still cause errors?',
 	'Broken coffee machines, outdated keyboards, and flickering monitors were mentioned in the complaint list.',
 	'Our supervisor, who is typically even-tempered, sounded disappointed during today’s briefing.',
-	'May I ask where I can submit a formal request for quieter workspaces?',
+	'Could you tell me where to submit a formal request for quieter workspaces?',
 	'The constant notifications are getting on everyone’s nerves, so silent mode was activated.',
-	'Satisfied and relieved, the team celebrated once the bug had been fixed.',
+	'Satisfied and relieved, our team celebrated after the bug had been fixed.',
 ];
 
 // mezclar el orden de las oraciones y tomar 5 primeras
@@ -250,13 +250,16 @@ export const Grammar = () => {
 const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 	const correctAnswers = results.filter((r) => r.isCorrect);
 	const incorrectAnswers = results.filter((r) => !r.isCorrect);
-	const accuracy = results.length > 0 ? Math.round((correctAnswers.length / results.length) * 100) : 0;
+	const accuracy =
+		results.length > 0 ? Math.round((correctAnswers.length / results.length) * 100) : 0;
 
 	const getPerformanceLevel = (score) => {
-		if (score >= 90) return { level: "Excellent", color: "text-green-600", bg: "bg-green-100" };
-		if (score >= 75) return { level: "Good", color: "text-blue-600", bg: "bg-blue-100" };
-		if (score >= 60) return { level: "Fair", color: "text-yellow-600", bg: "bg-yellow-100" };
-		return { level: "Needs Practice", color: "text-gray-600", bg: "bg-gray-100" };
+		if (score >= 90)
+			return { level: 'Excellent', color: 'text-green-600', bg: 'bg-green-100' };
+		if (score >= 75) return { level: 'Good', color: 'text-blue-600', bg: 'bg-blue-100' };
+		if (score >= 60)
+			return { level: 'Fair', color: 'text-yellow-600', bg: 'bg-yellow-100' };
+		return { level: 'Needs Practice', color: 'text-gray-600', bg: 'bg-gray-100' };
 	};
 
 	const performance = getPerformanceLevel(score);
@@ -276,7 +279,9 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 				<div className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2'>{score}</div>
 
 				{/* Nivel de rendimiento */}
-				<div className={`inline-block px-4 py-2 rounded-full font-semibold ${performance.bg} ${performance.color}`}>
+				<div
+					className={`inline-block px-4 py-2 rounded-full font-semibold ${performance.bg} ${performance.color}`}
+				>
 					{performance.level}
 				</div>
 			</div>
@@ -284,7 +289,9 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 			{/* Estadísticas detalladas */}
 			<div className='grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8'>
 				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>{correctAnswers.length}/{results.length}</div>
+					<div className='text-2xl font-bold text-gray-800'>
+						{correctAnswers.length}/{results.length}
+					</div>
 					<div className='text-sm text-gray-600'>Correct Sentences</div>
 				</div>
 				<div className='bg-gray-50 p-4 rounded-lg text-center'>
@@ -298,7 +305,8 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 			</div>
 
 			<p className='text-gray-600 text-center mb-8 sm:mb-10'>
-				Let's review your grammar performance. Use this feedback to improve your sentence construction skills.
+				Let's review your grammar performance. Use this feedback to improve your sentence
+				construction skills.
 			</p>
 
 			<div className='space-y-8'>
@@ -306,20 +314,30 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 				{correctAnswers.length > 0 && (
 					<section>
 						<h2 className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center'>
-							<span className='bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>✓</span>
+							<span className='bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>
+								✓
+							</span>
 							Correct Sentences ({correctAnswers.length})
 						</h2>
 						<div className='space-y-3'>
 							{correctAnswers.map((r, i) => (
-								<div key={i} className='p-4 bg-green-50 border border-green-200 rounded-lg'>
+								<div
+									key={i}
+									className='p-4 bg-green-50 border border-green-200 rounded-lg'
+								>
 									<div className='flex items-start gap-3'>
 										<div className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
 											{results.indexOf(r) + 1}
 										</div>
 										<div>
-											<p className='font-semibold text-gray-900 mb-1'>"{r.correctAnswer}"</p>
+											<p className='font-semibold text-gray-900 mb-1'>
+												"{r.correctAnswer}"
+											</p>
 											<p className='text-sm text-gray-600'>
-												Your arrangement: <span className='font-medium text-green-700'>"{r.userAnswer}"</span>
+												Your arrangement:{' '}
+												<span className='font-medium text-green-700'>
+													"{r.userAnswer}"
+												</span>
 											</p>
 											<div className='flex gap-4 text-xs text-gray-500 mt-1'>
 												<span>Words: {r.totalWords}</span>
@@ -337,7 +355,9 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 				{incorrectAnswers.length > 0 && (
 					<section>
 						<h2 className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center'>
-							<span className='bg-gray-200 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>✗</span>
+							<span className='bg-gray-200 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>
+								✗
+							</span>
 							Areas for Improvement ({incorrectAnswers.length})
 						</h2>
 						<div className='space-y-3'>
@@ -348,16 +368,24 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 											{results.indexOf(r) + 1}
 										</div>
 										<div>
-											<p className='font-semibold text-gray-900 mb-1'>Correct: "{r.correctAnswer}"</p>
+											<p className='font-semibold text-gray-900 mb-1'>
+												Correct: "{r.correctAnswer}"
+											</p>
 											<p className='text-sm text-gray-600 mb-2'>
-												Your attempt: <span className='font-medium text-blue-700'>"{r.userAnswer}"</span>
+												Your attempt:{' '}
+												<span className='font-medium text-blue-700'>
+													"{r.userAnswer}"
+												</span>
 											</p>
 											<div className='flex gap-4 text-xs text-gray-500 mb-2'>
-												<span>Correct words: {r.correctCount}/{r.totalWords}</span>
+												<span>
+													Correct words: {r.correctCount}/{r.totalWords}
+												</span>
 												<span>Score: {r.exerciseScore}/20</span>
 											</div>
 											<p className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300'>
-												💡 Tip: Pay attention to sentence structure, word order, and grammar rules. Practice with similar sentence patterns.
+												💡 Tip: Pay attention to sentence structure, word order, and
+												grammar rules. Practice with similar sentence patterns.
 											</p>
 										</div>
 									</div>
@@ -371,10 +399,16 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 			{/* Mensaje motivacional basado en el rendimiento */}
 			<div className={`mt-8 p-4 rounded-lg ${performance.bg} border border-opacity-30`}>
 				<div className={`text-center ${performance.color} font-semibold`}>
-					{score >= 90 && "🎉 Outstanding! Your grammar skills are excellent. Keep up the great work!"}
-					{score >= 75 && score < 90 && "👏 Good job! You're showing strong grammar understanding. A little more practice and you'll be perfect!"}
-					{score >= 60 && score < 75 && "💪 You're making progress! Focus on sentence structure and word order to improve your results."}
-					{score < 60 && "🎯 Keep practicing! Grammar takes time to master. Review the feedback and try again."}
+					{score >= 90 &&
+						'🎉 Outstanding! Your grammar skills are excellent. Keep up the great work!'}
+					{score >= 75 &&
+						score < 90 &&
+						"👏 Good job! You're showing strong grammar understanding. A little more practice and you'll be perfect!"}
+					{score >= 60 &&
+						score < 75 &&
+						"💪 You're making progress! Focus on sentence structure and word order to improve your results."}
+					{score < 60 &&
+						'🎯 Keep practicing! Grammar takes time to master. Review the feedback and try again.'}
 				</div>
 			</div>
 
