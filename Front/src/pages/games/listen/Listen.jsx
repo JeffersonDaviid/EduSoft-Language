@@ -215,99 +215,152 @@ const GameScreen = ({ onGameOver }) => {
 const GameOverScreen = ({ results, onPlayAgain }) => {
 	const correctAnswers = results.filter((r) => r.isCorrect);
 	const incorrectAnswers = results.filter((r) => !r.isCorrect);
+	const accuracy = results.length > 0 ? Math.round((correctAnswers.length / results.length) * 100) : 0;
 
 	const finalScore = correctAnswers.length * POINTS_PER_QUESTION;
+
+	const getPerformanceLevel = (score) => {
+		if (score >= 90) return { level: "Excellent", color: "text-green-600", bg: "bg-green-100" };
+		if (score >= 75) return { level: "Good", color: "text-blue-600", bg: "bg-blue-100" };
+		if (score >= 60) return { level: "Fair", color: "text-yellow-600", bg: "bg-yellow-100" };
+		return { level: "Needs Practice", color: "text-gray-600", bg: "bg-gray-100" };
+	};
+
+	const performance = getPerformanceLevel(finalScore);
 
 	const renderQuestion = (question, answer) => {
 		const parts = question.split('____');
 		return (
-			<p className='font-semibold text-black'>
+			<p className='font-semibold text-gray-900 mb-1'>
 				{parts[0]}
-				<strong className='font-bold'>{answer}</strong>
+				<strong className='font-bold text-blue-600'>{answer}</strong>
 				{parts[1]}
 			</p>
 		);
 	};
 
 	return (
-		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-8 sm:p-12 text-left'>
-			<h1 className='text-3xl sm:text-4xl font-bold text-gray-800 mb-2 text-center'>
-				Review Your Performance
+		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-4 sm:p-8 md:p-12 text-left'>
+			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center'>
+				Challenge Complete!
 			</h1>
-			<p className='text-gray-600 text-center mb-2'>
-				Your final score is: <strong className='text-blue-600'>{finalScore}</strong>
-			</p>
-			<p className='text-gray-600 text-center mb-10'>
-				Let's take a look at how you did. This review will help you understand where you
-				excelled and where you might need a bit more practice.
+
+			{/* Resumen de puntaje principal */}
+			<div className='text-center mb-8'>
+				{/* Etiqueta para el puntaje */}
+				<div className='text-lg font-medium text-gray-600 mb-1'>Score</div>
+
+				{/* Resultado del puntaje */}
+				<div className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2'>{finalScore}</div>
+
+				{/* Nivel de rendimiento */}
+				<div className={`inline-block px-4 py-2 rounded-full font-semibold ${performance.bg} ${performance.color}`}>
+					{performance.level}
+				</div>
+			</div>
+
+			{/* Estadísticas detalladas */}
+			<div className='grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8'>
+				<div className='bg-gray-50 p-4 rounded-lg text-center'>
+					<div className='text-2xl font-bold text-gray-800'>{correctAnswers.length}/{results.length}</div>
+					<div className='text-sm text-gray-600'>Correct Answers</div>
+				</div>
+				<div className='bg-gray-50 p-4 rounded-lg text-center'>
+					<div className='text-2xl font-bold text-gray-800'>{accuracy}%</div>
+					<div className='text-sm text-gray-600'>Accuracy Rate</div>
+				</div>
+				<div className='bg-gray-50 p-4 rounded-lg text-center'>
+					<div className='text-2xl font-bold text-gray-800'>{results.length}</div>
+					<div className='text-sm text-gray-600'>Total Questions</div>
+				</div>
+			</div>
+
+			<p className='text-gray-600 text-center mb-8 sm:mb-10'>
+				Let's review your listening comprehension performance. Use this feedback to improve your auditory skills.
 			</p>
 
 			<div className='space-y-8'>
+				{/* Sección de respuestas correctas */}
 				{correctAnswers.length > 0 && (
-					<div>
-						<h2 className='text-2xl font-bold text-gray-800 mb-4'>Correct Answers</h2>
-						<div className='space-y-4'>
-							{correctAnswers.map((result, index) => (
-								<div
-									key={index}
-									className='bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-start gap-4'
-								>
-									<div className='flex-shrink-0 bg-gray-200 text-green-600 rounded-full h-8 w-8 flex items-center justify-center font-bold'>
-										✓
-									</div>
-									<div>
-										{renderQuestion(result.question, result.correctAnswer)}
-										<p className='text-sm text-[#57788F]'>
-											Your Answer:{' '}
-											<span className='font-medium'>{result.userAnswer}</span>
-										</p>
+					<section>
+						<h2 className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center'>
+							<span className='bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>✓</span>
+							Correct Answers ({correctAnswers.length})
+						</h2>
+						<div className='space-y-3'>
+							{correctAnswers.map((r, i) => (
+								<div key={i} className='p-4 bg-green-50 border border-green-200 rounded-lg'>
+									<div className='flex items-start gap-3'>
+										<div className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+											{results.indexOf(r) + 1}
+										</div>
+										<div>
+											{renderQuestion(r.question, r.correctAnswer)}
+											<p className='text-sm text-gray-600'>
+												Your answer: <span className='font-medium text-green-700'>{r.userAnswer}</span>
+											</p>
+										</div>
 									</div>
 								</div>
 							))}
 						</div>
-					</div>
+					</section>
 				)}
 
+				{/* Sección de respuestas incorrectas */}
 				{incorrectAnswers.length > 0 && (
-					<div>
-						<h2 className='text-2xl font-bold text-gray-800 mb-4'>Incorrect Answers</h2>
-						<div className='space-y-4'>
-							{incorrectAnswers.map((result, index) => (
-								<div
-									key={index}
-									className='bg-gray-50 p-4 rounded-lg border border-gray-200 flex items-start gap-4'
-								>
-									<div className='flex-shrink-0 bg-gray-200 text-red-600 rounded-full h-8 w-8 flex items-center justify-center font-bold'>
-										✗
-									</div>
-									<div>
-										{renderQuestion(result.question, result.correctAnswer)}
-										<p className='text-sm text-[#57788F]'>
-											Correct Answer:{' '}
-											<span className='font-medium'>{result.correctAnswer}</span>
-										</p>
-										<p className='text-sm text-[#57788F]'>
-											Your Answer:{' '}
-											<span className='font-medium'>{result.userAnswer}</span>
-										</p>
+					<section>
+						<h2 className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center'>
+							<span className='bg-gray-200 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>✗</span>
+							Areas for Improvement ({incorrectAnswers.length})
+						</h2>
+						<div className='space-y-3'>
+							{incorrectAnswers.map((r, i) => (
+								<div key={i} className='p-4 bg-gray-50 border border-gray-200 rounded-lg'>
+									<div className='flex items-start gap-3'>
+										<div className='flex-shrink-0 bg-gray-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+											{results.indexOf(r) + 1}
+										</div>
+										<div>
+											{renderQuestion(r.question, r.correctAnswer)}
+											<p className='text-sm text-gray-600 mb-2'>
+												Correct answer: <span className='font-medium text-blue-700'>{r.correctAnswer}</span>
+											</p>
+											<p className='text-sm text-gray-600 mb-2'>
+												Your answer: <span className='font-medium text-blue-700'>{r.userAnswer}</span>
+											</p>
+											<p className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300'>
+												💡 Tip: Listen carefully to the pronunciation and context. Try to understand the meaning of the sentence to identify the missing word.
+											</p>
+										</div>
 									</div>
 								</div>
 							))}
 						</div>
-					</div>
+					</section>
 				)}
 			</div>
 
-			<div className='mt-12 flex flex-col sm:flex-row gap-4 justify-center'>
+			{/* Mensaje motivacional basado en el rendimiento */}
+			<div className={`mt-8 p-4 rounded-lg ${performance.bg} border border-opacity-30`}>
+				<div className={`text-center ${performance.color} font-semibold`}>
+					{finalScore >= 90 && "🎉 Outstanding! Your listening skills are excellent. Keep up the great work!"}
+					{finalScore >= 75 && finalScore < 90 && "👏 Good job! You're showing strong listening comprehension. A little more practice and you'll be perfect!"}
+					{finalScore >= 60 && finalScore < 75 && "💪 You're making progress! Focus on listening carefully to pronunciation and context clues to improve your results."}
+					{finalScore < 60 && "🎯 Keep practicing! Listening skills take time to develop. Review the feedback and try again."}
+				</div>
+			</div>
+
+			<div className='mt-10 sm:mt-12 flex flex-col sm:flex-row gap-4 justify-center'>
 				<button
 					onClick={onPlayAgain}
-					className='bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-lg text-lg'
+					className='bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-lg text-lg cursor-pointer'
 				>
 					Play Again
 				</button>
 				<Link
 					to='/games'
-					className='bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg text-center'
+					className='bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg text-center cursor-pointer'
 				>
 					Browse Other Games
 				</Link>

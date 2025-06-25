@@ -331,88 +331,141 @@ export const Reading = () => {
 	);
 };
 
-const ReadingCard = ({ idx, text, userAnswers, correctAnswers, isCorrect }) => {
-	const badge = isCorrect ? '✓' : '✗';
-	const badgeColor = isCorrect ? 'text-green-600' : 'text-red-600';
-
-	return (
-		<div
-			className={`p-4 flex flex-col gap-2 rounded-lg sm:bg-gray-50 sm:border sm:border-gray-200`}
-		>
-			{/* Encabezado */}
-			<div className='flex items-center gap-3 mb-2'>
-				<span
-					className={`flex-shrink-0 bg-gray-200 ${badgeColor} rounded-full h-8 w-8 flex items-center justify-center font-bold`}
-				>
-					{badge}
-				</span>
-				<h3 className='font-bold text-gray-800'>Reading {idx + 1}</h3>
-			</div>
-
-			{/* Texto con placeholders */}
-			<p className='text-black mb-2'>{text}</p>
-
-			{/* Respuestas */}
-			<p className='text-sm text-[#57788F]'>
-				<span className='font-medium'>Your answers:&nbsp;</span>
-				{userAnswers.join(', ')}
-			</p>
-
-			{!isCorrect && (
-				<p className='text-sm text-[#57788F]'>
-					<span className='font-medium'>Correct answers:&nbsp;</span>
-					{correctAnswers.join(', ')}
-				</p>
-			)}
-		</div>
-	);
-};
 
 const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 	const correctReadings = results.filter((r) => r.isCorrect);
 	const incorrectReadings = results.filter((r) => !r.isCorrect);
+	const accuracy = results.length > 0 ? Math.round((correctReadings.length / results.length) * 100) : 0;
+
+	const getPerformanceLevel = (score) => {
+		if (score >= 90) return { level: "Excellent", color: "text-green-600", bg: "bg-green-100" };
+		if (score >= 75) return { level: "Good", color: "text-blue-600", bg: "bg-blue-100" };
+		if (score >= 60) return { level: "Fair", color: "text-yellow-600", bg: "bg-yellow-100" };
+		return { level: "Needs Practice", color: "text-gray-600", bg: "bg-gray-100" };
+	};
+
+	const performance = getPerformanceLevel(score);
 
 	return (
-		<div className='w-full max-w-4xl mx-auto my-16 bg-white lg:shadow-2xl rounded-2xl p-4 sm:p-8 md:p-12 text-left'>
-			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-2 text-center'>
-				Review Your Performance
+		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-4 sm:p-8 md:p-12 text-left'>
+			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center'>
+				Challenge Complete!
 			</h1>
 
-			{/* Puntaje global */}
-			<p className='text-3xl sm:text-4xl font-extrabold text-green-600 text-center mb-8'>
-				{score} / 100
-			</p>
+			{/* Resumen de puntaje principal */}
+			<div className='text-center mb-8'>
+				{/* Etiqueta para el puntaje */}
+				<div className='text-lg font-medium text-gray-600 mb-1'>Score</div>
+
+				{/* Resultado del puntaje */}
+				<div className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2'>{score}</div>
+
+				{/* Nivel de rendimiento */}
+				<div className={`inline-block px-4 py-2 rounded-full font-semibold ${performance.bg} ${performance.color}`}>
+					{performance.level}
+				</div>
+			</div>
+
+			{/* Estadísticas detalladas */}
+			<div className='grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8'>
+				<div className='bg-gray-50 p-4 rounded-lg text-center'>
+					<div className='text-2xl font-bold text-gray-800'>{correctReadings.length}/{results.length}</div>
+					<div className='text-sm text-gray-600'>Perfect Readings</div>
+				</div>
+				<div className='bg-gray-50 p-4 rounded-lg text-center'>
+					<div className='text-2xl font-bold text-gray-800'>{accuracy}%</div>
+					<div className='text-sm text-gray-600'>Accuracy Rate</div>
+				</div>
+				<div className='bg-gray-50 p-4 rounded-lg text-center'>
+					<div className='text-2xl font-bold text-gray-800'>{results.length}</div>
+					<div className='text-sm text-gray-600'>Total Passages</div>
+				</div>
+			</div>
 
 			<p className='text-gray-600 text-center mb-8 sm:mb-10'>
-				Let's take a look at how you did. This review will help you understand where you
-				excelled and where you might need a bit more practice.
+				Let's review your reading comprehension performance. Use this feedback to improve your understanding of context and vocabulary.
 			</p>
 
-			{/* Lecturas correctas */}
-			{correctReadings.length > 0 && (
-				<section className='space-y-4 mb-8'>
-					<h2 className='text-xl sm:text-2xl font-bold text-gray-800'>
-						Correct Readings
-					</h2>
-					{correctReadings.map((r) => (
-						<ReadingCard key={r.idx} {...r} />
-					))}
-				</section>
-			)}
+			<div className='space-y-8'>
+				{/* Sección de respuestas correctas */}
+				{correctReadings.length > 0 && (
+					<section>
+						<h2 className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center'>
+							<span className='bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>✓</span>
+							Perfect Readings ({correctReadings.length})
+						</h2>
+						<div className='space-y-3'>
+							{correctReadings.map((r, i) => (
+								<div key={i} className='p-4 bg-green-50 border border-green-200 rounded-lg'>
+									<div className='flex items-start gap-3'>
+										<div className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+											{r.idx + 1}
+										</div>
+										<div>
+											<p className='font-semibold text-gray-900 mb-2'>Reading {r.idx + 1}</p>
+											<p className='text-sm text-gray-700 mb-2'>{r.text.replace(/\{\d\}/g, '_____')}</p>
+											<p className='text-sm text-gray-600'>
+												Your answers: <span className='font-medium text-green-700'>{r.userAnswers.join(', ')}</span>
+											</p>
+											<p className='text-sm text-gray-600'>
+												Correct answers: <span className='font-medium text-green-700'>{r.correctAnswers.join(', ')}</span>
+											</p>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+					</section>
+				)}
 
-			{/* Lecturas con errores */}
-			{incorrectReadings.length > 0 && (
-				<section className='space-y-4'>
-					<h2 className='text-xl sm:text-2xl font-bold text-gray-800'>
-						Readings to Review
-					</h2>
-					{incorrectReadings.map((r) => (
-						<ReadingCard key={r.idx} {...r} />
-					))}
-				</section>
-			)}
+				{/* Sección de respuestas incorrectas */}
+				{incorrectReadings.length > 0 && (
+					<section>
+						<h2 className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center'>
+							<span className='bg-gray-200 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>✗</span>
+							Areas for Improvement ({incorrectReadings.length})
+						</h2>
+						<div className='space-y-3'>
+							{incorrectReadings.map((r, i) => (
+								<div key={i} className='p-4 bg-gray-50 border border-gray-200 rounded-lg'>
+									<div className='flex items-start gap-3'>
+										<div className='flex-shrink-0 bg-gray-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+											{r.idx + 1}
+										</div>
+										<div>
+											<p className='font-semibold text-gray-900 mb-2'>Reading {r.idx + 1}</p>
+											<p className='text-sm text-gray-700 mb-2'>{r.text.replace(/\{\d\}/g, '_____')}</p>
+											<p className='text-sm text-gray-600 mb-2'>
+												Correct answers: <span className='font-medium text-blue-700'>{r.correctAnswers.join(', ')}</span>
+											</p>
+											<p className='text-sm text-gray-600 mb-2'>
+												Your answers: <span className='font-medium text-blue-700'>{r.userAnswers.join(', ')}</span>
+											</p>
+											<div className='flex gap-4 text-xs text-gray-500 mb-2'>
+												<span>Words filled: {r.userAnswers.filter(a => a !== '').length}/{r.correctAnswers.length}</span>
+											</div>
+											<p className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300'>
+												💡 Tip: Read the entire passage carefully and consider the context. Look for clues that help determine the right word choice.
+											</p>
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+					</section>
+				)}
+			</div>
 
-			{/* Botones */}
+			{/* Mensaje motivacional basado en el rendimiento */}
+			<div className={`mt-8 p-4 rounded-lg ${performance.bg} border border-opacity-30`}>
+				<div className={`text-center ${performance.color} font-semibold`}>
+					{score >= 90 && "🎉 Outstanding! Your reading comprehension is excellent. Keep up the great work!"}
+					{score >= 75 && score < 90 && "👏 Good job! You're showing strong reading skills. A little more practice and you'll be perfect!"}
+					{score >= 60 && score < 75 && "💪 You're making progress! Focus on understanding context and vocabulary relationships to improve your results."}
+					{score < 60 && "🎯 Keep practicing! Reading comprehension takes time to develop. Review the feedback and try again."}
+				</div>
+			</div>
+
 			<div className='mt-10 sm:mt-12 flex flex-col sm:flex-row gap-4 justify-center'>
 				<button
 					onClick={onPlayAgain}

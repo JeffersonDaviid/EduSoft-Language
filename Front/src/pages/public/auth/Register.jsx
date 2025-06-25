@@ -27,6 +27,11 @@ export const Register = () => {
             setError('Passwords do not match');
             return;
         }
+        
+        if (form.password.length < 8 || form.password.length > 15) {
+            setError('Password must be between 8 and 15 characters');
+            return;
+        }
 
         if (!form.answerSecret) {
             setError('Secret answer is required');

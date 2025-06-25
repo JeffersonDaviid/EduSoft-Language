@@ -250,48 +250,82 @@ export const Grammar = () => {
 const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 	const correctAnswers = results.filter((r) => r.isCorrect);
 	const incorrectAnswers = results.filter((r) => !r.isCorrect);
+	const accuracy = results.length > 0 ? Math.round((correctAnswers.length / results.length) * 100) : 0;
 
-	const renderQuestion = (question) => {
-		// resaltamos la parte que debía ir en negrita
-		return <p className='font-semibold text-black'>{question}</p>;
+	const getPerformanceLevel = (score) => {
+		if (score >= 90) return { level: "Excellent", color: "text-green-600", bg: "bg-green-100" };
+		if (score >= 75) return { level: "Good", color: "text-blue-600", bg: "bg-blue-100" };
+		if (score >= 60) return { level: "Fair", color: "text-yellow-600", bg: "bg-yellow-100" };
+		return { level: "Needs Practice", color: "text-gray-600", bg: "bg-gray-100" };
 	};
 
+	const performance = getPerformanceLevel(score);
+
 	return (
-		<div className='w-full max-w-4xl mx-auto my-16 bg-white lg:shadow-2xl rounded-2xl p-4 sm:p-8 md:p-12 text-left'>
-			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-2 text-center'>
-				Review Your Performance
+		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-4 sm:p-8 md:p-12 text-left'>
+			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center'>
+				Challenge Complete!
 			</h1>
-			<p className='text-3xl sm:text-4xl font-extrabold text-green-600 text-center mb-8'>
-				{score} / 100
-			</p>
+
+			{/* Resumen de puntaje principal */}
+			<div className='text-center mb-8'>
+				{/* Etiqueta para el puntaje */}
+				<div className='text-lg font-medium text-gray-600 mb-1'>Score</div>
+
+				{/* Resultado del puntaje */}
+				<div className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2'>{score}</div>
+
+				{/* Nivel de rendimiento */}
+				<div className={`inline-block px-4 py-2 rounded-full font-semibold ${performance.bg} ${performance.color}`}>
+					{performance.level}
+				</div>
+			</div>
+
+			{/* Estadísticas detalladas */}
+			<div className='grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8'>
+				<div className='bg-gray-50 p-4 rounded-lg text-center'>
+					<div className='text-2xl font-bold text-gray-800'>{correctAnswers.length}/{results.length}</div>
+					<div className='text-sm text-gray-600'>Correct Sentences</div>
+				</div>
+				<div className='bg-gray-50 p-4 rounded-lg text-center'>
+					<div className='text-2xl font-bold text-gray-800'>{accuracy}%</div>
+					<div className='text-sm text-gray-600'>Accuracy Rate</div>
+				</div>
+				<div className='bg-gray-50 p-4 rounded-lg text-center'>
+					<div className='text-2xl font-bold text-gray-800'>{results.length}</div>
+					<div className='text-sm text-gray-600'>Total Exercises</div>
+				</div>
+			</div>
 
 			<p className='text-gray-600 text-center mb-8 sm:mb-10'>
-				Let's take a look at how you did. This review will help you understand where you
-				excelled and where you might need a bit more practice.
+				Let's review your grammar performance. Use this feedback to improve your sentence construction skills.
 			</p>
 
 			<div className='space-y-8'>
+				{/* Sección de respuestas correctas */}
 				{correctAnswers.length > 0 && (
 					<section>
-						<h2 className='text-xl sm:text-2xl font-bold text-gray-800 mb-4'>
-							Correct Answers
+						<h2 className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center'>
+							<span className='bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>✓</span>
+							Correct Sentences ({correctAnswers.length})
 						</h2>
-						<div className='space-y-4'>
+						<div className='space-y-3'>
 							{correctAnswers.map((r, i) => (
-								<div
-									key={i}
-									className={`p-4 flex items-start gap-4 rounded-lg ${
-										'sm:bg-gray-50 sm:border sm:border-gray-200' // Only show card style on sm and up
-									}`}
-								>
-									<div className='flex-shrink-0 bg-gray-200 text-green-600 rounded-full h-8 w-8 flex items-center justify-center font-bold'>
-										✓
-									</div>
-									<div>
-										{renderQuestion(r.question, r.correctAnswer)}
-										<p className='text-sm text-[#57788F]'>
-											Your Answer: <span className='font-medium'>{r.userAnswer}</span>
-										</p>
+								<div key={i} className='p-4 bg-green-50 border border-green-200 rounded-lg'>
+									<div className='flex items-start gap-3'>
+										<div className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+											{results.indexOf(r) + 1}
+										</div>
+										<div>
+											<p className='font-semibold text-gray-900 mb-1'>"{r.correctAnswer}"</p>
+											<p className='text-sm text-gray-600'>
+												Your arrangement: <span className='font-medium text-green-700'>"{r.userAnswer}"</span>
+											</p>
+											<div className='flex gap-4 text-xs text-gray-500 mt-1'>
+												<span>Words: {r.totalWords}</span>
+												<span>Score: {r.exerciseScore}/20</span>
+											</div>
+										</div>
 									</div>
 								</div>
 							))}
@@ -299,35 +333,49 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 					</section>
 				)}
 
+				{/* Sección de respuestas incorrectas */}
 				{incorrectAnswers.length > 0 && (
 					<section>
-						<h2 className='text-xl sm:text-2xl font-bold text-gray-800 mb-4'>
-							Incorrect Answers
+						<h2 className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center'>
+							<span className='bg-gray-200 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>✗</span>
+							Areas for Improvement ({incorrectAnswers.length})
 						</h2>
-						<div className='space-y-4'>
+						<div className='space-y-3'>
 							{incorrectAnswers.map((r, i) => (
-								<div
-									key={i}
-									className={`p-4 flex items-start gap-4 rounded-lg ${'sm:bg-gray-50 sm:border sm:border-gray-200'}`}
-								>
-									<div className='flex-shrink-0 bg-gray-200 text-red-600 rounded-full h-8 w-8 flex items-center justify-center font-bold'>
-										✗
-									</div>
-									<div>
-										{renderQuestion(r.question, r.correctAnswer)}
-										<p className='text-sm text-[#57788F]'>
-											Correct Answer:{' '}
-											<span className='font-medium'>{r.correctAnswer}</span>
-										</p>
-										<p className='text-sm text-[#57788F]'>
-											Your Answer: <span className='font-medium'>{r.userAnswer}</span>
-										</p>
+								<div key={i} className='p-4 bg-gray-50 border border-gray-200 rounded-lg'>
+									<div className='flex items-start gap-3'>
+										<div className='flex-shrink-0 bg-gray-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+											{results.indexOf(r) + 1}
+										</div>
+										<div>
+											<p className='font-semibold text-gray-900 mb-1'>Correct: "{r.correctAnswer}"</p>
+											<p className='text-sm text-gray-600 mb-2'>
+												Your attempt: <span className='font-medium text-blue-700'>"{r.userAnswer}"</span>
+											</p>
+											<div className='flex gap-4 text-xs text-gray-500 mb-2'>
+												<span>Correct words: {r.correctCount}/{r.totalWords}</span>
+												<span>Score: {r.exerciseScore}/20</span>
+											</div>
+											<p className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300'>
+												💡 Tip: Pay attention to sentence structure, word order, and grammar rules. Practice with similar sentence patterns.
+											</p>
+										</div>
 									</div>
 								</div>
 							))}
 						</div>
 					</section>
 				)}
+			</div>
+
+			{/* Mensaje motivacional basado en el rendimiento */}
+			<div className={`mt-8 p-4 rounded-lg ${performance.bg} border border-opacity-30`}>
+				<div className={`text-center ${performance.color} font-semibold`}>
+					{score >= 90 && "🎉 Outstanding! Your grammar skills are excellent. Keep up the great work!"}
+					{score >= 75 && score < 90 && "👏 Good job! You're showing strong grammar understanding. A little more practice and you'll be perfect!"}
+					{score >= 60 && score < 75 && "💪 You're making progress! Focus on sentence structure and word order to improve your results."}
+					{score < 60 && "🎯 Keep practicing! Grammar takes time to master. Review the feedback and try again."}
+				</div>
 			</div>
 
 			<div className='mt-10 sm:mt-12 flex flex-col sm:flex-row gap-4 justify-center'>
