@@ -28,6 +28,9 @@ export const UpdateProfile = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+
     // Previsualización de la imagen seleccionada
     useEffect(() => {
         if (selectedFile) {
@@ -42,7 +45,11 @@ export const UpdateProfile = () => {
     }, [selectedFile, profilePicture]);
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        if (e.target.name === 'email') {
+            setForm({ ...form, [e.target.name]: e.target.value.toLowerCase() });
+        } else {
+            setForm({ ...form, [e.target.name]: e.target.value });
+        }
     };
 
     const handleFileChange = (e) => {
@@ -184,35 +191,61 @@ export const UpdateProfile = () => {
                                         onChange={handleChange}
                                     />
                                 </div>
-                                <div className='flex flex-col items-start'>
+                                <div className='flex flex-col items-start relative'>
                                     <label htmlFor='newPassword' className='leading-6 font-medium'>
                                         New Password
                                     </label>
                                     <input
                                         id='newPassword'
                                         name='newPassword'
-                                        type='password'
+                                        type={showNewPassword ? 'text' : 'password'}
                                         autoComplete='new-password'
                                         placeholder='Enter new password'
-                                        className='self-stretch rounded-xl bg-[#e8edf2] h-10 p-2 focus:outline-2 focus:outline-blue-400'
+                                        className='self-stretch rounded-xl bg-[#e8edf2] h-10 p-2 pr-10 focus:outline-2 focus:outline-blue-400'
                                         value={form.newPassword}
                                         onChange={handleChange}
                                     />
+                                    <button
+                                        type="button"
+                                        tabIndex={-1}
+                                        onClick={() => setShowNewPassword((v) => !v)}
+                                        className="absolute right-3 top-[32px] md:top-[28px] p-1 bg-transparent border-none outline-none"
+                                        aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                                    >
+                                        <img
+                                            src={showNewPassword ? '/eye-slash.png' : '/eye.png'}
+                                            alt={showNewPassword ? 'Hide password' : 'Show password'}
+                                            className="w-6 h-6"
+                                        />
+                                    </button>
                                 </div>
-                                <div className='flex flex-col items-start'>
+                                <div className='flex flex-col items-start relative'>
                                     <label htmlFor='confirmNewPassword' className='leading-6 font-medium'>
                                         Confirm New Password
                                     </label>
                                     <input
                                         id='confirmNewPassword'
                                         name='confirmNewPassword'
-                                        type='password'
+                                        type={showConfirmNewPassword ? 'text' : 'password'}
                                         autoComplete='new-password'
                                         placeholder='Confirm new password'
-                                        className='self-stretch rounded-xl bg-[#e8edf2] h-10 p-2 focus:outline-2 focus:outline-blue-400'
+                                        className='self-stretch rounded-xl bg-[#e8edf2] h-10 p-2 pr-10 focus:outline-2 focus:outline-blue-400'
                                         value={form.confirmNewPassword}
                                         onChange={handleChange}
                                     />
+                                    <button
+                                        type="button"
+                                        tabIndex={-1}
+                                        onClick={() => setShowConfirmNewPassword((v) => !v)}
+                                        className="absolute right-3 top-[32px] md:top-[28px] p-1 bg-transparent border-none outline-none"
+                                        aria-label={showConfirmNewPassword ? 'Hide password' : 'Show password'}
+                                    >
+                                        <img
+                                            src={showConfirmNewPassword ? '/eye-slash.png' : '/eye.png'}
+                                            alt={showConfirmNewPassword ? 'Hide password' : 'Show password'}
+                                            className="w-6 h-6"
+                                        />
+                                    </button>
                                 </div>
                                 {error && (
                                     <div className="flex items-center gap-3 text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-2">

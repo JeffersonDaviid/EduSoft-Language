@@ -9,10 +9,15 @@ export const Login = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
     const { login } = useAuth();
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        if (e.target.name === 'email') {
+            setForm({ ...form, [e.target.name]: e.target.value.toLowerCase() });
+        } else {
+            setForm({ ...form, [e.target.name]: e.target.value });
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -66,20 +71,33 @@ export const Login = () => {
                                     required
                                 />
                             </div>
-                            <div className='flex flex-col items-start'>
+                            <div className='flex flex-col items-start relative'>
                                 <label htmlFor='password' className='leading-6 font-medium'>
                                     Password
                                 </label>
                                 <input
                                     id='password'
                                     name='password'
-                                    type='password'
+                                    type={showPassword ? 'text' : 'password'}
                                     value={form.password}
                                     onChange={handleChange}
-                                    className='self-stretch rounded-xl bg-[#f7fafc] border-[#d1dee8] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4f7a96] text-base md:text-lg'
+                                    className='self-stretch rounded-xl bg-[#f7fafc] border-[#d1dee8] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4f7a96] text-base md:text-lg pr-12'
                                     placeholder='Enter your password'
                                     required
                                 />
+                                <button
+                                    type="button"
+                                    tabIndex={-1}
+                                    onClick={() => setShowPassword((v) => !v)}
+                                    className="absolute right-3 top-[32px] md:top-[36px] p-1 bg-transparent border-none outline-none"
+                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                >
+                                    <img
+                                        src={showPassword ? '/eye-slash.png' : '/eye.png'}
+                                        alt={showPassword ? 'Hide password' : 'Show password'}
+                                        className="w-6 h-6"
+                                    />
+                                </button>
                             </div>
                             <div className='self-stretch text-left text-[#4f7a96]'>
                                 <span

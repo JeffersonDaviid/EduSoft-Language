@@ -14,8 +14,15 @@ export const Register = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const handleChange = (e) => {
+        if (e.target.name === 'email') {
+        setForm({ ...form, [e.target.name]: e.target.value.toLowerCase() });
+    } else {
         setForm({ ...form, [e.target.name]: e.target.value });
+    }
     };
 
     const handleSubmit = async (e) => {
@@ -120,35 +127,61 @@ export const Register = () => {
                                     required
                                 />
                             </div>
-                            <div className='flex flex-col items-start'>
+                            <div className='flex flex-col items-start relative'>
                                 <label htmlFor='password' className='leading-6 font-medium'>
                                     Password
                                 </label>
                                 <input
                                     id='password'
                                     name='password'
-                                    type='password'
+                                    type={showPassword ? 'text' : 'password'}
                                     value={form.password}
                                     onChange={handleChange}
-                                    className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#57788f] text-base md:text-lg'
+                                    className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#57788f] text-base md:text-lg pr-12'
                                     placeholder='Create a password'
                                     required
                                 />
+                                <button
+                                    type="button"
+                                    tabIndex={-1}
+                                    onClick={() => setShowPassword((v) => !v)}
+                                    className="absolute right-3 top-[32px] md:top-[36px] p-1 bg-transparent border-none outline-none"
+                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                >
+                                    <img
+                                        src={showPassword ? '/eye-slash.png' : '/eye.png'}
+                                        alt={showPassword ? 'Hide password' : 'Show password'}
+                                        className="w-6 h-6"
+                                    />
+                                </button>
                             </div>
-                            <div className='flex flex-col items-start'>
+                            <div className='flex flex-col items-start relative'>
                                 <label htmlFor='confirmPassword' className='leading-6 font-medium'>
                                     Confirm Password
                                 </label>
                                 <input
                                     id='confirmPassword'
                                     name='confirmPassword'
-                                    type='password'
+                                    type={showConfirmPassword ? 'text' : 'password'}
                                     value={form.confirmPassword}
                                     onChange={handleChange}
-                                    className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#57788f] text-base md:text-lg'
+                                    className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#57788f] text-base md:text-lg pr-12'
                                     placeholder='Confirm your password'
                                     required
                                 />
+                                <button
+                                    type="button"
+                                    tabIndex={-1}
+                                    onClick={() => setShowConfirmPassword((v) => !v)}
+                                    className="absolute right-3 top-[30px] md:top-[36px] p-1 bg-transparent border-none outline-none"
+                                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                                >
+                                    <img
+                                        src={showConfirmPassword ? '/eye-slash.png' : '/eye.png'}
+                                        alt={showConfirmPassword ? 'Hide password' : 'Show password'}
+                                        className="w-6 h-6"
+                                    />
+                                </button>
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='answerSecret' className='leading-6 font-medium'>
