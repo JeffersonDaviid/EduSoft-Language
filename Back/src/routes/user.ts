@@ -8,6 +8,7 @@ import {
 	addGameHistory,
 	getUserProgress,
 	getUserRanking,
+	sendEmailCtrl,
 } from '../controllers/user-ctrl';
 
 const routerUser = express.Router();
@@ -45,5 +46,8 @@ routerUser.put('/update-profile', updateProfileCtrl as express.RequestHandler);
 routerUser.post('/game-history', addGameHistory as express.RequestHandler);
 routerUser.get('/progress', getUserProgress as express.RequestHandler);
 routerUser.get('/ranking', getUserRanking as express.RequestHandler);
+routerUser.post('/send-email', (req, res, next) => {
+	sendEmailCtrl(req, res).catch(next);
+});
 
 export { routerUser };
