@@ -27,7 +27,7 @@ export const About = () => {
 			});
 
 			if (res.ok) {
-				setSuccess('Email sent successfully!');
+				setSuccess('Message sent successfully! Our support team will contact you as soon as possible.');
 				setForm({ email: '', message: '' });
 			} else {
 				const data = await res.json();
@@ -107,6 +107,12 @@ export const About = () => {
 								onChange={handleChange}
 							/>
 						</div>
+						{success && (
+							<div className='flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 mb-2 mt-1'>
+								<img src='/check-circle.png' alt='Success' className='w-6 h-6' />
+								<span>{success}</span>
+							</div>
+						)}
 						{error && (
 							<div className='flex items-center gap-3 text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-2 mt-1'>
 								<img src='/x-circle.png' alt='Error' className='w-6 h-6' />
