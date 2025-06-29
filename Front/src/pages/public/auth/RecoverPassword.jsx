@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Footer } from '../../../components/Footer';
+import { useNavigate } from 'react-router';
 import { API_URL } from '../../../API';
 
 export const RecoverPassword = () => {
@@ -11,6 +12,7 @@ export const RecoverPassword = () => {
     });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -64,8 +66,18 @@ export const RecoverPassword = () => {
                             </h1>
                         </header>
                         <form className='w-full mx-auto flex flex-col gap-4' onSubmit={handleSubmit}>
-                            {error && <div className="text-red-500">{error}</div>}
-                            {success && <div className="text-green-600">{success}</div>}
+                            {success && (
+                                <div className="flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 mb-2">
+                                    <img src="/check-circle.png" alt="Success" className="w-6 h-6" />
+                                    <span>{success}</span>
+                                </div>
+                            )}
+                            {error && (
+                                <div className="flex items-center gap-3 text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-2">
+                                    <img src="/x-circle.png" alt="Error" className="w-6 h-6" />
+                                    <span>{error}</span>
+                                </div>
+                            )}
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='email' className='leading-6 font-medium'>
                                     Email
@@ -132,6 +144,14 @@ export const RecoverPassword = () => {
                             >
                                 Update Password
                             </button>
+                            <div className='w-full text-center text-[#4f7a96]'>
+                                <span
+                                    className='leading-[21px] cursor-pointer underline'
+                                    onClick={() => navigate('/login')}
+                                >
+                                    Back to Log in
+                                </span>
+                            </div>
                         </form>
                     </div>
                 </section>

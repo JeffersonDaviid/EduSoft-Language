@@ -1,4 +1,43 @@
+import { useState } from 'react';
+import { API_URL } from '../../API';
+
 export const About = () => {
+	const [form, setForm] = useState({ email: '', message: '' });
+	const [error, setError] = useState('');
+	const [success, setSuccess] = useState('');
+
+	const handleChange = (e) => {
+		if (e.target.name === 'email') {
+			setForm({ ...form, [e.target.name]: e.target.value.toLowerCase() });
+		} else {
+			setForm({ ...form, [e.target.name]: e.target.value });
+		}
+	};
+
+	const handleSendEmail = async (e) => {
+		e.preventDefault();
+		setError('');
+		setSuccess('');
+
+		try {
+			const res = await fetch(`${API_URL}/user/send-email`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(form),
+			});
+
+			if (res.ok) {
+				setSuccess('Message sent successfully! Our support team will contact you as soon as possible.');
+				setForm({ email: '', message: '' });
+			} else {
+				const data = await res.json();
+				setError(data.error || 'Failed to send email');
+			}
+		} catch (error) {
+			setError('An error occurred while sending the email. Please try again later.');
+		}
+	};
+
 	return (
 		<main className='w-full relative bg-[#fff] flex flex-col items-start justify-start text-center text-sm text-[#000] font-lexend mb-5'>
 			<section className='w-full bg-[#fafafa] min-h-[600px] flex flex-col items-center justify-start'>
@@ -37,7 +76,10 @@ export const About = () => {
 					<h2 className='w-full max-w-[960px] leading-7 font-bold pt-5 px-4 pb-3 text-left text-lg md:text-xl'>
 						Help
 					</h2>
-					<form className='w-full max-w-[480px] flex flex-col gap-4 px-4 mx-auto'>
+					<form
+						className='w-full max-w-[480px] flex flex-col gap-4 px-4 mx-auto'
+						onSubmit={handleSendEmail}
+					>
 						<div className='flex flex-col items-start'>
 							<label htmlFor='email' className='leading-6 font-medium'>
 								Your Email
@@ -47,6 +89,9 @@ export const About = () => {
 								type='email'
 								className='w-full rounded-lg bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#57788f] focus:outline-2 focus:outline-[#338fc9]'
 								placeholder='email@example.com'
+								name='email'
+								value={form.email}
+								onChange={handleChange}
 							/>
 						</div>
 						<div className='flex flex-col items-start'>
@@ -56,8 +101,24 @@ export const About = () => {
 							<textarea
 								id='message'
 								className='w-full rounded-lg bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border min-h-[100px] md:min-h-[144px] p-3 md:p-[15px] focus:outline-2 focus:outline-[#338fc9]'
+								placeholder='Write your message here...'
+								name='message'
+								value={form.message}
+								onChange={handleChange}
 							/>
 						</div>
+						{success && (
+							<div className='flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 mb-2 mt-1'>
+								<img src='/check-circle.png' alt='Success' className='w-6 h-6' />
+								<span>{success}</span>
+							</div>
+						)}
+						{error && (
+							<div className='flex items-center gap-3 text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-2 mt-1'>
+								<img src='/x-circle.png' alt='Error' className='w-6 h-6' />
+								<span>{error}</span>
+							</div>
+						)}
 						<div className='flex flex-row items-center justify-end'>
 							<button
 								type='submit'

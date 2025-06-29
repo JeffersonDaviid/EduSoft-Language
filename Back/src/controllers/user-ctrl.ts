@@ -1,5 +1,6 @@
-import type { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import type { Request, Response } from 'express';
+import { transporter } from '../nodemailer';
 
 const prisma = new PrismaClient();
 
@@ -176,12 +177,40 @@ const getUserRanking = async (req: Request, res: Response) => {
 	}
 };
 
+const sendEmailCtrl = async (req: Request, res: Response) => {
+	const { email, message } = req.body;
+
+	try {
+		const mailOptions = {
+			from: email,
+			// to: 'c99652451@gmail.com',
+			to: 'soporte.edusoft@gmail.com',
+			subject: `Message of ${email}`,
+			text: message,
+		};
+
+		transporter.sendMail(mailOptions, (error, info) => {
+			if (error) {
+				console.error('Error al enviar el correo electrónico:', error);
+			} else {
+				console.log('Correo electrónico enviado:', info.response);
+			}
+		});
+
+		return res.json({ ok: true, msg: 'Mensaje enviado' });
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ ok: false, msg: 'Error al enviar el correo' });
+	}
+};
+
 export {
-	createUserCtrl,
-	loginUserCtrl,
-	recoverPasswordCtrl,
-	updateProfileCtrl,
 	addGameHistory,
+	createUserCtrl,
 	getUserProgress,
 	getUserRanking,
+	loginUserCtrl,
+	recoverPasswordCtrl,
+	sendEmailCtrl,
+	updateProfileCtrl,
 };

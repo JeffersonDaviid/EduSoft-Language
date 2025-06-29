@@ -1,14 +1,31 @@
 import { Link } from 'react-router';
+import React, { useEffect, useState } from 'react';
 import hero from '../../public/hero.jpg';
 
 export const HomeUser = () => {
+	const [loginMessage, setLoginMessage] = useState('');
+
+	useEffect(() => {
+		const msg = localStorage.getItem('loginSuccess');
+		if (msg) {
+			setLoginMessage(msg);
+			localStorage.removeItem('loginSuccess');
+		}
+	}, []);
+
 	return (
-		<main className='w-full min-h-screen flex flex-col items-center justify-between bg-white text-[#0f141a] font-lexend'>
-			<section className='w-full flex-1 flex flex-col items-center justify-center min-h-[500px] sm:min-h-[600px] md:min-h-[700px] lg:min-h-[800px]'>
-				<section className='w-full flex flex-row items-center justify-center py-6 px-3 sm:px-6 md:px-12 lg:px-32 text-center'>
-					<div className='w-full max-w-3xl sm:max-w-4xl md:max-w-5xl flex flex-col justify-center'>
-						<div className='flex flex-col items-center justify-center w-full'>
-							<div className='w-full flex flex-col items-center justify-center p-2 sm:p-4'>
+		<main className='w-full relative bg-[#fff] min-h-screen flex flex-col items-center justify-between text-center text-sm text-[#0f141a] font-lexend'>
+			{loginMessage && (
+				<div className='flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 mb-6 mt-8 max-w-xl mx-auto z-20'>
+					<img src='/check-circle.png' alt='Success' className='w-6 h-6' />
+					<span>{loginMessage}</span>
+				</div>
+			)}
+			<section className='w-full max-w-[1280px] flex-1 flex flex-col items-center justify-center min-h-[400px] md:min-h-[500px] lg:min-h-[600px]'>
+				<section className='w-full flex flex-row items-center justify-center py-5 px-4 md:px-16 lg:px-40 box-border text-2xl md:text-4xl lg:text-5xl text-[#fff]'>
+					<div className='w-full max-w-[960px] relative flex flex-col justify-center'>
+						<div className='relative w-full flex flex-col items-center justify-center'>
+							<div className='w-full md:w-[1000px] flex flex-col items-center justify-center p-2 md:p-4 box-border'>
 								<div
 									className='w-full relative rounded-xl bg-cover bg-no-repeat bg-center min-h-[220px] sm:min-h-[320px] md:min-h-[480px] flex flex-col items-center justify-center shadow-lg'
 									style={{ backgroundImage: `url(${hero})` }}

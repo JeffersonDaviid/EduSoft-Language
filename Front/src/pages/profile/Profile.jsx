@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { API_URL } from '../../API';
 
 export const Profile = () => {
+    const [profileUpdateMessage, setProfileUpdateMessage] = useState('');
     const { logout } = useAuth();
     const navigate = useNavigate();
 
@@ -24,6 +25,15 @@ export const Profile = () => {
     const level = Math.floor(totalScore / 500);
     const scoreInLevel = totalScore % 500;
     
+    
+    useEffect(() => {
+        const msg = localStorage.getItem('profileUpdateSuccess');
+        if (msg) {
+            setProfileUpdateMessage(msg);
+            localStorage.removeItem('profileUpdateSuccess');
+        }
+    }, []);
+
     useEffect(() => {
         const fetchProgress = async () => {
             if (!user || !user.id) return;
@@ -81,6 +91,14 @@ export const Profile = () => {
 
     return (
         <main className='w-full relative bg-[#fff] flex flex-col items-start justify-start text-left text-sm text-[#000] font-lexend'>
+            {profileUpdateMessage && (
+                    <div className="w-full flex items-center justify-center py-4 bg-[#fafafa]"> {/* Added py-4 for top/bottom spacing */}
+                        <div className="flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 max-w-xl">
+                            <img src="/check-circle.png" alt="Success" className="w-6 h-6" />
+                            <span>{profileUpdateMessage}</span>
+                        </div>
+                    </div>
+                )}
             <section className='self-stretch bg-[#fafafa] overflow-hidden flex flex-col items-start justify-start min-h-[800px]'>
                 <section className='self-stretch flex flex-col items-start justify-start'>
                     <header className='self-stretch flex flex-row items-start justify-center py-5 px-4 md:px-16 lg:px-40 box-border text-[#0f141a]'>
