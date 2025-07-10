@@ -5,6 +5,7 @@ export const About = () => {
 	const [form, setForm] = useState({ email: '', message: '' });
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
+	const [fieldErrors, setFieldErrors] = useState({});
 
 	const handleChange = (e) => {
 		if (e.target.name === 'email') {
@@ -18,24 +19,35 @@ export const About = () => {
 		e.preventDefault();
 		setError('');
 		setSuccess('');
+		setFieldErrors({});
 
-		try {
-			const res = await fetch(`${API_URL}/user/send-email`, {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(form),
-			});
+		const newFieldErrors = {};
+			if (!form.email) newFieldErrors.email = 'Email is required';
+			if (!form.message) newFieldErrors.message = 'Message is required';
 
-			if (res.ok) {
-				setSuccess('Message sent successfully! Our support team will contact you as soon as possible.');
-				setForm({ email: '', message: '' });
-			} else {
-				const data = await res.json();
-				setError(data.error || 'Failed to send email');
+			if (Object.keys(newFieldErrors).length > 0) {
+				setFieldErrors(newFieldErrors);
+				setError('Please fill in all required fields.');
+				return;
 			}
-		} catch (error) {
-			setError('An error occurred while sending the email. Please try again later.');
-		}
+
+			try {
+				const res = await fetch(`${API_URL}/user/send-email`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(form),
+				});
+
+				if (res.ok) {
+					setSuccess('Message sent successfully! Our support team will contact you as soon as possible.');
+					setForm({ email: '', message: '' });
+				} else {
+					const data = await res.json();
+					setError(data.error || 'Failed to send email');
+				}
+			} catch (error) {
+				setError('An error occurred while sending the email. Please try again later.');
+			}
 	};
 
 	return (
@@ -80,37 +92,43 @@ export const About = () => {
 						className='w-full max-w-[480px] flex flex-col gap-4 px-4 mx-auto'
 						onSubmit={handleSendEmail}
 					>
-						<div className='flex flex-col items-start'>
-							<label htmlFor='email' className='leading-6 font-medium'>
-								Your Email <span className="text-red-600" aria-hidden="true">*</span>
-								<span className="sr-only">(required)</span>
-							</label>
-							<input
-								id='email'
-								type='email'
-								className='w-full rounded-lg bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#57788f] focus:outline-2 focus:outline-[#338fc9]'
-								placeholder='email@example.com'
-								name='email'
-								value={form.email}
-								onChange={handleChange}
-								required
-							/>
-						</div>
-						<div className='flex flex-col items-start'>
-							<label htmlFor='message' className='leading-6 font-medium'>
-								Your Message <span className="text-red-600" aria-hidden="true">*</span>
-								<span className="sr-only">(required)</span>
-							</label>
-							<textarea
-								id='message'
-								className='w-full rounded-lg bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border min-h-[100px] md:min-h-[144px] p-3 md:p-[15px] focus:outline-2 focus:outline-[#338fc9]'
-								placeholder='Write your message here...'
-								name='message'
-								value={form.message}
-								onChange={handleChange}
-								required
-							/>
-						</div>
+					<div className='flex flex-col items-start w-full'>
+						<label htmlFor='email' className='leading-6 font-medium'>
+							Your Email <span className="text-red-600" aria-hidden="true">*</span>
+							<span className="sr-only">(required)</span>
+						</label>
+						<input
+							id='email'
+							type='email'
+							className={`w-full rounded-lg bg-[#fafafa] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#57788f] focus:outline-2 focus:outline-[#338fc9] ${fieldErrors.email ? 'border-red-500' : 'border-[#d4dee3]'}`}
+							placeholder='email@example.com'
+							name='email'
+							value={form.email}
+							onChange={handleChange}
+							aria-invalid={!!fieldErrors.email}
+						/>
+						{fieldErrors.email && (
+							<span className="text-red-600 text-xs mt-1">{fieldErrors.email}</span>
+						)}
+					</div>
+					<div className='flex flex-col items-start w-full'>
+						<label htmlFor='message' className='leading-6 font-medium'>
+							Your Message <span className="text-red-600" aria-hidden="true">*</span>
+							<span className="sr-only">(required)</span>
+						</label>
+						<textarea
+							id='message'
+							className={`w-full rounded-lg bg-[#fafafa] border-solid border-[1px] box-border min-h-[100px] md:min-h-[144px] p-3 md:p-[15px] focus:outline-2 focus:outline-[#338fc9] ${fieldErrors.message ? 'border-red-500' : 'border-[#d4dee3]'}`}
+							placeholder='Write your message here...'
+							name='message'
+							value={form.message}
+							onChange={handleChange}
+							aria-invalid={!!fieldErrors.message}
+						/>
+						{fieldErrors.message && (
+							<span className="text-red-600 text-xs mt-1">{fieldErrors.message}</span>
+						)}
+					</div>
 						{success && (
 							<div className='flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 mb-2 mt-1'>
 								<img src='/check-circle.png' alt='Success' className='w-6 h-6' />

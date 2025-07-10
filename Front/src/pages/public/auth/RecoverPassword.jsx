@@ -12,19 +12,43 @@ export const RecoverPassword = () => {
     });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [fieldErrors, setFieldErrors] = useState({});
     const navigate = useNavigate();
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
+        setFieldErrors({ ...fieldErrors, [e.target.name]: '' });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setSuccess('');
+        const newFieldErrors = {};
 
-        if (form.newPassword !== form.confirmNewPassword) {
-            setError('Passwords do not match');
+        if (!form.email.trim()) newFieldErrors.email = 'Email is required';
+        if (!form.answerSecret.trim()) newFieldErrors.answerSecret = 'Secret answer is required';
+        if (!form.newPassword) newFieldErrors.newPassword = 'Password is required';
+        if (!form.confirmNewPassword) newFieldErrors.confirmNewPassword = 'Please confirm your password';
+
+        if (
+            form.newPassword &&
+            form.confirmNewPassword &&
+            form.newPassword !== form.confirmNewPassword
+        ) {
+            newFieldErrors.confirmNewPassword = 'Passwords do not match';
+        }
+
+        if (
+            form.newPassword &&
+            (form.newPassword.length < 8 || form.newPassword.length > 15)
+        ) {
+            newFieldErrors.newPassword = 'Password must be between 8 and 15 characters';
+        }
+
+        if (Object.keys(newFieldErrors).length > 0) {
+            setFieldErrors(newFieldErrors);
+            setError('Please fix the errors before submitting.');
             return;
         }
 
@@ -65,7 +89,7 @@ export const RecoverPassword = () => {
                                 Recover your password
                             </h1>
                         </header>
-                        <form className='w-full mx-auto flex flex-col gap-4' onSubmit={handleSubmit}>
+                        <form className='w-full mx-auto flex flex-col gap-4' onSubmit={handleSubmit} noValidate>
                             {success && (
                                 <div className="flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 mb-2">
                                     <img src="/check-circle.png" alt="Success" className="w-6 h-6" />
@@ -89,10 +113,13 @@ export const RecoverPassword = () => {
                                     type='email'
                                     value={form.email}
                                     onChange={handleChange}
-                                    className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 p-3 text-[#57788f] text-base'
+                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 p-3 text-[#57788f] text-base ${fieldErrors.email ? 'border-red-500' : 'border-[#d4dee3]'}`}
                                     placeholder='Enter your email'
-                                    required
+                                    aria-invalid={!!fieldErrors.email}
                                 />
+                                {fieldErrors.email && (
+                                    <span className="text-red-600 text-xs mt-1">{fieldErrors.email}</span>
+                                )}
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='answerSecret' className='leading-6 font-medium'>
@@ -105,10 +132,13 @@ export const RecoverPassword = () => {
                                     type='text'
                                     value={form.answerSecret}
                                     onChange={handleChange}
-                                    className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 p-3 text-[#57788f] text-base'
+                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 p-3 text-[#57788f] text-base ${fieldErrors.answerSecret ? 'border-red-500' : 'border-[#d4dee3]'}`}
                                     placeholder='Enter your secret answer'
-                                    required
+                                    aria-invalid={!!fieldErrors.answerSecret}
                                 />
+                                {fieldErrors.answerSecret && (
+                                    <span className="text-red-600 text-xs mt-1">{fieldErrors.answerSecret}</span>
+                                )}
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='newPassword' className='leading-6 font-medium'>
@@ -121,10 +151,13 @@ export const RecoverPassword = () => {
                                     type='password'
                                     value={form.newPassword}
                                     onChange={handleChange}
-                                    className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 p-3 text-[#57788f] text-base'
+                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 p-3 text-[#57788f] text-base ${fieldErrors.newPassword ? 'border-red-500' : 'border-[#d4dee3]'}`}
                                     placeholder='Enter your new password'
-                                    required
+                                    aria-invalid={!!fieldErrors.newPassword}
                                 />
+                                {fieldErrors.newPassword && (
+                                    <span className="text-red-600 text-xs mt-1">{fieldErrors.newPassword}</span>
+                                )}
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='confirmNewPassword' className='leading-6 font-medium'>
@@ -137,10 +170,13 @@ export const RecoverPassword = () => {
                                     type='password'
                                     value={form.confirmNewPassword}
                                     onChange={handleChange}
-                                    className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 p-3 text-[#57788f] text-base'
+                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 p-3 text-[#57788f] text-base ${fieldErrors.confirmNewPassword ? 'border-red-500' : 'border-[#d4dee3]'}`}
                                     placeholder='Confirm your new password'
-                                    required
+                                    aria-invalid={!!fieldErrors.confirmNewPassword}
                                 />
+                                {fieldErrors.confirmNewPassword && (
+                                    <span className="text-red-600 text-xs mt-1">{fieldErrors.confirmNewPassword}</span>
+                                )}
                             </div>
                             <button
                                 type='submit'
