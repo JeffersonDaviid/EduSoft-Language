@@ -99,7 +99,8 @@ export const Register = () => {
                             )}
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='email' className='leading-6 font-medium'>
-                                    Email
+                                    Email <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='email'
@@ -114,7 +115,8 @@ export const Register = () => {
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='username' className='leading-6 font-medium'>
-                                    Username
+                                    Username <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='username'
@@ -129,7 +131,8 @@ export const Register = () => {
                             </div>
                             <div className='flex flex-col items-start relative'>
                                 <label htmlFor='password' className='leading-6 font-medium'>
-                                    Password
+                                    Password <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='password'
@@ -157,7 +160,8 @@ export const Register = () => {
                             </div>
                             <div className='flex flex-col items-start relative'>
                                 <label htmlFor='confirmPassword' className='leading-6 font-medium'>
-                                    Confirm Password
+                                    Confirm Password <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='confirmPassword'
@@ -185,7 +189,8 @@ export const Register = () => {
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='answerSecret' className='leading-6 font-medium'>
-                                    Secret Answer (for password recovery)
+                                    Secret Answer (for password recovery) <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='answerSecret'

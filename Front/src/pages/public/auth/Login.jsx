@@ -58,7 +58,8 @@ export const Login = () => {
                         <form className='w-full max-w-[480px] mx-auto flex flex-col gap-4' onSubmit={handleSubmit}>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='email' className='leading-6 font-medium'>
-                                    Email
+                                    Email <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='email'
@@ -73,7 +74,8 @@ export const Login = () => {
                             </div>
                             <div className='flex flex-col items-start relative'>
                                 <label htmlFor='password' className='leading-6 font-medium'>
-                                    Password
+                                    Password <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='password'

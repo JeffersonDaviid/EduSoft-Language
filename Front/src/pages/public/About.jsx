@@ -82,7 +82,8 @@ export const About = () => {
 					>
 						<div className='flex flex-col items-start'>
 							<label htmlFor='email' className='leading-6 font-medium'>
-								Your Email
+								Your Email <span className="text-red-600" aria-hidden="true">*</span>
+								<span className="sr-only">(required)</span>
 							</label>
 							<input
 								id='email'
@@ -92,11 +93,13 @@ export const About = () => {
 								name='email'
 								value={form.email}
 								onChange={handleChange}
+								required
 							/>
 						</div>
 						<div className='flex flex-col items-start'>
 							<label htmlFor='message' className='leading-6 font-medium'>
-								Your Message
+								Your Message <span className="text-red-600" aria-hidden="true">*</span>
+								<span className="sr-only">(required)</span>
 							</label>
 							<textarea
 								id='message'
@@ -105,6 +108,7 @@ export const About = () => {
 								name='message'
 								value={form.message}
 								onChange={handleChange}
+								required
 							/>
 						</div>
 						{success && (

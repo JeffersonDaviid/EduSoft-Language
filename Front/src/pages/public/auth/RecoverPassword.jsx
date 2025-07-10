@@ -80,7 +80,8 @@ export const RecoverPassword = () => {
                             )}
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='email' className='leading-6 font-medium'>
-                                    Email
+                                    Email <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='email'
@@ -95,7 +96,8 @@ export const RecoverPassword = () => {
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='answerSecret' className='leading-6 font-medium'>
-                                    Secret Answer
+                                    Secret Answer <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='answerSecret'
@@ -110,7 +112,8 @@ export const RecoverPassword = () => {
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='newPassword' className='leading-6 font-medium'>
-                                    New Password
+                                    New Password <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='newPassword'
@@ -125,7 +128,8 @@ export const RecoverPassword = () => {
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='confirmNewPassword' className='leading-6 font-medium'>
-                                    Confirm New Password
+                                    Confirm New Password <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='confirmNewPassword'
