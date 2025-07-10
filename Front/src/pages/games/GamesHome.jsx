@@ -57,6 +57,8 @@ const gamesData = [
 				title: 'Grammar Challenge',
 				desc: 'Test your grammar skills with fun challenges.',
 				src: grammar1Icon,
+				altImg:
+					'Person standing with hands on hips, facing a greenish-blue wall with the word "Grammar" and lines simulating text.',
 				path: '/games/grammar',
 				enable: true,
 			},
@@ -64,6 +66,8 @@ const gamesData = [
 				title: 'Sentence Builder',
 				desc: 'Build correct sentences from jumbled words.',
 				src: grammar2Icon,
+				altImg:
+					'One person examines a notebook with a magnifying glass, while another gestures that a letter is correct. The notebook rests on a computer monitor.',
 				path: '/games/',
 				enable: false,
 			},
@@ -71,6 +75,8 @@ const gamesData = [
 				title: 'Verb Forms',
 				desc: 'Practice verb forms in different tenses.',
 				src: grammar3Icon,
+				altImg:
+					'A girl lifts an orange book labeled “Grammar English” up to her nose, partially covering her face. An empty chalkboard is in the background.',
 				path: '/games/',
 				enable: false,
 			},
@@ -167,6 +173,7 @@ export const GamesHome = () => {
 					description={selectedGame.desc}
 					link={selectedGame.path}
 					img={selectedGame.src}
+					altImg={selectedGame.altImg}
 					setSelectedGame={setSelectedGame}
 					enable={selectedGame.enable}
 				/>
@@ -202,7 +209,7 @@ export const GamesHome = () => {
 										>
 											<img
 												className='w-full rounded-xl max-w-full h-48 md:h-[301px] object-cover'
-												alt={game.title}
+												alt={game.altImg}
 												src={game.src}
 											/>
 											<div className='flex flex-col items-start'>

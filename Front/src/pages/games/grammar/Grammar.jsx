@@ -1,66 +1,13 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { API_URL } from '../../../API';
 import { HeaderGame } from '../../../components/HeaderGame';
 import { useAuth } from '../../../context/AuthContext';
-import { API_URL } from '../../../API';
-
-const sentencesStack = [
-	'Big data is being analyzed in real time to predict customer behavior.',
-	'Augmented-reality headsets have been adopted by several hospitals to train surgeons.',
-	'Will quantum computing be embraced by mainstream businesses within the decade?',
-	'These constant pop-up ads aren’t annoying, are they?',
-	'Moreover, video conferencing, which facilitates remote collaboration, is reshaping office culture.',
-	'In my opinion, the Internet of Things will revolutionize urban planning.',
-	'Participating in the debate, she argued that social-media platforms must be regulated.',
-	'Streaming services are being preferred over traditional broadcasting worldwide.',
-	'Nevertheless, cyber-security remains a pressing concern; furthermore, data breaches damage trust.',
-	'Isn’t it true that e-mail has become less popular among teenagers?',
-	'Cloud computing has been heralded as the backbone of digital transformation.',
-	'By 2030, remote workspaces will be managed entirely through virtual-reality dashboards.',
-	'Applicants fluent in Python, possessing AWS certification, and boasting machine-learning experience stand out immediately.',
-	'My colleague, who is undeniably visionary, suggested prototyping early to identify flaws.',
-	'To solve connectivity issues, one practical solution is installing a mesh network.',
-	'Employees motivated by curiosity often generate breakthrough ideas.',
-	'Lack of feedback, analyzed carefully, shows why the project stalled.',
-	'Her résumé, which was meticulously formatted, highlighted transferable skills.',
-	'Designers known for their adaptability frequently pivot during development.',
-	'Frankly, the fact remains: our cost-benefit ratio favors automation.',
-	'When bandwidth drops, rebooting the router is a quick fix.',
-	'The prototype, tested repeatedly, proved viable.',
-	'Innovative thinkers, who thrive under pressure, often cultivate a culture of experimentation.',
-	'Root-cause analysis revealed that inadequate training led to errors.',
-	'While residents of Quito greet with a handshake, people from Tokyo bow politely.',
-	'Back then, our family gathered around a radio during the evenings, but now everyone streams podcasts individually.',
-	'Some professionals stay calm under stress, whereas others keep complaining about minor issues.',
-	'Generally speaking, community-oriented cultures place a higher value on collective success.',
-	'Except for a few regional differences, holiday traditions remain remarkably similar across the country.',
-	'He always brought home-made desserts to meetings while employed here.',
-	'Tourists keep asking for eco-friendly options, so hotels stay competitive by adopting green policies.',
-	'On the other hand, city dwellers dine out frequently, whereas rural families cook at home.',
-	'Accepting change is difficult; nevertheless, many employees embrace automation.',
-	'Years ago, our group wrote postcards and waited weeks for a reply.',
-	'Although smartphones simplify communication, they also keep users constantly distracted.',
-	'By and large, people prefer flexible schedules over rigid nine-to-five routines.',
-	'Slow-loading webpages drive me crazy during rush hours.',
-	'I get irritated when automated voices mispronounce my name.',
-	'Long queues at the bank make me feel exhausted.',
-	'Could you tell me why the printer keeps jamming every morning?',
-	'The colleague who never replies to emails is my biggest source of frustration.',
-	'What bothers her most is that meetings start late.',
-	'If customers feel annoyed, sending a quick apology email may avoid further problems.',
-	'He politely suggested that we double-check the cables before calling support.',
-	'Did that issue get resolved following the update, or does it still cause errors?',
-	'Broken coffee machines, outdated keyboards, and flickering monitors were mentioned in the complaint list.',
-	'Our supervisor, who is typically even-tempered, sounded disappointed during today’s briefing.',
-	'Could you tell me where to submit a formal request for quieter workspaces?',
-	'The constant notifications are getting on everyone’s nerves, so silent mode was activated.',
-	'Satisfied and relieved, our team celebrated after the bug had been fixed.',
-];
+import { SENTENCES_STACK_FOR_GRAMMAR } from '../CONST_VALUES';
 
 // mezclar el orden de las oraciones y tomar 5 primeras
-const sentences = sentencesStack.sort(() => Math.random() - 0.5).slice(0, 5);
-console.log(sentences); // TODO: Eliminar esto en producción
+const sentences = SENTENCES_STACK_FOR_GRAMMAR.sort(() => Math.random() - 0.5).slice(0, 5);
 
 const shuffled = sentences.map((s) => s.split(' ').sort(() => Math.random() - 0.5));
 
@@ -138,18 +85,41 @@ export const Grammar = () => {
 		}
 	};
 
-	/* componente palabra */
+	/* componente palabra completamente navegable */
 	const Word = ({ w, fromDock, idx }) => {
 		const correct = verified && placed[idx] === correctSentence.split(' ')[idx];
 		const wrong = verified && placed[idx] && !correct;
+
+		const handleKeyDown = (e) => {
+			if (e.key === 'Enter' || e.key === ' ') {
+				e.preventDefault();
+				if (!verified) {
+					move(w, fromDock);
+				}
+			}
+		};
+
 		return (
 			<motion.button
 				layout
 				whileTap={{ scale: 0.9 }}
 				disabled={verified}
 				onClick={() => move(w, fromDock)}
-				className={`px-3 py-1 m-1 rounded shadow ${
-					correct ? 'bg-green-300' : wrong ? 'bg-red-300' : 'bg-white'
+				onKeyDown={handleKeyDown}
+				tabIndex={verified ? -1 : 0}
+				aria-label={`Palabra: ${w}. ${
+					fromDock
+						? 'Presiona para mover a la oración'
+						: 'Presiona para devolver al banco'
+				}`}
+				className={`px-3 py-1 m-1 rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all ${
+					correct
+						? 'bg-green-300 border-2 border-green-500'
+						: wrong
+						? 'bg-red-300 border-2 border-red-500'
+						: 'bg-white border border-gray-300 hover:bg-gray-50'
+				} ${
+					verified ? 'cursor-not-allowed opacity-75' : 'cursor-pointer hover:shadow-md'
 				}`}
 			>
 				{w}
@@ -167,7 +137,7 @@ export const Grammar = () => {
 			/>
 		);
 
-	/* UI principal */
+	/* UI principal con TODAS las etiquetas navegables */
 	return (
 		<section className='max-w-2xl mx-auto p-4 sm:p-6 space-y-6 select-none'>
 			<HeaderGame
@@ -177,36 +147,75 @@ export const Grammar = () => {
 				currentStep={step + 1}
 				score={score}
 			/>
+			{/* Constructed sentence - NAVIGABLE AREA */}
+			<div
+				className='w-full border-2 border-green-400 rounded-xl flex flex-wrap gap-0 bg-gradient-to-r from-green-50 via-green-100 to-green-50 shadow-inner py-4 px-2 min-h-[56px] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+				tabIndex={0}
+				aria-label='Sentence construction area'
+			>
+				<h3 className='sr-only'>Sentence Construction Area</h3>
 
-			{/* oración armada */}
-			<div className='w-full border-2 border-green-400 rounded-xl flex flex-wrap  gap-0 bg-gradient-to-r from-green-50 via-green-100 to-green-50 shadow-inner py-4 px-2 min-h-[56px] transition-all duration-300'>
+				{placed.length === 0 && (
+					<div
+						className='text-gray-500 italic p-2 text-center w-full focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+						tabIndex={0}
+						aria-label='Empty area. Place words here to build your sentence'
+					>
+						Place words here to build your sentence
+					</div>
+				)}
+
 				{placed.map((w, i) => (
 					<span key={w + i} className='inline-flex items-center'>
 						<Word w={w} idx={i} fromDock={false} />
-						{/* corrección */}
+						{/* navigable correction */}
 						{verified && placed[i] !== correctSentence.split(' ')[i] && (
-							<span className='ml-1 italic text-green-700 text-sm'>
+							<span
+								className='ml-1 italic text-green-700 text-sm bg-green-100 px-1 rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+								tabIndex={0}
+								aria-label={`Correction: correct word is ${
+									correctSentence.split(' ')[i]
+								}`}
+							>
 								{correctSentence.split(' ')[i]}
 							</span>
 						)}
 					</span>
 				))}
 			</div>
-			{/* dock mejorado */}
 			{dock.length > 0 && (
-				<div className='w-full border-2 border-sky-400 rounded-xl flex flex-wrap justify-center items-center gap-2 bg-gradient-to-r from-sky-100 via-sky-200 to-sky-100 shadow-inner py-4 px-2 min-h-[56px] transition-all duration-300'>
+				<div
+					className='w-full border-2 border-sky-400 rounded-xl flex flex-wrap justify-center items-center gap-2 bg-gradient-to-r from-sky-100 via-sky-200 to-sky-100 shadow-inner py-4 px-2 min-h-[56px] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2'
+					tabIndex={0}
+					aria-label={`Word bank with ${dock.length} words available`}
+				>
+					<h3 className='sr-only'>Word Bank</h3>
 					{dock.map((w) => (
 						<Word key={w} w={w} fromDock={true} />
 					))}
 				</div>
 			)}
-			{/* botones */}
+			<div
+				className='text-center text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+				tabIndex={0}
+				aria-label={`Current state: ${placed.length} words in sentence, ${dock.length} words in bank`}
+			>
+				Words in sentence: <span className='font-semibold'>{placed.length}</span> | Words
+				available: <span className='font-semibold'>{dock.length}</span>
+			</div>
+			{/* navigable buttons */}
 			<div className='flex flex-col justify-center sm:flex-row gap-3 sm:gap-4'>
 				{!verified && (
 					<button
 						onClick={handleVerify}
 						disabled={placed.length === 0}
-						className='bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-40 cursor-pointer'
+						tabIndex={0}
+						aria-label={`Verify sentence. ${
+							placed.length === 0
+								? 'Place at least one word first'
+								: `Current sentence: ${placed.join(' ')}`
+						}`}
+						className='bg-blue-600 text-white px-6 py-3 rounded-lg disabled:opacity-40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hover:bg-blue-700 transition-colors font-medium'
 					>
 						Verify
 					</button>
@@ -215,7 +224,9 @@ export const Grammar = () => {
 				{verified && step < total - 1 && (
 					<button
 						onClick={handleNext}
-						className='bg-green-500 text-white px-4 py-2 rounded shadow hover:bg-green-600 transition-colors duration-150 cursor-pointer'
+						tabIndex={0}
+						aria-label={`Continue to the next exercise ${step + 2} of ${total}`}
+						className='bg-green-500 text-white px-6 py-3 rounded-lg shadow hover:bg-green-600 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 font-medium'
 					>
 						Next ➔
 					</button>
@@ -224,25 +235,123 @@ export const Grammar = () => {
 				{verified && step === total - 1 && (
 					<button
 						onClick={handleFinish}
-						className='bg-neutral-700 text-white px-4 py-2 rounded cursor-pointer'
+						tabIndex={0}
+						aria-label={`Terminar juego y ver resultados. Puntaje actual: ${score} puntos`}
+						className='bg-neutral-700 text-white px-6 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 hover:bg-neutral-800 transition-colors font-medium'
 					>
 						Finish
 					</button>
 				)}
 			</div>
-
-			{/* feedback general */}
+			{/* feedback general - COMPLETAMENTE NAVEGABLE */}
 			{verified && (
-				<p
-					className={`font-semibold ${
-						placed.join(' ') === correctSentence ? 'text-green-600' : 'text-red-600'
+				<div
+					className={`p-4 rounded-lg border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+						placed.join(' ') === correctSentence
+							? 'bg-green-50 border-green-300 focus:ring-green-500'
+							: 'bg-red-50 border-red-300 focus:ring-red-500'
+					}`}
+					tabIndex={0}
+					aria-label={`Verification result: ${
+						placed.join(' ') === correctSentence
+							? 'Correct sentence'
+							: 'Incorrect sentence'
 					}`}
 				>
-					{placed.join(' ') === correctSentence
-						? 'Great! The sentence is correct.'
-						: 'Some words are in the wrong place — see corrections above.'}
-				</p>
+					<div className='flex items-center gap-2'>
+						<span
+							className='text-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+							tabIndex={0}
+							aria-label={
+								placed.join(' ') === correctSentence ? 'Success icon' : 'Error icon'
+							}
+						>
+							{placed.join(' ') === correctSentence ? '✅' : '❌'}
+						</span>
+						<div>
+							<p
+								className={`font-semibold text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+									placed.join(' ') === correctSentence ? 'text-green-600' : 'text-red-600'
+								}`}
+								tabIndex={0}
+							>
+								{placed.join(' ') === correctSentence
+									? 'Excellent! The sentence is correct.'
+									: 'Some words are in the wrong position.'}
+							</p>
+							{placed.join(' ') !== correctSentence && (
+								<p
+									className='text-sm mt-1 text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+									tabIndex={0}
+								>
+									Review the corrections shown in green above.
+								</p>
+							)}
+						</div>
+					</div>
+				</div>
 			)}
+			{/* Información de la oración correcta - NAVEGABLE */}
+			{verified && (
+				<div
+					className='bg-gray-100 p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+					tabIndex={0}
+				>
+					<h4
+						className='font-semibold text-gray-700 mb-1 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
+						tabIndex={0}
+					>
+						Correct sentence:
+					</h4>
+					<p
+						className='text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
+						tabIndex={0}
+						aria-label={`The correct sentence is: ${correctSentence}`}
+					>
+						"{correctSentence}"
+					</p>
+					<p
+						className='text-sm text-gray-600 mt-1 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+						tabIndex={0}
+					>
+						Your answer: "{placed.join(' ')}"
+					</p>
+				</div>
+			)}
+			{/* Ayuda de navegación - NAVEGABLE */}
+			<details
+				className='bg-gray-50 p-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+				tabIndex={0}
+			>
+				<summary
+					className='cursor-pointer font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hover:text-blue-600'
+					tabIndex={0}
+				>
+					⌨️ Navigation Instructions
+				</summary>
+				<div className='mt-2 space-y-2'>
+					<p
+						className='text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+						tabIndex={0}
+					>
+						• Use <kbd className='bg-gray-200 px-1 rounded'>Tab</kbd> to navigate between
+						all elements
+					</p>
+					<p
+						className='text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+						tabIndex={0}
+					>
+						• Use <kbd className='bg-gray-200 px-1 rounded'>Enter</kbd> or{' '}
+						<kbd className='bg-gray-200 px-1 rounded'>Space</kbd> to move words
+					</p>
+					<p
+						className='text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+						tabIndex={0}
+					>
+						• All texts and elements are navigable with Tab
+					</p>
+				</div>
+			</details>
 		</section>
 	);
 };
@@ -266,55 +375,130 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 
 	return (
 		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-4 sm:p-8 md:p-12 text-left'>
-			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center'>
-				Challenge Complete!
+			{/* Main Title - Navigable */}
+			<h1
+				className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+				tabIndex={0}
+			>
+				Complete Grammar Challenge Results
 			</h1>
 
-			{/* Resumen de puntaje principal */}
+			{/* Main Score Summary - ALL ELEMENTS NAVIGABLE */}
 			<div className='text-center mb-8'>
-				{/* Etiqueta para el puntaje */}
-				<div className='text-lg font-medium text-gray-600 mb-1'>Score</div>
-
-				{/* Resultado del puntaje */}
-				<div className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2'>{score}</div>
-
-				{/* Nivel de rendimiento */}
+				{/* Label for score - Navigable */}
 				<div
-					className={`inline-block px-4 py-2 rounded-full font-semibold ${performance.bg} ${performance.color}`}
+					className='text-lg font-medium text-gray-600 mb-1 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+					tabIndex={0}
+				>
+					Final Score
+				</div>
+
+				{/* Score result - Navigable */}
+				<div
+					className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+					tabIndex={0}
+					aria-label={`Your final score is ${score} out of 100 points`}
+				>
+					{score}
+				</div>
+
+				{/* Performance Level - Navigable */}
+				<div
+					className={`inline-block px-4 py-2 rounded-full font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${performance.bg} ${performance.color}`}
+					tabIndex={0}
+					aria-label={`Performance level: ${performance.level}`}
 				>
 					{performance.level}
 				</div>
 			</div>
 
-			{/* Estadísticas detalladas */}
+			{/* Detailed Statistics Title - Navigable */}
+			<h2
+				className='text-xl font-bold text-gray-800 mb-4 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
+				tabIndex={0}
+			>
+				Detailed Statistics
+			</h2>
+
+			{/* Detailed Statistics - ALL ELEMENTS NAVIGABLE */}
 			<div className='grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8'>
-				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>
+				<div
+					className='bg-gray-50 p-4 rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+					tabIndex={0}
+					aria-label={`Correct sentences: ${correctAnswers.length} out of ${results.length}`}
+				>
+					<div
+						className='text-2xl font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
+						tabIndex={0}
+					>
 						{correctAnswers.length}/{results.length}
 					</div>
-					<div className='text-sm text-gray-600'>Correct Sentences</div>
+					<div
+						className='text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+						tabIndex={0}
+					>
+						Correct Sentences
+					</div>
 				</div>
-				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>{accuracy}%</div>
-					<div className='text-sm text-gray-600'>Accuracy Rate</div>
+				<div
+					className='bg-gray-50 p-4 rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+					tabIndex={0}
+					aria-label={`Accuracy: ${accuracy} percent`}
+				>
+					<div
+						className='text-2xl font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
+						tabIndex={0}
+					>
+						{accuracy}%
+					</div>
+					<div
+						className='text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+						tabIndex={0}
+					>
+						Accuracy
+					</div>
 				</div>
-				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>{results.length}</div>
-					<div className='text-sm text-gray-600'>Total Exercises</div>
+				<div
+					className='bg-gray-50 p-4 rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+					tabIndex={0}
+					aria-label={`Total Exercises: ${results.length}`}
+				>
+					<div
+						className='text-2xl font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
+						tabIndex={0}
+					>
+						{results.length}
+					</div>
+					<div
+						className='text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+						tabIndex={0}
+					>
+						Total Exercises
+					</div>
 				</div>
 			</div>
 
-			<p className='text-gray-600 text-center mb-8 sm:mb-10'>
-				Let's review your grammar performance. Use this feedback to improve your sentence
-				construction skills.
+			{/* Description - Navigable */}
+			<p
+				className='text-gray-600 text-center mb-8 sm:mb-10 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+				tabIndex={0}
+			>
+				Review your grammar performance. Use this feedback to improve your skills.
 			</p>
 
 			<div className='space-y-8'>
-				{/* Sección de respuestas correctas */}
+				{/* Correct Answers Section - TITLES AND CONTENT NAVIGABLE */}
 				{correctAnswers.length > 0 && (
 					<section>
-						<h2 className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center'>
-							<span className='bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>
+						<h2
+							className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+							tabIndex={0}
+						>
+							<span
+								className='bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2'
+								tabIndex={0}
+								aria-label='Success Icon'
+							>
 								✓
 							</span>
 							Correct Sentences ({correctAnswers.length})
@@ -323,25 +507,50 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 							{correctAnswers.map((r, i) => (
 								<div
 									key={i}
-									className='p-4 bg-green-50 border border-green-200 rounded-lg'
+									className='p-4 bg-green-50 border border-green-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2'
+									tabIndex={0}
+									aria-label={`Exercise ${results.indexOf(r) + 1} correct`}
 								>
 									<div className='flex items-start gap-3'>
-										<div className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+										<div
+											className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2'
+											tabIndex={0}
+											aria-label={`Exercise number ${results.indexOf(r) + 1}`}
+										>
 											{results.indexOf(r) + 1}
 										</div>
 										<div>
-											<p className='font-semibold text-gray-900 mb-1'>
+											<p
+												className='font-semibold text-gray-900 mb-1 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
+												tabIndex={0}
+											>
 												"{r.correctAnswer}"
 											</p>
-											<p className='text-sm text-gray-600'>
-												Your arrangement:{' '}
-												<span className='font-medium text-green-700'>
+											<p
+												className='text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+												tabIndex={0}
+											>
+												Your answer:{' '}
+												<span
+													className='font-medium text-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2'
+													tabIndex={0}
+												>
 													"{r.userAnswer}"
 												</span>
 											</p>
 											<div className='flex gap-4 text-xs text-gray-500 mt-1'>
-												<span>Words: {r.totalWords}</span>
-												<span>Score: {r.exerciseScore}/20</span>
+												<span
+													className='focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+													tabIndex={0}
+												>
+													Words: {r.totalWords}
+												</span>
+												<span
+													className='focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+													tabIndex={0}
+												>
+													Score: {r.exerciseScore}/20
+												</span>
 											</div>
 										</div>
 									</div>
@@ -351,41 +560,76 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 					</section>
 				)}
 
-				{/* Sección de respuestas incorrectas */}
+				{/* Incorrect Answers Section - TITLES AND CONTENT NAVIGABLE */}
 				{incorrectAnswers.length > 0 && (
 					<section>
-						<h2 className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center'>
-							<span className='bg-gray-200 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>
+						<h2
+							className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+							tabIndex={0}
+						>
+							<span
+								className='bg-gray-200 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+								tabIndex={0}
+								aria-label='Improvement Icon'
+							>
 								✗
 							</span>
 							Areas for Improvement ({incorrectAnswers.length})
 						</h2>
 						<div className='space-y-3'>
 							{incorrectAnswers.map((r, i) => (
-								<div key={i} className='p-4 bg-gray-50 border border-gray-200 rounded-lg'>
+								<div
+									key={i}
+									className='p-4 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+									tabIndex={0}
+									aria-label={`Exercise ${results.indexOf(r) + 1} for improvement`}
+								>
 									<div className='flex items-start gap-3'>
-										<div className='flex-shrink-0 bg-gray-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+										<div
+											className='flex-shrink-0 bg-gray-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+											tabIndex={0}
+											aria-label={`Exercise number ${results.indexOf(r) + 1}`}
+										>
 											{results.indexOf(r) + 1}
 										</div>
 										<div>
-											<p className='font-semibold text-gray-900 mb-1'>
+											<p
+												className='font-semibold text-gray-900 mb-1 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2'
+												tabIndex={0}
+											>
 												Correct: "{r.correctAnswer}"
 											</p>
-											<p className='text-sm text-gray-600 mb-2'>
+											<p
+												className='text-sm text-gray-600 mb-2 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+												tabIndex={0}
+											>
 												Your attempt:{' '}
-												<span className='font-medium text-blue-700'>
+												<span
+													className='font-medium text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2'
+													tabIndex={0}
+												>
 													"{r.userAnswer}"
 												</span>
 											</p>
 											<div className='flex gap-4 text-xs text-gray-500 mb-2'>
-												<span>
+												<span
+													className='focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+													tabIndex={0}
+												>
 													Correct words: {r.correctCount}/{r.totalWords}
 												</span>
-												<span>Score: {r.exerciseScore}/20</span>
+												<span
+													className='focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2'
+													tabIndex={0}
+												>
+													Score: {r.exerciseScore}/20
+												</span>
 											</div>
-											<p className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300'>
-												💡 Tip: Pay attention to sentence structure, word order, and
-												grammar rules. Practice with similar sentence patterns.
+											<p
+												className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2'
+												tabIndex={0}
+											>
+												💡 Tip: Pay attention to sentence structure and word order.
 											</p>
 										</div>
 									</div>
@@ -396,34 +640,44 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 				)}
 			</div>
 
-			{/* Mensaje motivacional basado en el rendimiento */}
-			<div className={`mt-8 p-4 rounded-lg ${performance.bg} border border-opacity-30`}>
-				<div className={`text-center ${performance.color} font-semibold`}>
+			{/* Motivational Message - Navigable */}
+			<div
+				className={`mt-8 p-4 rounded-lg ${performance.bg} border border-opacity-30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
+				tabIndex={0}
+			>
+				<div
+					className={`text-center ${performance.color} font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`}
+					tabIndex={0}
+				>
 					{score >= 90 &&
-						'🎉 Outstanding! Your grammar skills are excellent. Keep up the great work!'}
+						'🎉 Outstanding! Your grammar skills are excellent. Keep it up!'}
 					{score >= 75 &&
 						score < 90 &&
-						"👏 Good job! You're showing strong grammar understanding. A little more practice and you'll be perfect!"}
+						"👏 Great job! You show strong understanding. A little more practice and you'll be perfect!"}
 					{score >= 60 &&
 						score < 75 &&
-						"💪 You're making progress! Focus on sentence structure and word order to improve your results."}
-					{score < 60 &&
-						'🎯 Keep practicing! Grammar takes time to master. Review the feedback and try again.'}
+						"💪 You're progressing. Focus on sentence structure and word order."}
+					{score < 60 && '🎯 Keep practicing! Grammar takes time. Review the feedback.'}
 				</div>
 			</div>
 
+			{/* Final Buttons - Navigable */}
 			<div className='mt-10 sm:mt-12 flex flex-col sm:flex-row gap-4 justify-center'>
 				<button
 					onClick={onPlayAgain}
-					className='bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-lg text-lg cursor-pointer'
+					tabIndex={0}
+					aria-label='Play Again - Restart the grammar challenge'
+					className='bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors'
 				>
 					Play Again
 				</button>
 				<Link
 					to='/games'
-					className='bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg text-center cursor-pointer'
+					tabIndex={0}
+					aria-label='Explore other games - Go to the main games menu'
+					className='bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors'
 				>
-					Browse Other Games
+					Explore Other Games
 				</Link>
 			</div>
 		</div>

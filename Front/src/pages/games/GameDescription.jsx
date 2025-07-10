@@ -4,6 +4,7 @@ export const GameDescription = ({
 	title,
 	description,
 	img,
+	altImg = 'Game preview image',
 	setSelectedGame,
 	link,
 	enable,
@@ -21,7 +22,7 @@ export const GameDescription = ({
 			<div className='w-full flex justify-center items-center bg-neutral-50 rounded-xl overflow-hidden p-2 md:p-4'>
 				<img
 					src={img}
-					alt={`Preview for ${title}`}
+					alt={altImg}
 					className='w-full max-w-[928px] h-auto md:h-[50vh] rounded-xl object-cover shadow-sm'
 				/>
 			</div>
