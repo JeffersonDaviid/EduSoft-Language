@@ -1,73 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import { useAuth } from '../../../context/AuthContext';
 import { API_URL } from '../../../API';
-import { HeaderGame } from '../../../components/HeaderGame';
-
-// --- C1 Level Academic Sentences ---
-// Advanced topics suitable for C1 English learners
-const pronunciationSentences = [
-	{
-		sentence:
-			'Contemporary economic theories suggest that sustainable development requires comprehensive policy reform.',
-	},
-	{
-		sentence:
-			'Artificial intelligence has revolutionized data analysis across multiple scientific disciplines.',
-	},
-	{
-		sentence:
-			'Environmental conservation efforts must address both climate change and biodiversity preservation simultaneously.',
-	},
-	{
-		sentence:
-			'Advanced research methodologies enable scientists to investigate complex psychological phenomena.',
-	},
-	{
-		sentence:
-			'International cooperation is essential for addressing global challenges in the twenty-first century.',
-	},
-	{
-		sentence:
-			'Technological innovations have transformed communication patterns in modern professional environments.',
-	},
-	{
-		sentence:
-			'Academic institutions increasingly emphasize critical thinking and analytical reasoning skills.',
-	},
-	{
-		sentence:
-			'Sophisticated marketing strategies leverage consumer psychology to influence purchasing decisions effectively.',
-	},
-	{
-		sentence:
-			'Medical breakthroughs demonstrate the importance of interdisciplinary collaboration in scientific research.',
-	},
-	{
-		sentence:
-			'Cultural diversity enriches educational experiences and promotes intellectual growth among students.',
-	},
-	{
-		sentence:
-			'Financial markets exhibit complex behavioral patterns that economists continue to analyze extensively.',
-	},
-	{
-		sentence:
-			'Urban planning requires balancing economic development with environmental sustainability concerns.',
-	},
-	{
-		sentence:
-			'Digital transformation has fundamentally altered traditional business models across various industries.',
-	},
-	{
-		sentence:
-			'Educational technology facilitates personalized learning experiences for students with diverse academic needs.',
-	},
-	{
-		sentence:
-			'Professional development opportunities enhance employee satisfaction and organizational productivity significantly.',
-	},
-];
+import { useAuth } from '../../../context/AuthContext';
+import { SENTENCES_STACK_FOR_SPEAKING } from '../CONST_VALUES';
 
 // Solo 5 rondas como solicitaste
 const TOTAL_PRONUNCIATION_ROUNDS = 5;
@@ -155,7 +90,10 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 
 	// Initialize sentences when component mounts
 	useEffect(() => {
-		const shuffled = shuffleAndPick(pronunciationSentences, TOTAL_PRONUNCIATION_ROUNDS);
+		const shuffled = shuffleAndPick(
+			SENTENCES_STACK_FOR_SPEAKING,
+			TOTAL_PRONUNCIATION_ROUNDS
+		);
 		setGameSentences(shuffled);
 	}, []);
 

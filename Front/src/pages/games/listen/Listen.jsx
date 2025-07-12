@@ -3,75 +3,7 @@ import { Link } from 'react-router';
 import { useAuth } from '../../../context/AuthContext';
 import { API_URL } from '../../../API';
 import { HeaderGame } from '../../../components/HeaderGame';
-
-// lista de oraciones.
-const sentences = [
-	{
-		display: 'The committee needs to ____ the new proposal before approval.',
-		speak: 'The committee needs to evaluate the new proposal before approval.',
-		answer: 'evaluate',
-	},
-	{
-		display: 'Climate change has ____ effects on global ecosystems.',
-		speak: 'Climate change has profound effects on global ecosystems.',
-		answer: 'profound',
-	},
-	{
-		display: "The study's findings ____ the initial hypothesis.",
-		speak: "The study's findings contradict the initial hypothesis.",
-		answer: 'contradict',
-	},
-	{
-		display: 'It is ____ that all students attend the mandatory orientation.',
-		speak: 'It is imperative that all students attend the mandatory orientation.',
-		answer: 'imperative',
-	},
-	{
-		display: 'The author uses vivid imagery to ____ his main points.',
-		speak: 'The author uses vivid imagery to illustrate his main points.',
-		answer: 'illustrate',
-	},
-	{
-		display: 'Technological ____ have transformed the way we communicate.',
-		speak: 'Technological innovations have transformed the way we communicate.',
-		answer: 'innovations',
-	},
-	{
-		display: 'The professor provided a ____ explanation of the complex theory.',
-		speak: 'The professor provided a comprehensive explanation of the complex theory.',
-		answer: 'comprehensive',
-	},
-	{
-		display: 'A key ____ of the research is to identify potential solutions.',
-		speak: 'A key objective of the research is to identify potential solutions.',
-		answer: 'objective',
-	},
-	{
-		display: 'The government plans to ____ new policies to reduce pollution.',
-		speak: 'The government plans to implement new policies to reduce pollution.',
-		answer: 'implement',
-	},
-	{
-		display: 'Despite the challenges, they managed to achieve their ____.',
-		speak: 'Despite the challenges, they managed to achieve their goals.',
-		answer: 'goals',
-	},
-	{
-		display: 'The evidence presented was not ____ to support the claim.',
-		speak: 'The evidence presented was not sufficient to support the claim.',
-		answer: 'sufficient',
-	},
-	{
-		display: 'Further research is required to ____ these results.',
-		speak: 'Further research is required to validate these results.',
-		answer: 'validate',
-	},
-	{
-		display: 'The transition to renewable energy is ____.',
-		speak: 'The transition to renewable energy is inevitable.',
-		answer: 'inevitable',
-	},
-];
+import { SENTENCES_STACK_FOR_LISTENING } from '../CONST_VALUES';
 
 const TOTAL_QUESTIONS = 5;
 const POINTS_PER_QUESTION = 100 / TOTAL_QUESTIONS; // Cada pregunta vale 20 puntos
@@ -98,7 +30,7 @@ const GameScreen = ({ onGameOver }) => {
 	const [results, setResults] = useState([]);
 
 	useEffect(() => {
-		setGameSentences(shuffleAndPick(sentences, TOTAL_QUESTIONS));
+		setGameSentences(shuffleAndPick(SENTENCES_STACK_FOR_LISTENING, TOTAL_QUESTIONS));
 	}, []);
 
 	useEffect(() => {

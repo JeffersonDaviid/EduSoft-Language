@@ -1,59 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { useAuth } from '../../../context/AuthContext';
 import { API_URL } from '../../../API';
 import { HeaderGame } from '../../../components/HeaderGame';
-
-// Lista de palabras y definiciones para el juego de vocabulario.
-const vocabularyWords = [
-	{
-		definition:
-			'A set of rules a computer follows to solve problems or make calculations.',
-		answer: 'algorithm', // Technology buzzwords
-	},
-	{
-		definition:
-			'A formal word used to add another piece of information to an idea you are developing.',
-		answer: 'furthermore', // Expressions for connecting ideas formally
-	},
-	{
-		definition:
-			'A digital audio file, like a radio show, that you can download and listen to whenever you want.',
-		answer: 'podcast', // Words for forms of communication
-	},
-	{
-		definition:
-			'Describes a person who is good at finding clever ways to overcome difficulties.',
-		answer: 'resourceful', // Qualities of creative people
-	},
-	{
-		definition: 'A verb that means to confront or start dealing with a difficult issue.',
-		answer: 'tackle', // Collocations for problem solving
-	},
-	{
-		definition:
-			'Using a network of remote servers hosted on the Internet to store, manage, and process data, rather than a local server or a personal computer.',
-		answer: 'cloud computing', // Technology buzzwords
-	},
-	{
-		definition: 'A formal word that means "as a result" or "therefore".',
-		answer: 'consequently', // Expressions for connecting ideas formally
-	},
-	{
-		definition:
-			'Describes a person or a new idea that introduces new methods and is original.',
-		answer: 'innovative', // Qualities of creative people
-	},
-	{
-		definition: 'To put a decision, plan, or agreement into effect.',
-		answer: 'implement', // Collocations for problem solving
-	},
-	{
-		definition:
-			'A brief written message, typically used in a business or professional setting.',
-		answer: 'memo', // Words for forms of communication
-	},
-];
+import { useAuth } from '../../../context/AuthContext';
+import { SENTENCES_STACK_FOR_VOCABULARY } from '../CONST_VALUES';
 
 const TOTAL_QUESTIONS = 5;
 const POINTS_PER_QUESTION = 100 / TOTAL_QUESTIONS; // Cada pregunta vale 20 puntos
@@ -75,7 +25,7 @@ const GameScreen = ({ onGameOver }) => {
 	const [results, setResults] = useState([]);
 
 	useEffect(() => {
-		setGameWords(shuffleAndPick(vocabularyWords, TOTAL_QUESTIONS));
+		setGameWords(shuffleAndPick(SENTENCES_STACK_FOR_VOCABULARY, TOTAL_QUESTIONS));
 	}, []);
 
 	useEffect(() => {
