@@ -72,19 +72,19 @@ export const About = () => {
 						About us
 					</h2>
 					<div className='w-full max-w-[960px] flex flex-col items-start justify-start p-4 text-sm'>
-						<article className='w-full rounded-lg bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border flex flex-col items-start justify-start py-3 px-4 md:py-4 md:px-6 shadow-sm'>
-							<h3 className='leading-[21px] font-medium py-2 text-base md:text-lg'>
-								Edusoft
-							</h3>
-							<p className='leading-[21px] text-[#57788f]'>
-								Edusoft is a development team that focuses on the recreational field of
-								the English language, focusing on the language in the academic aspect so
-								that you can improve your English vocabulary and listening skills. We
-								focus on providing the highest quality when developing our applications
-								and ensuring that the user can enjoy using them.
-							</p>
-						</article>
-					</div>
+                        <article className='w-full rounded-lg bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border flex flex-col items-start justify-start py-3 px-4 md:py-4 md:px-6 shadow-sm'>
+                            <h3 className='leading-[21px] font-medium py-2 text-base md:text-lg text-left w-full'>
+                                Edusoft
+                            </h3>
+                            <p className='leading-[21px] text-[#57788f] text-left w-full'>
+                                Edusoft is a development team that focuses on the recreational field of
+                                the English language, focusing on the language in the academic aspect so
+                                that you can improve your English vocabulary and listening skills. We
+                                focus on providing the highest quality when developing our applications
+                                and ensuring that the user can enjoy using them.
+                            </p>
+                        </article>
+                    </div>
 					<h2 className='w-full max-w-[960px] leading-7 font-bold pt-5 px-4 pb-3 text-left text-lg md:text-xl'>
 						Help
 					</h2>
