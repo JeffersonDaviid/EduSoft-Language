@@ -78,7 +78,7 @@ const PrivateNavbar = () => {
 					<li key={link.to} className='w-full'>
 						<Link
 							to={link.to}
-							className='block w-full text-[#61a1c9] hover:text-[#1d7fc1] px-2 py-3 text-base font-medium rounded transition-colors duration-150 text-center'
+							className='block w-full text-[#61a1c9] hover:text-[#1d7fc1] px-2 py-3 font-medium rounded transition-colors duration-150 text-center'
 							onClick={() => setMenuOpen(false)}
 						>
 							{link.label}

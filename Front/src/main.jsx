@@ -4,13 +4,16 @@ import App from './App.jsx';
 import './index.css';
 import RouterProviders from './RouterProviders.jsx';
 import { AuthProvider } from './context/AuthContext';
+import { FontSizeProvider } from './context/FontSizeContext.jsx';
 
 createRoot(document.getElementById('root')).render(
 	<StrictMode>
-		<AuthProvider>
-			<RouterProviders>
-				<App />
-			</RouterProviders>
-		</AuthProvider>	
+		<FontSizeProvider>
+			<AuthProvider>
+				<RouterProviders>
+					<App />
+				</RouterProviders>
+			</AuthProvider>
+		</FontSizeProvider>
 	</StrictMode>
 );
