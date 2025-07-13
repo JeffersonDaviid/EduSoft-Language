@@ -51,7 +51,7 @@ export const HomeUser = () => {
 									<div className='flex justify-center w-full mt-6 sm:mt-10 relative z-10'>
 										<Link
 											to='/games'
-											className='rounded-xl text-white bg-[#47a8eb] hover:bg-[#1d7fc1] h-12 flex items-center justify-center px-6 min-w-[120px] max-w-xs text-base sm:text-lg leading-6 whitespace-nowrap focus:outline-2 focus:outline-[#0d171c] transition-colors duration-150 shadow-md'
+											className='rounded-xl text-white bg-[#1579C1] hover:bg-[#1d7fc1] h-12 flex items-center justify-center px-6 min-w-[120px] max-w-xs text-base sm:text-lg leading-6 whitespace-nowrap focus:outline-2 focus:outline-[#0d171c] transition-colors duration-150 shadow-md'
 											aria-label='Start games'
 											tabIndex={0}
 											title='Start playing now'

@@ -46,7 +46,7 @@ const PublicNavbar = () => {
 							{link.btn === 'primary' ? (
 								<Link
 									to={link.to}
-									className='rounded-[20px] bg-[#61a1c9] h-10 flex items-center justify-center px-3 md:px-4 min-w-[70px] md:min-w-[84px] max-w-[480px] text-white overflow-hidden text-ellipsis whitespace-nowrap focus:outline-2 focus:outline-white transition-colors duration-150 font-medium'
+									className='rounded-[20px] bg-[#397DA7] h-10 flex items-center justify-center px-3 md:px-4 min-w-[70px] md:min-w-[84px] max-w-[480px] text-white overflow-hidden text-ellipsis whitespace-nowrap focus:outline-2 focus:outline-white transition-colors duration-150 font-medium'
 									aria-label={link.aria}
 								>
 									{link.label}
@@ -62,7 +62,7 @@ const PublicNavbar = () => {
 							) : (
 								<Link
 									to={link.to}
-									className='relative leading-[21px] font-medium focus:outline-2 focus:outline-[#61a1c9] px-2 py-1 rounded transition-colors duration-150'
+									className='relative leading-[21px] font-medium focus:outline-2 focus:outline-[#397DA7] px-2 py-1 rounded transition-colors duration-150'
 									aria-label={link.aria}
 								>
 									{link.label}
@@ -75,9 +75,8 @@ const PublicNavbar = () => {
 
 			{/* Mobile nav */}
 			<ul
-				className={`md:hidden flex flex-col items-center gap-2 bg-white border-t border-[#e6e8eb] px-4 py-2 transition-all duration-200 ${
-					menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
-				}`}
+				className={`md:hidden flex flex-col items-center gap-2 bg-white border-t border-[#e6e8eb] px-4 py-2 transition-all duration-200 ${menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+					}`}
 				aria-label='Navigation menu'
 			>
 				{navLinks.map((link) => (
@@ -85,7 +84,7 @@ const PublicNavbar = () => {
 						{link.btn === 'primary' ? (
 							<Link
 								to={link.to}
-								className='w-full rounded-[20px] bg-[#61a1c9] h-10 flex items-center justify-center px-3 min-w-[70px] max-w-[480px] text-white overflow-hidden text-ellipsis whitespace-nowrap focus:outline-2 focus:outline-white transition-colors duration-150 font-medium my-1'
+								className='w-full rounded-[20px] bg-[#397DA7] h-10 flex items-center justify-center px-3 min-w-[70px] max-w-[480px] text-white overflow-hidden text-ellipsis whitespace-nowrap focus:outline-2 focus:outline-white transition-colors duration-150 font-medium my-1'
 								aria-label={link.aria}
 								onClick={() => setMenuOpen(false)}
 							>
@@ -103,7 +102,7 @@ const PublicNavbar = () => {
 						) : (
 							<Link
 								to={link.to}
-								className='block w-full relative leading-[21px] font-medium focus:outline-2 focus:outline-[#61a1c9] px-2 py-3 rounded transition-colors duration-150 my-1 text-center'
+								className='block w-full relative leading-[21px] font-medium focus:outline-2 focus:outline-[#397DA7] px-2 py-3 rounded transition-colors duration-150 my-1 text-center'
 								aria-label={link.aria}
 								onClick={() => setMenuOpen(false)}
 							>

@@ -107,7 +107,11 @@ export const Register = () => {
                                     type='email'
                                     value={form.email}
                                     onChange={handleChange}
+<<<<<<< Updated upstream
                                     className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#57788f] text-base md:text-lg'
+=======
+                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg ${fieldErrors.email ? 'border-red-500' : 'border-[#d4dee3]'}`}
+>>>>>>> Stashed changes
                                     placeholder='Enter your email'
                                     required
                                 />
@@ -122,7 +126,11 @@ export const Register = () => {
                                     type='text'
                                     value={form.username}
                                     onChange={handleChange}
+<<<<<<< Updated upstream
                                     className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#57788f] text-base md:text-lg'
+=======
+                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg ${fieldErrors.username ? 'border-red-500' : 'border-[#d4dee3]'}`}
+>>>>>>> Stashed changes
                                     placeholder='Choose a username'
                                     required
                                 />
@@ -137,7 +145,11 @@ export const Register = () => {
                                     type={showPassword ? 'text' : 'password'}
                                     value={form.password}
                                     onChange={handleChange}
+<<<<<<< Updated upstream
                                     className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#57788f] text-base md:text-lg pr-12'
+=======
+                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg pr-12 ${fieldErrors.password ? 'border-red-500' : 'border-[#d4dee3]'}`}
+>>>>>>> Stashed changes
                                     placeholder='Create a password'
                                     required
                                 />
@@ -165,7 +177,11 @@ export const Register = () => {
                                     type={showConfirmPassword ? 'text' : 'password'}
                                     value={form.confirmPassword}
                                     onChange={handleChange}
+<<<<<<< Updated upstream
                                     className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#57788f] text-base md:text-lg pr-12'
+=======
+                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg pr-12 ${fieldErrors.confirmPassword ? 'border-red-500' : 'border-[#d4dee3]'}`}
+>>>>>>> Stashed changes
                                     placeholder='Confirm your password'
                                     required
                                 />
@@ -193,7 +209,11 @@ export const Register = () => {
                                     type='text'
                                     value={form.answerSecret}
                                     onChange={handleChange}
+<<<<<<< Updated upstream
                                     className='self-stretch rounded-xl bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#57788f] text-base md:text-lg'
+=======
+                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg ${fieldErrors.answerSecret ? 'border-red-500' : 'border-[#d4dee3]'}`}
+>>>>>>> Stashed changes
                                     placeholder='Enter a secret answer'
                                     required
                                 />
@@ -204,7 +224,7 @@ export const Register = () => {
                             >
                                 Sign Up
                             </button>
-                            <div className='self-stretch text-center text-[#57788f]'>
+                            <div className='self-stretch text-center text-[#4C7490]'>
                                 <span>Already have an account? </span>
                                 <Link to='/login' className='font-medium underline'>
                                     Log in

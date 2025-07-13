@@ -24,8 +24,8 @@ export const Profile = () => {
     const totalScore = progress.history.reduce((acc, row) => acc + (row.score || 0), 0);
     const level = Math.floor(totalScore / 500);
     const scoreInLevel = totalScore % 500;
-    
-    
+
+
     useEffect(() => {
         const msg = localStorage.getItem('profileUpdateSuccess');
         if (msg) {
@@ -87,18 +87,18 @@ export const Profile = () => {
         navigate('/');
     };
 
-    
+
 
     return (
         <main className='w-full relative bg-[#fff] flex flex-col items-start justify-start text-left text-sm text-[#000] font-lexend'>
             {profileUpdateMessage && (
-                    <div className="w-full flex items-center justify-center py-4 bg-[#fafafa]"> {/* Added py-4 for top/bottom spacing */}
-                        <div className="flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 max-w-xl">
-                            <img src="/check-circle.png" alt="Success" className="w-6 h-6" />
-                            <span>{profileUpdateMessage}</span>
-                        </div>
+                <div className="w-full flex items-center justify-center py-4 bg-[#fafafa]"> {/* Added py-4 for top/bottom spacing */}
+                    <div className="flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 max-w-xl">
+                        <img src="/check-circle.png" alt="Success" className="w-6 h-6" />
+                        <span>{profileUpdateMessage}</span>
                     </div>
-                )}
+                </div>
+            )}
             <section className='self-stretch bg-[#fafafa] overflow-hidden flex flex-col items-start justify-start min-h-[800px]'>
                 <section className='self-stretch flex flex-col items-start justify-start'>
                     <header className='self-stretch flex flex-row items-start justify-center py-5 px-4 md:px-16 lg:px-40 box-border text-[#0f141a]'>
@@ -111,7 +111,7 @@ export const Profile = () => {
                                     >
                                         Profile
                                     </h1>
-                                    <p className='text-sm text-[#57788f]'>
+                                    <p className='text-sm text-[#517085]'>
                                         Here you can view and customize your learning experience. In your
                                         profile, you'll find information about your progress, achievements,
                                         and statistics, as well as the option to adjust your preferences to
@@ -121,7 +121,7 @@ export const Profile = () => {
                             </div>
                             <section className='self-stretch flex flex-row items-start justify-start p-4 text-center'>
                                 <div className='flex-1 flex flex-col md:flex-row items-center justify-between gap-4'>
-                                    <div className='flex flex-row items-start justify-start gap-4 text-left text-base text-[#57788f]'>
+                                    <div className='flex flex-row items-start justify-start gap-4 text-left text-base text-[#517085]'>
                                         <img
                                             className='w-24 h-24 md:w-32 md:h-32 rounded-full object-cover min-h-[96px] md:min-h-[128px] border border-[#d4dee3]'
                                             alt='Profile picture'
@@ -178,21 +178,21 @@ export const Profile = () => {
                                         aria-label='Games Played'
                                     >
                                         <b className='text-2xl leading-[30px]'>{loading ? '...' : progress.gamesPlayed}</b>
-                                        <span className='text-sm text-[#57788f]'>Games Played</span>
+                                        <span className='text-sm text-[#517085]'>Games Played</span>
                                     </article>
                                     <article
                                         className='flex-1 rounded-lg border-[#d4dee3] border-solid border-[1px] box-border flex flex-col items-start justify-start p-3 gap-2 min-w-[111px] bg-white shadow-sm'
                                         aria-label='Average Score'
                                     >
                                         <b className='text-2xl leading-[30px]'>{loading ? '...' : progress.averageScore}</b>
-                                        <span className='text-sm text-[#57788f]'>Average Score</span>
+                                        <span className='text-sm text-[#517085]'>Average Score</span>
                                     </article>
                                     <article
                                         className='flex-1 rounded-lg border-[#d4dee3] border-solid border-[1px] box-border flex flex-col items-start justify-start p-3 gap-2 min-w-[111px] bg-white shadow-sm'
                                         aria-label='Ranking'
                                     >
                                         <b className='text-2xl leading-[30px]'>{loading || ranking == null ? '...' : `#${ranking}`}</b>
-                                        <span className='text-sm text-[#57788f]'>Ranking</span>
+                                        <span className='text-sm text-[#517085]'>Ranking</span>
                                     </article>
                                 </div>
                             </section>
@@ -234,8 +234,8 @@ export const Profile = () => {
                                                         className='focus:outline-2 focus:outline-blue-400'
                                                     >
                                                         <td className='py-2 px-4 text-[#0d171c]'>{row.game}</td>
-                                                        <td className='py-2 px-4 text-[#4f7a96]'>{new Date(row.playedAt).toLocaleDateString()}</td>
-                                                        <td className='py-2 px-4 text-[#57788f]'>{row.score}/100</td>
+                                                        <td className='py-2 px-4 text-[#517085]'>{new Date(row.playedAt).toLocaleDateString()}</td>
+                                                        <td className='py-2 px-4 text-[#517085]'>{row.score}/100</td>
                                                     </tr>
                                                 ))
                                             )}

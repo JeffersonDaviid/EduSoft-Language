@@ -140,11 +140,11 @@ export const RecoverPassword = () => {
                             </div>
                             <button
                                 type='submit'
-                                className='w-full rounded-[20px] bg-[#42a6eb] h-10 flex items-center justify-center py-0 px-4 min-w-[84px] max-w-[480px] cursor-pointer text-[#fafafa] font-bold leading-[21px] text-base transition-colors duration-150 hover:bg-[#1d7fc1] focus:outline-2 focus:outline-[#0d171c]'
+                                className='w-full rounded-[20px] bg-[#1377B9] h-10 flex items-center justify-center py-0 px-4 min-w-[84px] max-w-[480px] cursor-pointer text-[#fafafa] font-bold leading-[21px] text-base transition-colors duration-150 hover:bg-[#1d7fc1] focus:outline-2 focus:outline-[#0d171c]'
                             >
                                 Update Password
                             </button>
-                            <div className='w-full text-center text-[#4f7a96]'>
+                            <div className='w-full text-center text-[#4C7490]'>
                                 <span
                                     className='leading-[21px] cursor-pointer underline'
                                     onClick={() => navigate('/login')}

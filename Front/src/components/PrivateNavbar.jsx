@@ -47,7 +47,7 @@ const PrivateNavbar = () => {
 						<li key={link.to} className='h-10 flex items-center'>
 							<Link
 								to={link.to}
-								className='text-[#61a1c9] hover:text-[#1d7fc1] relative leading-[21px] font-medium px-2 py-1 rounded transition-colors duration-150'
+								className='text-[#397DA7] hover:text-[#1d7fc1] relative leading-[21px] font-medium px-2 py-1 rounded transition-colors duration-150'
 							>
 								{link.label}
 							</Link>
@@ -69,16 +69,15 @@ const PrivateNavbar = () => {
 
 			{/* Mobile nav */}
 			<ul
-				className={`md:hidden flex flex-col items-center gap-2 bg-white border-t border-[#e6e8eb] px-4 py-2 transition-all duration-200 ${
-					menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
-				}`}
+				className={`md:hidden flex flex-col items-center gap-2 bg-white border-t border-[#e6e8eb] px-4 py-2 transition-all duration-200 ${menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+					}`}
 				aria-label='Menú de navegación'
 			>
 				{navLinks.map((link) => (
 					<li key={link.to} className='w-full'>
 						<Link
 							to={link.to}
-							className='block w-full text-[#61a1c9] hover:text-[#1d7fc1] px-2 py-3 text-base font-medium rounded transition-colors duration-150 text-center'
+							className='block w-full text-[#397DA7] hover:text-[#1d7fc1] px-2 py-3 text-base font-medium rounded transition-colors duration-150 text-center'
 							onClick={() => setMenuOpen(false)}
 						>
 							{link.label}

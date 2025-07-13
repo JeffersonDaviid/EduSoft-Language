@@ -112,7 +112,7 @@ export const UpdateProfile = () => {
             });
             const data = await res.json();
             if (res.ok) {
-                localStorage.setItem('profileUpdateSuccess', 'Profile updated successfully!');  
+                localStorage.setItem('profileUpdateSuccess', 'Profile updated successfully!');
                 localStorage.setItem('user', JSON.stringify(data.user));
                 updateUser(data.user);
                 setTimeout(() => navigate('/profile'), 1200);
@@ -138,7 +138,7 @@ export const UpdateProfile = () => {
                                     >
                                         Edit Profile
                                     </h1>
-                                    <p className='text-sm text-[#4f7a96]'>
+                                    <p className='text-sm text-[#4C7490]'>
                                         Update your account information.
                                     </p>
                                 </div>
@@ -266,7 +266,7 @@ export const UpdateProfile = () => {
                                 )}
                                 <button
                                     type='submit'
-                                    className='rounded-3xl bg-[#42a6eb] h-12 flex items-center justify-center px-5 min-w-[84px] max-w-[480px] font-bold text-white mt-4 focus:outline-2 focus:outline-blue-400 hover:bg-[#1d7fc2] transition-colors duration-150'
+                                    className='rounded-3xl bg-[#1377B9] h-12 flex items-center justify-center px-5 min-w-[84px] max-w-[480px] font-bold text-white mt-4 focus:outline-2 focus:outline-blue-400 hover:bg-[#1d7fc2] transition-colors duration-150'
                                     aria-label='Save changes to your profile'
                                 >
                                     Save Changes

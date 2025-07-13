@@ -35,60 +35,60 @@ export const Progress = () => {
         return avg;
     };
 
-	const minAvgType = (() => {
-    let minType = null;
-    let minAvg = Infinity;
-    GAME_TYPES.forEach(type => {
-        const avg = getAverage(type);
-        if (avg !== null && avg < minAvg) {
-            minAvg = avg;
-            minType = type;
-        }
-    });
-    return minType;
-})();
+    const minAvgType = (() => {
+        let minType = null;
+        let minAvg = Infinity;
+        GAME_TYPES.forEach(type => {
+            const avg = getAverage(type);
+            if (avg !== null && avg < minAvg) {
+                minAvg = avg;
+                minType = type;
+            }
+        });
+        return minType;
+    })();
 
-	const getPracticeStreak = () => {
-    	const dates = Array.from(
-        	new Set(
-            	progress.history
-                	.map(row => new Date(row.playedAt).toDateString())
-        	)
-    ).sort((a, b) => new Date(b) - new Date(a));
-    if (dates.length === 0) return 0;
-    let streak = 1;
-    let prev = new Date(dates[0]);
-    for (let i = 1; i < dates.length; i++) {
-        const curr = new Date(dates[i]);
-        const diff = (prev - curr) / (1000 * 60 * 60 * 24);
-        if (diff === 1) {
-            streak++;
-            prev = curr;
-        } else if (diff > 1) {
-            break;
+    const getPracticeStreak = () => {
+        const dates = Array.from(
+            new Set(
+                progress.history
+                    .map(row => new Date(row.playedAt).toDateString())
+            )
+        ).sort((a, b) => new Date(b) - new Date(a));
+        if (dates.length === 0) return 0;
+        let streak = 1;
+        let prev = new Date(dates[0]);
+        for (let i = 1; i < dates.length; i++) {
+            const curr = new Date(dates[i]);
+            const diff = (prev - curr) / (1000 * 60 * 60 * 24);
+            if (diff === 1) {
+                streak++;
+                prev = curr;
+            } else if (diff > 1) {
+                break;
+            }
         }
-    }
-    return streak;
-};
-const streak = getPracticeStreak();
+        return streak;
+    };
+    const streak = getPracticeStreak();
 
-	return (
-		<main className='w-full min-h-screen bg-[#fff] flex flex-col items-center text-left text-sm text-[#000] font-lexend'>
-			<section className='w-full max-w-[1280px] bg-[#f7fafc] flex-1 flex flex-col items-center justify-center min-h-[600px] md:min-h-[700px] lg:min-h-[800px]'>
-				<section className='w-full flex flex-col items-center justify-center'>
-					<header className='w-full flex flex-col items-center justify-start py-5 px-4 md:px-16 lg:px-40 box-border'>
-						<div className='w-full max-w-[960px] flex flex-col gap-6'>
-							<div className='flex flex-col gap-3'>
-								<h1 className='text-2xl md:text-4xl font-bold leading-10 mb-2'>
-									Your Progress
-								</h1>
-								<p className='text-sm md:text-base text-[#4f7a96]'>
-									Track your learning journey in EduSoft Language! Here you can view your
-									overall progress, see your average scores for each game type,
-									check your daily practice streak, and get friendly tips to helper
-									you improve even more.
-								</p>
-							</div>
+    return (
+        <main className='w-full min-h-screen bg-[#fff] flex flex-col items-center text-left text-sm text-[#000] font-lexend'>
+            <section className='w-full max-w-[1280px] bg-[#f7fafc] flex-1 flex flex-col items-center justify-center min-h-[600px] md:min-h-[700px] lg:min-h-[800px]'>
+                <section className='w-full flex flex-col items-center justify-center'>
+                    <header className='w-full flex flex-col items-center justify-start py-5 px-4 md:px-16 lg:px-40 box-border'>
+                        <div className='w-full max-w-[960px] flex flex-col gap-6'>
+                            <div className='flex flex-col gap-3'>
+                                <h1 className='text-2xl md:text-4xl font-bold leading-10 mb-2'>
+                                    Your Progress
+                                </h1>
+                                <p className='text-sm md:text-base text-[#4C7490]'>
+                                    Track your learning journey in EduSoft Language! Here you can view your
+                                    overall progress, see your average scores for each game type,
+                                    check your daily practice streak, and get friendly tips to helper
+                                    you improve even more.
+                                </p>
+                            </div>
                             <section className='w-full flex flex-col items-start justify-start p-4 gap-3'>
                                 <div className='w-full flex flex-row items-center justify-between gap-2'>
                                     <h2 className='leading-6 font-medium'>Complete all game types to reach 100% progress</h2>
@@ -96,12 +96,12 @@ const streak = getPracticeStreak();
                                 </div>
                                 <progress value={percent} max='100' className='w-full rounded h-2'></progress>
                             </section>
-							<section className='w-full flex flex-col items-start justify-start pt-5 px-4 pb-3'>
-								<h2 className='leading-7 font-bold text-lg md:text-[22px]'>
-									Average Scores by Game Type
-								</h2>
-							</section>
-							<section className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 px-4'>
+                            <section className='w-full flex flex-col items-start justify-start pt-5 px-4 pb-3'>
+                                <h2 className='leading-7 font-bold text-lg md:text-[22px]'>
+                                    Average Scores by Game Type
+                                </h2>
+                            </section>
+                            <section className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 px-4'>
                                 {GAME_TYPES.map((type) => {
                                     const avg = getAverage(type);
                                     return (
@@ -113,31 +113,31 @@ const streak = getPracticeStreak();
                                             <p className='text-2xl font-bold text-blue-700'>
                                                 {avg !== null ? `${avg}/100` : <span className='text-gray-400'>–</span>}
                                             </p>
-                                            <p className='text-xs text-[#4f7a96]'>Average Score</p>
+                                            <p className='text-xs text-[#4C7490]'>Average Score</p>
                                         </article>
                                     );
                                 })}
                             </section>
-							<section className='w-full flex flex-col items-start justify-start pt-5 px-4 pb-3'>
-								<h2 className='leading-7 font-bold text-lg md:text-[22px]'>
-									Practice Summary
-								</h2>
-							</section>
-							<section className='w-full flex flex-row items-center justify-start gap-4 px-4 py-2'>
-								<div className='bg-white rounded-lg shadow p-4 flex flex-col items-center min-w-[120px]'>
-									<span className='text-3xl font-bold text-emerald-600'>{streak}</span>
-									<span className='text-xs text-[#4f7a96]'>Day Streak</span>
-								</div>
-								{minAvgType && (
-									<div className="bg-blue-100 text-blue-800 rounded p-3 text-sm font-medium flex-1">
-										<span className="font-bold">{minAvgType.replace(' Challenge', '')}</span> could use a little extra practice! Give it another try to boost your overall progress. 🚀
-									</div>
-								)}
-							</section>
-						</div>
-					</header>
-				</section>
-			</section>
-		</main>
-	);
+                            <section className='w-full flex flex-col items-start justify-start pt-5 px-4 pb-3'>
+                                <h2 className='leading-7 font-bold text-lg md:text-[22px]'>
+                                    Practice Summary
+                                </h2>
+                            </section>
+                            <section className='w-full flex flex-row items-center justify-start gap-4 px-4 py-2'>
+                                <div className='bg-white rounded-lg shadow p-4 flex flex-col items-center min-w-[120px]'>
+                                    <span className='text-3xl font-bold text-emerald-600'>{streak}</span>
+                                    <span className='text-xs text-[#4C7490]'>Day Streak</span>
+                                </div>
+                                {minAvgType && (
+                                    <div className="bg-blue-100 text-blue-800 rounded p-3 text-sm font-medium flex-1">
+                                        <span className="font-bold">{minAvgType.replace(' Challenge', '')}</span> could use a little extra practice! Give it another try to boost your overall progress. 🚀
+                                    </div>
+                                )}
+                            </section>
+                        </div>
+                    </header>
+                </section>
+            </section>
+        </main>
+    );
 };

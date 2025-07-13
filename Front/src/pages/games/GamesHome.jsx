@@ -190,7 +190,7 @@ export const GamesHome = () => {
 							<h1 className='text-2xl md:text-4xl lg:text-5xl font-bold leading-10 mb-2'>
 								Our Games
 							</h1>
-							<p className='text-sm md:text-base text-[#57788f]'>
+							<p className='text-sm md:text-base text-[#57778E]'>
 								Learn English by playing! At EduSoft Language, our games are designed to
 								make learning a fun and educational experience. Through multiple-choice
 								questions, you can test and expand your English vocabulary in an
@@ -216,7 +216,7 @@ export const GamesHome = () => {
 												<h3 className='leading-6 font-medium text-base md:text-lg'>
 													{game.title}
 												</h3>
-												<p className='text-sm text-[#57788f]'>{game.desc}</p>
+												<p className='text-sm text-[#57778E]'>{game.desc}</p>
 											</div>
 										</article>
 									))}
