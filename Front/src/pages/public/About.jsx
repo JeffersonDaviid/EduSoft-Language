@@ -5,6 +5,7 @@ export const About = () => {
 	const [form, setForm] = useState({ email: '', message: '' });
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
+	const [fieldErrors, setFieldErrors] = useState({});
 
 	const handleChange = (e) => {
 		if (e.target.name === 'email') {
@@ -18,6 +19,17 @@ export const About = () => {
 		e.preventDefault();
 		setError('');
 		setSuccess('');
+		setFieldErrors({});
+
+		const newFieldErrors = {};
+			if (!form.email) newFieldErrors.email = 'Email is required';
+			if (!form.message) newFieldErrors.message = 'Message is required';
+
+			if (Object.keys(newFieldErrors).length > 0) {
+				setFieldErrors(newFieldErrors);
+				setError('Please fill in all required fields.');
+				return;
+			}
 
 <<<<<<< Updated upstream
 		try {

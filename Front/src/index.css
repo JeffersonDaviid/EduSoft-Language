@@ -10,3 +10,16 @@
 	--primary-color: #3C74B5;
 	--secondary-color: #50e3c2;
 }
+
+html.font-scale-sm {
+	font-size: 85%;
+}
+html.font-scale-md {
+	font-size: 100%;
+}
+html.font-scale-lg {
+	font-size: 115%;
+}
+html.font-scale-xl {
+	font-size: 130%;
+}

@@ -8,6 +8,7 @@ export const Login = () => {
     const [form, setForm] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [fieldErrors, setFieldErrors] = useState({});
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const { login } = useAuth();
@@ -18,12 +19,22 @@ export const Login = () => {
         } else {
             setForm({ ...form, [e.target.name]: e.target.value });
         }
+        setFieldErrors({ ...fieldErrors, [e.target.name]: '' });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setSuccess('');
+        const newFieldErrors = {};
+        if (!form.email.trim()) newFieldErrors.email = 'Email is required';
+        if (!form.password.trim()) newFieldErrors.password = 'Password is required';
+
+        if (Object.keys(newFieldErrors).length > 0) {
+            setFieldErrors(newFieldErrors);
+            setError('Please fill in all required fields.');
+            return;
+        }
 
         try {
             const res = await fetch(`${API_URL}/user/login`, {
@@ -55,10 +66,11 @@ export const Login = () => {
                                 Welcome back to Edusoft
                             </h1>
                         </header>
-                        <form className='w-full max-w-[480px] mx-auto flex flex-col gap-4' onSubmit={handleSubmit}>
+                        <form className='w-full max-w-[480px] mx-auto flex flex-col gap-4' onSubmit={handleSubmit} noValidate>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='email' className='leading-6 font-medium'>
-                                    Email
+                                    Email <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='email'
@@ -72,12 +84,16 @@ export const Login = () => {
                                     className={`self-stretch rounded-xl bg-[#f7fafc] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg ${fieldErrors.email ? 'border-red-500' : 'border-[#d1dee8]'}`}
 >>>>>>> Stashed changes
                                     placeholder='Enter your email'
-                                    required
+                                    aria-invalid={!!fieldErrors.email}
                                 />
+                                {fieldErrors.email && (
+                                    <span className="text-red-600 text-xs mt-1">{fieldErrors.email}</span>
+                                )}
                             </div>
                             <div className='flex flex-col items-start relative'>
                                 <label htmlFor='password' className='leading-6 font-medium'>
-                                    Password
+                                    Password <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='password'
@@ -91,7 +107,7 @@ export const Login = () => {
                                     className={`self-stretch rounded-xl bg-[#f7fafc] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg pr-12 ${fieldErrors.password ? 'border-red-500' : 'border-[#d1dee8]'}`}
 >>>>>>> Stashed changes
                                     placeholder='Enter your password'
-                                    required
+                                    aria-invalid={!!fieldErrors.password}
                                 />
                                 <button
                                     type="button"
@@ -106,6 +122,9 @@ export const Login = () => {
                                         className="w-6 h-6"
                                     />
                                 </button>
+                                {fieldErrors.password && (
+                                    <span className="text-red-600 text-xs mt-1">{fieldErrors.password}</span>
+                                )}
                             </div>
                             <div className='self-stretch text-left text-[#4C7490]'>
                                 <span

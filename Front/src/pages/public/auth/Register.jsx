@@ -13,35 +13,51 @@ export const Register = () => {
     });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [fieldErrors, setFieldErrors] = useState({});
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleChange = (e) => {
         if (e.target.name === 'email') {
-        setForm({ ...form, [e.target.name]: e.target.value.toLowerCase() });
-    } else {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    }
+            setForm({ ...form, [e.target.name]: e.target.value.toLowerCase() });
+        } else {
+            setForm({ ...form, [e.target.name]: e.target.value });
+        }
+        setFieldErrors({ ...fieldErrors, [e.target.name]: '' });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setSuccess('');
+        const newFieldErrors = {};
 
-        if (form.password !== form.confirmPassword) {
-            setError('Passwords do not match');
-            return;
-        }
-        
-        if (form.password.length < 8 || form.password.length > 15) {
-            setError('Password must be between 8 and 15 characters');
-            return;
+        if (!form.email.trim()) newFieldErrors.email = 'Email is required';
+        if (!form.username.trim()) newFieldErrors.username = 'Username is required';
+        if (!form.password) newFieldErrors.password = 'Password is required';
+        if (!form.confirmPassword) newFieldErrors.confirmPassword = 'Please confirm your password';
+        if (!form.answerSecret.trim()) newFieldErrors.answerSecret = 'Secret answer is required';
+
+
+        if (
+            form.password &&
+            form.confirmPassword &&
+            form.password !== form.confirmPassword
+        ) {
+            newFieldErrors.confirmPassword = 'Passwords do not match';
         }
 
-        if (!form.answerSecret) {
-            setError('Secret answer is required');
+        if (
+            form.password &&
+            (form.password.length < 8 || form.password.length > 15)
+        ) {
+            newFieldErrors.password = 'Password must be between 8 and 15 characters';
+        }
+
+        if (Object.keys(newFieldErrors).length > 0) {
+            setFieldErrors(newFieldErrors);
+            setError('Please fix the errors before submitting.');
             return;
         }
 
@@ -84,7 +100,7 @@ export const Register = () => {
                                 Sign up for Edusoft
                             </h1>
                         </header>
-                        <form className='w-full max-w-[480px] mx-auto flex flex-col gap-4' onSubmit={handleSubmit}>
+                        <form className='w-full max-w-[480px] mx-auto flex flex-col gap-4' onSubmit={handleSubmit} noValidate>
                             {success && (
                                 <div className="flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 mb-2">
                                     <img src="/check-circle.png" alt="Success" className="w-6 h-6" />
@@ -99,7 +115,8 @@ export const Register = () => {
                             )}
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='email' className='leading-6 font-medium'>
-                                    Email
+                                    Email <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='email'
@@ -113,12 +130,16 @@ export const Register = () => {
                                     className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg ${fieldErrors.email ? 'border-red-500' : 'border-[#d4dee3]'}`}
 >>>>>>> Stashed changes
                                     placeholder='Enter your email'
-                                    required
+                                    aria-invalid={!!fieldErrors.email}
                                 />
+                                {fieldErrors.email && (
+                                    <span className="text-red-600 text-xs mt-1">{fieldErrors.email}</span>
+                                )}
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='username' className='leading-6 font-medium'>
-                                    Username
+                                    Username <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='username'
@@ -132,12 +153,16 @@ export const Register = () => {
                                     className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg ${fieldErrors.username ? 'border-red-500' : 'border-[#d4dee3]'}`}
 >>>>>>> Stashed changes
                                     placeholder='Choose a username'
-                                    required
+                                    aria-invalid={!!fieldErrors.username}
                                 />
+                                {fieldErrors.username && (
+                                    <span className="text-red-600 text-xs mt-1">{fieldErrors.username}</span>
+                                )}
                             </div>
                             <div className='flex flex-col items-start relative'>
                                 <label htmlFor='password' className='leading-6 font-medium'>
-                                    Password
+                                    Password <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='password'
@@ -151,7 +176,7 @@ export const Register = () => {
                                     className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg pr-12 ${fieldErrors.password ? 'border-red-500' : 'border-[#d4dee3]'}`}
 >>>>>>> Stashed changes
                                     placeholder='Create a password'
-                                    required
+                                    aria-invalid={!!fieldErrors.password}
                                 />
                                 <button
                                     type="button"
@@ -166,10 +191,14 @@ export const Register = () => {
                                         className="w-6 h-6"
                                     />
                                 </button>
+                                {fieldErrors.password && (
+                                    <span className="text-red-600 text-xs mt-1">{fieldErrors.password}</span>
+                                )}
                             </div>
                             <div className='flex flex-col items-start relative'>
                                 <label htmlFor='confirmPassword' className='leading-6 font-medium'>
-                                    Confirm Password
+                                    Confirm Password <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='confirmPassword'
@@ -183,7 +212,7 @@ export const Register = () => {
                                     className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg pr-12 ${fieldErrors.confirmPassword ? 'border-red-500' : 'border-[#d4dee3]'}`}
 >>>>>>> Stashed changes
                                     placeholder='Confirm your password'
-                                    required
+                                    aria-invalid={!!fieldErrors.confirmPassword}
                                 />
                                 <button
                                     type="button"
@@ -198,10 +227,14 @@ export const Register = () => {
                                         className="w-6 h-6"
                                     />
                                 </button>
+                                {fieldErrors.confirmPassword && (
+                                    <span className="text-red-600 text-xs mt-1">{fieldErrors.confirmPassword}</span>
+                                )}
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='answerSecret' className='leading-6 font-medium'>
-                                    Secret Answer (for password recovery)
+                                    Secret Answer (for password recovery) <span className="text-red-600" aria-hidden="true">*</span>
+                                    <span className="sr-only">(required)</span>
                                 </label>
                                 <input
                                     id='answerSecret'
@@ -215,8 +248,11 @@ export const Register = () => {
                                     className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg ${fieldErrors.answerSecret ? 'border-red-500' : 'border-[#d4dee3]'}`}
 >>>>>>> Stashed changes
                                     placeholder='Enter a secret answer'
-                                    required
+                                    aria-invalid={!!fieldErrors.answerSecret}
                                 />
+                                {fieldErrors.answerSecret && (
+                                    <span className="text-red-600 text-xs mt-1">{fieldErrors.answerSecret}</span>
+                                )}
                             </div>
                             <button
                                 type='submit'

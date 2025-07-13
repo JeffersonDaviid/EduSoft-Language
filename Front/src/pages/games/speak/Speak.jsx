@@ -1,73 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import { useAuth } from '../../../context/AuthContext';
 import { API_URL } from '../../../API';
-import { HeaderGame } from '../../../components/HeaderGame';
-
-// --- C1 Level Academic Sentences ---
-// Advanced topics suitable for C1 English learners
-const pronunciationSentences = [
-	{
-		sentence:
-			'Contemporary economic theories suggest that sustainable development requires comprehensive policy reform.',
-	},
-	{
-		sentence:
-			'Artificial intelligence has revolutionized data analysis across multiple scientific disciplines.',
-	},
-	{
-		sentence:
-			'Environmental conservation efforts must address both climate change and biodiversity preservation simultaneously.',
-	},
-	{
-		sentence:
-			'Advanced research methodologies enable scientists to investigate complex psychological phenomena.',
-	},
-	{
-		sentence:
-			'International cooperation is essential for addressing global challenges in the twenty-first century.',
-	},
-	{
-		sentence:
-			'Technological innovations have transformed communication patterns in modern professional environments.',
-	},
-	{
-		sentence:
-			'Academic institutions increasingly emphasize critical thinking and analytical reasoning skills.',
-	},
-	{
-		sentence:
-			'Sophisticated marketing strategies leverage consumer psychology to influence purchasing decisions effectively.',
-	},
-	{
-		sentence:
-			'Medical breakthroughs demonstrate the importance of interdisciplinary collaboration in scientific research.',
-	},
-	{
-		sentence:
-			'Cultural diversity enriches educational experiences and promotes intellectual growth among students.',
-	},
-	{
-		sentence:
-			'Financial markets exhibit complex behavioral patterns that economists continue to analyze extensively.',
-	},
-	{
-		sentence:
-			'Urban planning requires balancing economic development with environmental sustainability concerns.',
-	},
-	{
-		sentence:
-			'Digital transformation has fundamentally altered traditional business models across various industries.',
-	},
-	{
-		sentence:
-			'Educational technology facilitates personalized learning experiences for students with diverse academic needs.',
-	},
-	{
-		sentence:
-			'Professional development opportunities enhance employee satisfaction and organizational productivity significantly.',
-	},
-];
+import { useAuth } from '../../../context/AuthContext';
+import { SENTENCES_STACK_FOR_SPEAKING } from '../CONST_VALUES';
 
 // Solo 5 rondas como solicitaste
 const TOTAL_PRONUNCIATION_ROUNDS = 5;
@@ -143,12 +78,22 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 	const [hasRecorded, setHasRecorded] = useState(false);
 	const [currentTranscript, setCurrentTranscript] = useState('');
 
+	// Audio control states
+	const [volume, setVolume] = useState(0.8); // Default volume at 80%
+	const [speechRate, setSpeechRate] = useState(0.8); // Speech rate control
+	const [isPaused, setIsPaused] = useState(false);
+	const [currentUtterance, setCurrentUtterance] = useState(null);
+	const [showAudioControls, setShowAudioControls] = useState(false);
+
 	const recognitionRef = useRef(null);
 	const [results, setResults] = useState([]);
 
 	// Initialize sentences when component mounts
 	useEffect(() => {
-		const shuffled = shuffleAndPick(pronunciationSentences, TOTAL_PRONUNCIATION_ROUNDS);
+		const shuffled = shuffleAndPick(
+			SENTENCES_STACK_FOR_SPEAKING,
+			TOTAL_PRONUNCIATION_ROUNDS
+		);
 		setGameSentences(shuffled);
 	}, []);
 
@@ -161,6 +106,8 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			setIsListening(false);
 			setHasRecorded(false);
 			setCurrentTranscript('');
+			setIsPaused(false);
+			setCurrentUtterance(null);
 
 			if (window.speechSynthesis.speaking) {
 				window.speechSynthesis.cancel();
@@ -243,8 +190,12 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 					console.warn('Error cleaning up recognition on unmount:', error);
 				}
 			}
+			// Cancel any ongoing speech synthesis
+			if (window.speechSynthesis.speaking) {
+				window.speechSynthesis.cancel();
+			}
 		};
-	}, []);
+	}, [isListening]);
 
 	// Function to handle Listen button click (Speech Synthesis)
 	const handleListenClick = useCallback(() => {
@@ -255,24 +206,66 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			setIsListening(false);
 		}
 
+		// Cancel any existing speech
+		if (window.speechSynthesis.speaking) {
+			window.speechSynthesis.cancel();
+		}
+
 		setIsSpeaking(true);
+		setIsPaused(false);
+
 		const utterance = new SpeechSynthesisUtterance(currentSentence);
 		utterance.lang = 'en-US';
-		utterance.rate = 0.8; // Slightly slower for better comprehension
+		utterance.rate = speechRate;
+		utterance.volume = volume;
 
 		utterance.onend = () => {
 			setIsSpeaking(false);
+			setIsPaused(false);
+			setCurrentUtterance(null);
 			setStatusMessage('Now press "Speak" to repeat the sentence!');
 		};
 
 		utterance.onerror = (event) => {
 			console.error('Speech Synthesis Error:', event.error);
 			setIsSpeaking(false);
+			setIsPaused(false);
+			setCurrentUtterance(null);
 			setStatusMessage('Error speaking the sentence. Try again.');
 		};
 
+		setCurrentUtterance(utterance);
 		window.speechSynthesis.speak(utterance);
-	}, [currentSentence, isListening]);
+	}, [currentSentence, isListening, speechRate, volume]);
+
+	// Audio control functions
+	const handlePauseResume = useCallback(() => {
+		if (window.speechSynthesis.speaking && !isPaused) {
+			window.speechSynthesis.pause();
+			setIsPaused(true);
+		} else if (isPaused) {
+			window.speechSynthesis.resume();
+			setIsPaused(false);
+		}
+	}, [isPaused]);
+
+	const handleStop = useCallback(() => {
+		if (window.speechSynthesis.speaking || currentUtterance) {
+			window.speechSynthesis.cancel();
+			setIsSpeaking(false);
+			setIsPaused(false);
+			setCurrentUtterance(null);
+			setStatusMessage('Audio stopped. Press "Listen" to play again.');
+		}
+	}, [currentUtterance]);
+
+	const handleVolumeChange = useCallback((newVolume) => {
+		setVolume(newVolume);
+	}, []);
+
+	const handleSpeedChange = useCallback((newRate) => {
+		setSpeechRate(newRate);
+	}, []);
 
 	// Function to handle Speak button click (Speech Recognition)
 	const handleSpeakClick = useCallback(() => {
@@ -392,14 +385,66 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 	};
 
 	return (
-		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-6 sm:p-10 text-center'>
-			<div className='flex justify-between items-start mb-4'>
-				<h1 className='text-xl sm:text-2xl font-bold text-blue-600 text-left'>
+		<div className='w-full lg:max-w-4xl lg:mx-auto lg:my-16 sm:hjjhnmbg-gray-50 lg:bg-white lg:shadow-2xl lg:rounded-2xl xs:p-0 sm:p-6 lg:p-10 text-center min-h-screen lg:min-h-0 flex flex-col justify-start lg:block'>
+			{/* Custom CSS for better slider styling */}
+			<style jsx>{`
+				.slider::-webkit-slider-thumb {
+					appearance: none;
+					height: 20px;
+					width: 20px;
+					border-radius: 50%;
+					background: #3b82f6;
+					cursor: pointer;
+					box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+					transition: all 0.2s ease;
+				}
+				.slider::-webkit-slider-thumb:hover {
+					background: #2563eb;
+					transform: scale(1.1);
+				}
+				.slider::-webkit-slider-track {
+					height: 8px;
+					border-radius: 4px;
+					background: #e5e7eb;
+				}
+				.slider::-moz-range-thumb {
+					height: 20px;
+					width: 20px;
+					border-radius: 50%;
+					background: #3b82f6;
+					cursor: pointer;
+					border: none;
+					box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+				}
+				.slider::-moz-range-track {
+					height: 8px;
+					border-radius: 4px;
+					background: #e5e7eb;
+				}
+			`}</style>
+
+			<div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0'>
+				<h1 className='text-xl sm:text-2xl lg:text-2xl font-bold text-blue-600 text-left'>
 					Pronunciation Challenge
 				</h1>
-				<div className='text-right'>
-					<div className='text-sm font-bold text-gray-500 uppercase'>Score</div>
-					<div className='text-3xl font-bold text-gray-700'>{getAverageScore()}</div>
+				<div className='flex items-center gap-3'>
+					{/* Audio Status Indicator */}
+					{isSpeaking && (
+						<div className='flex items-center gap-1 text-xs px-2 py-1 bg-blue-50 border border-blue-200 rounded-full'>
+							<div
+								className={`w-2 h-2 rounded-full ${
+									isPaused ? 'bg-orange-400' : 'bg-green-400 animate-pulse'
+								}`}
+							></div>
+							<span className='text-blue-700'>{isPaused ? 'Paused' : 'Playing'}</span>
+						</div>
+					)}
+					<div className='text-right'>
+						<div className='text-sm font-bold text-gray-500 uppercase'>Score</div>
+						<div className='text-2xl sm:text-3xl font-bold text-gray-700'>
+							{getAverageScore()}
+						</div>
+					</div>
 				</div>
 			</div>
 			<p className='text-gray-600 mb-8'>
@@ -407,16 +452,122 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			</p>
 
 			<div className='mb-8 flex flex-col items-center'>
-				<div className='text-lg md:text-3xl font-bold text-gray-800 mb-6 bg-gray-100 p-6 rounded-lg min-w-[300px] text-center leading-relaxed'>
+				<div className='text-base sm:text-lg lg:text-2xl xl:text-3xl font-bold text-gray-800 mb-6 bg-white lg:bg-gray-100 p-4 sm:p-6 rounded-lg w-full max-w-4xl text-center leading-relaxed border border-gray-200 lg:border-0 shadow-sm lg:shadow-none'>
 					{currentSentence}
 				</div>
-
 				{hasRecorded && currentTranscript && (
 					<div className='mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200'>
 						<p className='text-sm text-gray-600 mb-2'>Your pronunciation:</p>
 						<p className='text-lg font-medium text-blue-800'>"{currentTranscript}"</p>
 					</div>
 				)}
+
+				{/* Audio Controls - Compact and Collapsible */}
+				<div className='mb-6 w-full max-w-md'>
+					{/* Audio Control Toggle Button */}
+					<button
+						onClick={() => setShowAudioControls(!showAudioControls)}
+						className='w-full flex items-center justify-between p-3 bg-gray-100 hover:bg-gray-150 rounded-lg border border-gray-200 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400'
+						aria-expanded={showAudioControls}
+						aria-controls='audio-controls-panel'
+					>
+						<span className='text-sm font-medium text-gray-700'>🎛️ Audio Settings</span>
+						<svg
+							className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
+								showAudioControls ? 'rotate-180' : ''
+							}`}
+							fill='none'
+							stroke='currentColor'
+							viewBox='0 0 24 24'
+						>
+							<path
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								strokeWidth={2}
+								d='M19 9l-7 7-7-7'
+							/>
+						</svg>
+					</button>
+
+					{/* Collapsible Audio Controls Panel */}
+					<div
+						id='audio-controls-panel'
+						className={`transition-all duration-300 ease-in-out overflow-hidden ${
+							showAudioControls ? 'max-h-96 opacity-100 mt-2' : 'max-h-0 opacity-0'
+						}`}
+					>
+						<div className='p-4 bg-white rounded-lg border border-gray-200 shadow-sm'>
+							{/* Volume Control */}
+							<div className='mb-4'>
+								<label
+									htmlFor='volume-control'
+									className='block text-sm font-medium text-gray-700 mb-2'
+								>
+									🔊 Volume: {Math.round(volume * 100)}%
+								</label>
+								<input
+									id='volume-control'
+									type='range'
+									min='0'
+									max='1'
+									step='0.1'
+									value={volume}
+									onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+									className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider'
+									aria-label='Audio volume control'
+								/>
+							</div>
+
+							{/* Speed Control */}
+							<div className='mb-4'>
+								<label
+									htmlFor='speed-control'
+									className='block text-sm font-medium text-gray-700 mb-2'
+								>
+									⚡ Speed: {speechRate}x
+								</label>
+								<input
+									id='speed-control'
+									type='range'
+									min='0.5'
+									max='2.0'
+									step='0.1'
+									value={speechRate}
+									onChange={(e) => handleSpeedChange(parseFloat(e.target.value))}
+									className='w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider'
+									aria-label='Speech speed control'
+								/>
+								<div className='flex justify-between text-xs text-gray-500 mt-1'>
+									<span>Slow</span>
+									<span>Normal</span>
+									<span>Fast</span>
+								</div>
+							</div>
+
+							{/* Audio Control Buttons */}
+							<div className='flex gap-2 justify-center'>
+								<button
+									onClick={handlePauseResume}
+									disabled={!isSpeaking || isListening}
+									className='flex-1 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-3 rounded text-sm disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-orange-400'
+									title={isPaused ? 'Resume audio playback' : 'Pause audio playback'}
+									aria-label={isPaused ? 'Resume audio' : 'Pause audio'}
+								>
+									{isPaused ? '▶️ Resume' : '⏸️ Pause'}
+								</button>
+								<button
+									onClick={handleStop}
+									disabled={!isSpeaking || isListening}
+									className='flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-3 rounded text-sm disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-red-400'
+									title='Stop audio playback'
+									aria-label='Stop audio'
+								>
+									⏹️ Stop
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
 
 				<div className='flex flex-wrap gap-4 justify-center'>
 					<button

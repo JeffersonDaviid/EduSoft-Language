@@ -69,8 +69,9 @@ const PrivateNavbar = () => {
 
 			{/* Mobile nav */}
 			<ul
-				className={`md:hidden flex flex-col items-center gap-2 bg-white border-t border-[#e6e8eb] px-4 py-2 transition-all duration-200 ${menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
-					}`}
+				className={`md:hidden flex flex-col items-center gap-2 bg-white border-t border-[#e6e8eb] px-4 py-2 transition-all duration-200 ${
+					menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+				}`}
 				aria-label='Menú de navegación'
 			>
 				{navLinks.map((link) => (

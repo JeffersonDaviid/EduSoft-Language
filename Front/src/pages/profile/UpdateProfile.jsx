@@ -16,7 +16,6 @@ export const UpdateProfile = () => {
         confirmNewPassword: '',
     });
 
-    // Usa la ruta relativa para el backend, pero la URL completa para previsualización
     const [profilePicture, setProfilePicture] = useState(user.profilePicture || '');
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(() => {
@@ -58,25 +57,29 @@ export const UpdateProfile = () => {
         }
     };
 
+    const [fieldErrors, setFieldErrors] = useState({});
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setSuccess('');
+        setFieldErrors({});
 
-        if (form.newPassword && form.newPassword !== form.confirmNewPassword) {
-            setError('Passwords do not match');
-            return;
+        const newFieldErrors = {};
+
+        if (form.newPassword || form.confirmNewPassword) {
+            if (form.newPassword !== form.confirmNewPassword) {
+                newFieldErrors.confirmNewPassword = 'Passwords do not match';
+            }
+            if (form.newPassword && (form.newPassword.length < 8 || form.newPassword.length > 15)) {
+                newFieldErrors.newPassword = 'Password must be between 8 and 15 characters';
+            }
         }
 
-        if (form.newPassword) {
-            if (form.newPassword.length < 8 || form.newPassword.length > 15) {
-                setError('Password must be between 8 and 15 characters');
-                return;
-            }
-            if (form.newPassword !== form.confirmNewPassword) {
-                setError('Passwords do not match');
-                return;
-            }
+        if (Object.keys(newFieldErrors).length > 0) {
+            setFieldErrors(newFieldErrors);
+            setError('Please fix the errors before submitting.');
+            return;
         }
 
         try {
@@ -212,9 +215,10 @@ export const UpdateProfile = () => {
                                         type={showNewPassword ? 'text' : 'password'}
                                         autoComplete='new-password'
                                         placeholder='Enter new password'
-                                        className='self-stretch rounded-xl bg-[#e8edf2] h-10 p-2 pr-10 focus:outline-2 focus:outline-blue-400'
+                                        className={`self-stretch rounded-xl bg-[#e8edf2] h-10 p-2 pr-10 focus:outline-2 focus:outline-blue-400 ${fieldErrors.newPassword ? 'border border-red-500' : ''}`}
                                         value={form.newPassword}
                                         onChange={handleChange}
+                                        aria-invalid={!!fieldErrors.newPassword}
                                     />
                                     <button
                                         type="button"
@@ -229,6 +233,9 @@ export const UpdateProfile = () => {
                                             className="w-6 h-6"
                                         />
                                     </button>
+                                    {fieldErrors.newPassword && (
+                                        <span className="text-red-600 text-xs mt-1">{fieldErrors.newPassword}</span>
+                                    )}
                                 </div>
                                 <div className='flex flex-col items-start relative'>
                                     <label htmlFor='confirmNewPassword' className='leading-6 font-medium'>
@@ -240,9 +247,10 @@ export const UpdateProfile = () => {
                                         type={showConfirmNewPassword ? 'text' : 'password'}
                                         autoComplete='new-password'
                                         placeholder='Confirm new password'
-                                        className='self-stretch rounded-xl bg-[#e8edf2] h-10 p-2 pr-10 focus:outline-2 focus:outline-blue-400'
+                                        className={`self-stretch rounded-xl bg-[#e8edf2] h-10 p-2 pr-10 focus:outline-2 focus:outline-blue-400 ${fieldErrors.confirmNewPassword ? 'border border-red-500' : ''}`}
                                         value={form.confirmNewPassword}
                                         onChange={handleChange}
+                                        aria-invalid={!!fieldErrors.confirmNewPassword}
                                     />
                                     <button
                                         type="button"
@@ -257,6 +265,9 @@ export const UpdateProfile = () => {
                                             className="w-6 h-6"
                                         />
                                     </button>
+                                    {fieldErrors.confirmNewPassword && (
+                                        <span className="text-red-600 text-xs mt-1">{fieldErrors.confirmNewPassword}</span>
+                                    )}
                                 </div>
                                 {error && (
                                     <div className="flex items-center gap-3 text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-2">
