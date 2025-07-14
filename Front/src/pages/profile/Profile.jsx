@@ -45,7 +45,7 @@ export const Profile = () => {
                     averageScore: data.averageScore || 0,
                     history: data.history || [],
                 });
-            } catch (e) {
+            } catch {
                 setProgress({ gamesPlayed: 0, averageScore: 0, history: [] });
             }
             setLoading(false);
@@ -60,7 +60,7 @@ export const Profile = () => {
                 const res = await fetch(`${API_URL}/user/ranking?userId=${user.id}`);
                 const data = await res.json();
                 setRanking(data.ranking);
-            } catch (e) {
+            } catch {
                 setRanking(null);
             }
         };
