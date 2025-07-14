@@ -428,17 +428,6 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 					Pronunciation Challenge
 				</h1>
 				<div className='flex items-center gap-3'>
-					{/* Audio Status Indicator */}
-					{isSpeaking && (
-						<div className='flex items-center gap-1 text-xs px-2 py-1 bg-blue-50 border border-blue-200 rounded-full'>
-							<div
-								className={`w-2 h-2 rounded-full ${
-									isPaused ? 'bg-orange-400' : 'bg-green-400 animate-pulse'
-								}`}
-							></div>
-							<span className='text-blue-700'>{isPaused ? 'Paused' : 'Playing'}</span>
-						</div>
-					)}
 					<div className='text-right'>
 						<div className='text-sm font-bold text-gray-500 uppercase'>Score</div>
 						<div className='text-2xl sm:text-3xl font-bold text-gray-700'>
