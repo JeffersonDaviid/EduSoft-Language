@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { API_URL } from '../../../API';
 import { useAuth } from '../../../context/AuthContext';
 import { SENTENCES_STACK_FOR_SPEAKING } from '../CONST_VALUES';
+import { HeaderGame } from '../../../components/HeaderGame';
 
 // Solo 5 rondas como solicitaste
 const TOTAL_PRONUNCIATION_ROUNDS = 5;
@@ -385,7 +386,7 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 	};
 
 	return (
-		<div className='w-full lg:max-w-4xl lg:mx-auto lg:my-16 sm:hjjhnmbg-gray-50 lg:bg-white lg:shadow-2xl lg:rounded-2xl xs:p-0 sm:p-6 lg:p-10 text-center min-h-screen lg:min-h-0 flex flex-col justify-start lg:block'>
+		<div className='max-w-2xl mx-auto p-4 sm:p-6 space-y-6 select-none'>
 			{/* Custom CSS for better slider styling */}
 			<style jsx>{`
 				.slider::-webkit-slider-thumb {
@@ -423,22 +424,13 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 				}
 			`}</style>
 
-			<div className='flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0'>
-				<h1 className='text-xl sm:text-2xl lg:text-2xl font-bold text-blue-600 text-left'>
-					Pronunciation Challenge
-				</h1>
-				<div className='flex items-center gap-3'>
-					<div className='text-right'>
-						<div className='text-sm font-bold text-gray-500 uppercase'>Score</div>
-						<div className='text-2xl sm:text-3xl font-bold text-gray-700'>
-							{getAverageScore()}
-						</div>
-					</div>
-				</div>
-			</div>
-			<p className='text-gray-600 mb-8'>
-				Round {roundsPlayed + 1} of {TOTAL_PRONUNCIATION_ROUNDS}
-			</p>
+			<HeaderGame
+				typeGame='Speak'
+				title='Pronunciation Challenge'
+				currentStep={roundsPlayed + 1}
+				totalSteps={TOTAL_PRONUNCIATION_ROUNDS}
+				score={getAverageScore()}
+			/>
 
 			<div className='mb-8 flex flex-col items-center'>
 				<div className='text-base sm:text-lg lg:text-2xl xl:text-3xl font-bold text-gray-800 mb-6 bg-white lg:bg-gray-100 p-4 sm:p-6 rounded-lg w-full max-w-4xl text-center leading-relaxed border border-gray-200 lg:border-0 shadow-sm lg:shadow-none'>
