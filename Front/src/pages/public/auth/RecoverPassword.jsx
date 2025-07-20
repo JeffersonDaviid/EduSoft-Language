@@ -85,7 +85,8 @@ export const RecoverPassword = () => {
                 <section className='w-full flex flex-row items-center justify-center py-5 px-4 md:px-16 lg:px-40 box-border text-left text-base'>
                     <div className='w-full max-w-[480px] overflow-hidden shrink-0 flex flex-col items-center justify-start py-5 px-0 box-border'>
                         <header className='self-stretch flex flex-col items-center justify-start pt-5 px-2 md:px-4 pb-3 text-center text-2xl md:text-[28px]'>
-                            <h1 className='self-stretch leading-[35px] font-bold'>
+                            <h1 className='self-stretch leading-[35px] font-bold'
+                            tabIndex={0}>
                                 Recover your password
                             </h1>
                         </header>
@@ -103,7 +104,8 @@ export const RecoverPassword = () => {
                                 </div>
                             )}
                             <div className='flex flex-col items-start'>
-                                <label htmlFor='email' className='leading-6 font-medium'>
+                                <label htmlFor='email' className='leading-6 font-medium'
+                                tabIndex={0}>
                                     Email <span className="text-red-600" aria-hidden="true">*</span>
                                     <span className="sr-only">(required)</span>
                                 </label>
@@ -122,7 +124,8 @@ export const RecoverPassword = () => {
                                 )}
                             </div>
                             <div className='flex flex-col items-start'>
-                                <label htmlFor='answerSecret' className='leading-6 font-medium'>
+                                <label htmlFor='answerSecret' className='leading-6 font-medium'
+                                tabIndex={0}>
                                     Secret Answer <span className="text-red-600" aria-hidden="true">*</span>
                                     <span className="sr-only">(required)</span>
                                 </label>
@@ -141,7 +144,8 @@ export const RecoverPassword = () => {
                                 )}
                             </div>
                             <div className='flex flex-col items-start'>
-                                <label htmlFor='newPassword' className='leading-6 font-medium'>
+                                <label htmlFor='newPassword' className='leading-6 font-medium'
+                                tabIndex={0}>
                                     New Password <span className="text-red-600" aria-hidden="true">*</span>
                                     <span className="sr-only">(required)</span>
                                 </label>
@@ -160,7 +164,8 @@ export const RecoverPassword = () => {
                                 )}
                             </div>
                             <div className='flex flex-col items-start'>
-                                <label htmlFor='confirmNewPassword' className='leading-6 font-medium'>
+                                <label htmlFor='confirmNewPassword' className='leading-6 font-medium'
+                                tabIndex={0}>
                                     Confirm New Password <span className="text-red-600" aria-hidden="true">*</span>
                                     <span className="sr-only">(required)</span>
                                 </label>
@@ -181,6 +186,7 @@ export const RecoverPassword = () => {
                             <button
                                 type='submit'
                                 className='w-full rounded-[20px] bg-[#1377B9] h-10 flex items-center justify-center py-0 px-4 min-w-[84px] max-w-[480px] cursor-pointer text-[#fafafa] font-bold leading-[21px] text-base transition-colors duration-150 hover:bg-[#1d7fc1] focus:outline-2 focus:outline-[#0d171c]'
+                                tabIndex={0}
                             >
                                 Update Password
                             </button>
@@ -188,6 +194,7 @@ export const RecoverPassword = () => {
                                 <span
                                     className='leading-[21px] cursor-pointer underline'
                                     onClick={() => navigate('/login')}
+                                    tabIndex={0}
                                 >
                                     Back to Log in
                                 </span>
@@ -196,7 +203,6 @@ export const RecoverPassword = () => {
                     </div>
                 </section>
             </section>
-            <Footer />
         </main>
     );
 };

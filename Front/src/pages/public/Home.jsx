@@ -33,6 +33,7 @@ export const Home = () => {
 							<div className='w-full md:w-[1000px] flex flex-col items-center justify-center p-2 md:p-4 box-border'>
 								<div
 									className='w-full md:w-[969px] relative rounded-xl bg-cover bg-no-repeat bg-center min-h-[320px] md:min-h-[480px] flex flex-col items-center justify-center shadow-lg'
+									alt="Image represent a group of friend talking and rest on a sofa" tabIndex={0}
 									style={{ backgroundImage: `url(${hero})` }}
 								>
 									<div
@@ -43,13 +44,14 @@ export const Home = () => {
 										<h1
 											className='w-full md:w-[706px] tracking-[-1px] md:tracking-[-2px] leading-[40px] md:leading-[60px] font-black inline-block h-auto md:h-[60px] shrink-0 text-2xl md:text-4xl lg:text-5xl'
 											aria-label='Main headline'
+											tabIndex={0}
 										>
 											Learn English by playing!
 											<span className='sr-only'>
 												Welcome to EduSoft, interactive English learning through games
 											</span>
 										</h1>
-										<p className='self-stretch relative leading-6 text-base md:text-lg text-[#e6e8eb] mt-2'>
+										<p className='self-stretch relative leading-6 text-base md:text-lg text-[#e6e8eb] mt-2' tabIndex={0}>
 											Learn English in a fun and effective way. At EduSoft, we transform
 											language learning into an entertaining experience through
 											interactive games that will help you improve your comprehension,

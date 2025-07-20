@@ -29,7 +29,7 @@ export const Reading = () => {
 		setBlanks(Array(current.answers.length).fill(''));
 		setVerified(false);
 		setAlert('');
-	}, [idx]);
+	}, [idx, current.answers.length]);
 
 	// helpers
 	const allFilled = blanks.every((w) => w !== '');
@@ -41,6 +41,56 @@ export const Reading = () => {
 			copy[i] = val;
 			return copy;
 		});
+
+	// Función para manejar navegación por teclado en select
+	const handleSelectKeyDown = (e, index) => {
+		if (verified) return; // No permitir cambios si ya está verificado
+
+		const select = e.target;
+		const options = Array.from(select.options);
+		const currentIndex = options.findIndex((option) => option.value === blanks[index]);
+
+		switch (e.key) {
+			case 'ArrowDown':
+			case 'ArrowRight': {
+				e.preventDefault();
+				const nextIndex = Math.min(currentIndex + 1, options.length - 1);
+				if (nextIndex !== currentIndex) {
+					selectWord(index, options[nextIndex].value);
+				}
+				break;
+			}
+
+			case 'ArrowUp':
+			case 'ArrowLeft': {
+				e.preventDefault();
+				const prevIndex = Math.max(currentIndex - 1, 0);
+				if (prevIndex !== currentIndex) {
+					selectWord(index, options[prevIndex].value);
+				}
+				break;
+			}
+
+			case 'Home': {
+				e.preventDefault();
+				selectWord(index, options[1].value); // Skip empty option
+				break;
+			}
+
+			case 'End': {
+				e.preventDefault();
+				selectWord(index, options[options.length - 1].value);
+				break;
+			}
+
+			case 'Delete':
+			case 'Backspace': {
+				e.preventDefault();
+				selectWord(index, '');
+				break;
+			}
+		}
+	};
 
 	const handleVerify = () => {
 		if (!allFilled) {
@@ -123,7 +173,12 @@ export const Reading = () => {
 			<div className='leading-relaxed text-md'>
 				{current.text.split(/(\{\d\})/g).map((seg, k) => {
 					const m = seg.match(/\{(\d)\}/);
-					if (!m) return seg;
+					if (!m)
+						return (
+							<span key={k} tabIndex={0}>
+								{seg}
+							</span>
+						);
 
 					const i = Number(m[1]);
 					const filled = blanks[i];
@@ -136,13 +191,16 @@ export const Reading = () => {
 								value={filled}
 								disabled={verified}
 								onChange={(e) => selectWord(i, e.target.value)}
-								className={`mx-1 border rounded px-2 ${
+								onKeyDown={(e) => handleSelectKeyDown(e, i)}
+								className={`mx-1 border rounded px-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
 									verified && filled === correct
 										? 'bg-green-100'
 										: wrong
 										? 'bg-red-100'
 										: ''
 								}`}
+								aria-label={`Blank ${i + 1} of ${current.answers.length}`}
+								aria-describedby={wrong ? `correction-${i}` : undefined}
 							>
 								<option value=''>___</option>
 								{choices.map((c) => (
@@ -154,7 +212,15 @@ export const Reading = () => {
 
 							{/* 💡 Corrección visible al verificar si estaba mal */}
 							{wrong && (
-								<span className='text-emerald-700 text-sm italic ml-1'>{correct}</span>
+								<span
+									id={`correction-${i}`}
+									className='text-emerald-700 text-sm italic ml-1'
+									tabIndex={0}
+									role='status'
+									aria-label={`Correct answer: ${correct}`}
+								>
+									{correct}
+								</span>
 							)}
 						</span>
 					);
@@ -162,7 +228,11 @@ export const Reading = () => {
 			</div>
 
 			{/* Aviso faltan espacios */}
-			{alert && !verified && <p className='text-red-600 text-sm'>{alert}</p>}
+			{alert && !verified && (
+				<p className='text-red-600 text-sm' tabIndex={0} role='alert'>
+					{alert}
+				</p>
+			)}
 
 			{/* Botonera */}
 			<div className='flex flex-col justify-center sm:flex-row gap-3 sm:gap-4'>
@@ -216,21 +286,29 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 
 	return (
 		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-4 sm:p-8 md:p-12 text-left'>
-			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center'>
+			<h1
+				className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center'
+				tabIndex={0}
+			>
 				Challenge Complete!
 			</h1>
 
 			{/* Resumen de puntaje principal */}
 			<div className='text-center mb-8'>
 				{/* Etiqueta para el puntaje */}
-				<div className='text-lg font-medium text-gray-600 mb-1'>Score</div>
+				<div className='text-lg font-medium text-gray-600 mb-1' tabIndex={0}>
+					Score
+				</div>
 
 				{/* Resultado del puntaje */}
-				<div className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2'>{score}</div>
+				<div className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2' tabIndex={0}>
+					{score}
+				</div>
 
 				{/* Nivel de rendimiento */}
 				<div
 					className={`inline-block px-4 py-2 rounded-full font-semibold ${performance.bg} ${performance.color}`}
+					tabIndex={0}
 				>
 					{performance.level}
 				</div>
@@ -239,22 +317,32 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 			{/* Estadísticas detalladas */}
 			<div className='grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8'>
 				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>
+					<div className='text-2xl font-bold text-gray-800' tabIndex={0}>
 						{correctReadings.length}/{results.length}
 					</div>
-					<div className='text-sm text-gray-600'>Perfect Readings</div>
+					<div className='text-sm text-gray-600' tabIndex={0}>
+						Perfect Readings
+					</div>
 				</div>
 				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>{accuracy}%</div>
-					<div className='text-sm text-gray-600'>Accuracy Rate</div>
+					<div className='text-2xl font-bold text-gray-800' tabIndex={0}>
+						{accuracy}%
+					</div>
+					<div className='text-sm text-gray-600' tabIndex={0}>
+						Accuracy Rate
+					</div>
 				</div>
 				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>{results.length}</div>
-					<div className='text-sm text-gray-600'>Total Passages</div>
+					<div className='text-2xl font-bold text-gray-800' tabIndex={0}>
+						{results.length}
+					</div>
+					<div className='text-sm text-gray-600' tabIndex={0}>
+						Total Passages
+					</div>
 				</div>
 			</div>
 
-			<p className='text-gray-600 text-center mb-8 sm:mb-10'>
+			<p className='text-gray-600 text-center mb-8 sm:mb-10' tabIndex={0}>
 				Let's review your reading comprehension performance. Use this feedback to improve
 				your understanding of context and vocabulary.
 			</p>
@@ -263,7 +351,10 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 				{/* Sección de respuestas correctas */}
 				{correctReadings.length > 0 && (
 					<section>
-						<h2 className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center'>
+						<h2
+							className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center'
+							tabIndex={0}
+						>
 							<span className='bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>
 								✓
 							</span>
@@ -276,23 +367,26 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 									className='p-4 bg-green-50 border border-green-200 rounded-lg'
 								>
 									<div className='flex items-start gap-3'>
-										<div className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+										<div
+											className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'
+											tabIndex={0}
+										>
 											{r.idx + 1}
 										</div>
 										<div>
-											<p className='font-semibold text-gray-900 mb-2'>
+											<p className='font-semibold text-gray-900 mb-2' tabIndex={0}>
 												Reading {r.idx + 1}
 											</p>
-											<p className='text-sm text-gray-700 mb-2'>
+											<p className='text-sm text-gray-700 mb-2' tabIndex={0}>
 												{r.text.replace(/\{\d\}/g, '_____')}
 											</p>
-											<p className='text-sm text-gray-600'>
+											<p className='text-sm text-gray-600' tabIndex={0}>
 												Your answers:{' '}
 												<span className='font-medium text-green-700'>
 													{r.userAnswers.join(', ')}
 												</span>
 											</p>
-											<p className='text-sm text-gray-600'>
+											<p className='text-sm text-gray-600' tabIndex={0}>
 												Correct answers:{' '}
 												<span className='font-medium text-green-700'>
 													{r.correctAnswers.join(', ')}
@@ -309,7 +403,10 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 				{/* Sección de respuestas incorrectas */}
 				{incorrectReadings.length > 0 && (
 					<section>
-						<h2 className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center'>
+						<h2
+							className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center'
+							tabIndex={0}
+						>
 							<span className='bg-gray-200 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>
 								✗
 							</span>
@@ -319,35 +416,41 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 							{incorrectReadings.map((r, i) => (
 								<div key={i} className='p-4 bg-gray-50 border border-gray-200 rounded-lg'>
 									<div className='flex items-start gap-3'>
-										<div className='flex-shrink-0 bg-gray-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+										<div
+											className='flex-shrink-0 bg-gray-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'
+											tabIndex={0}
+										>
 											{r.idx + 1}
 										</div>
 										<div>
-											<p className='font-semibold text-gray-900 mb-2'>
+											<p className='font-semibold text-gray-900 mb-2' tabIndex={0}>
 												Reading {r.idx + 1}
 											</p>
-											<p className='text-sm text-gray-700 mb-2'>
+											<p className='text-sm text-gray-700 mb-2' tabIndex={0}>
 												{r.text.replace(/\{\d\}/g, '_____')}
 											</p>
-											<p className='text-sm text-gray-600 mb-2'>
+											<p className='text-sm text-gray-600 mb-2' tabIndex={0}>
 												Correct answers:{' '}
 												<span className='font-medium text-blue-700'>
 													{r.correctAnswers.join(', ')}
 												</span>
 											</p>
-											<p className='text-sm text-gray-600 mb-2'>
+											<p className='text-sm text-gray-600 mb-2' tabIndex={0}>
 												Your answers:{' '}
 												<span className='font-medium text-blue-700'>
 													{r.userAnswers.join(', ')}
 												</span>
 											</p>
-											<div className='flex gap-4 text-xs text-gray-500 mb-2'>
+											<div className='flex gap-4 text-xs text-gray-500 mb-2' tabIndex={0}>
 												<span>
 													Words filled: {r.userAnswers.filter((a) => a !== '').length}/
 													{r.correctAnswers.length}
 												</span>
 											</div>
-											<p className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300'>
+											<p
+												className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300'
+												tabIndex={0}
+											>
 												💡 Tip: Read the entire passage carefully and consider the
 												context. Look for clues that help determine the right word choice.
 											</p>
@@ -362,7 +465,7 @@ const GameResumeDetails = ({ results, score, onPlayAgain }) => {
 
 			{/* Mensaje motivacional basado en el rendimiento */}
 			<div className={`mt-8 p-4 rounded-lg ${performance.bg} border border-opacity-30`}>
-				<div className={`text-center ${performance.color} font-semibold`}>
+				<div className={`text-center ${performance.color} font-semibold`} tabIndex={0}>
 					{score >= 90 &&
 						'🎉 Outstanding! Your reading comprehension is excellent. Keep up the great work!'}
 					{score >= 75 &&

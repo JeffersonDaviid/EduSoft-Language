@@ -196,10 +196,12 @@ export const GamesHome = () => {
 				<header className='w-full flex flex-col items-center justify-start py-5 px-4 md:px-16 lg:px-40 box-border'>
 					<div className='w-full max-w-[960px] flex flex-col gap-6'>
 						<div className='flex flex-col gap-3'>
-							<h1 className='text-2xl md:text-4xl lg:text-5xl font-bold leading-10 mb-2'>
+							<h1 className='text-2xl md:text-4xl lg:text-5xl font-bold leading-10 mb-2'
+                            tabIndex={0}>
 								Our Games
 							</h1>
-							<p className='text-sm md:text-base text-[#57778E]'>
+							<p className='text-sm md:text-base text-[#57778E]'
+                            tabIndex={0}>
 								Learn English by playing! At EduSoft Language, our games are designed to
 								make learning a fun and educational experience. Through multiple-choice
 								questions, you can test and expand your English vocabulary in an
@@ -208,7 +210,7 @@ export const GamesHome = () => {
 						</div>
 						{gamesData.map(({ category, games }) => (
 							<section key={category} className='pt-4 pb-2'>
-								<h2 className='text-lg md:text-xl font-bold mb-2'>{category}</h2>
+								<h2 className='text-lg md:text-xl font-bold mb-2' tabIndex={0}>{category}</h2>
 								<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
 									{games.map((game, idx) => (
 										<article
@@ -220,12 +222,14 @@ export const GamesHome = () => {
 												className='w-full rounded-xl max-w-full h-48 md:h-[301px] object-cover'
 												alt={game.altImg}
 												src={game.src}
+                                                tabIndex={0}
 											/>
 											<div className='flex flex-col items-start'>
-												<h3 className='leading-6 font-medium text-base md:text-lg'>
+												<h3 className='leading-6 font-medium text-base md:text-lg'
+                                                tabIndex={0}>
 													{game.title}
 												</h3>
-												<p className='text-sm text-[#57778E]'>{game.desc}</p>
+												<p className='text-sm text-[#57778E]' tabIndex={0}>{game.desc}</p>
 											</div>
 										</article>
 									))}

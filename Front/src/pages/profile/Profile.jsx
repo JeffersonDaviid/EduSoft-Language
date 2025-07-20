@@ -51,7 +51,8 @@ export const Profile = () => {
 			setLoading(false);
 		};
 		fetchProgress();
-	}, []);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user?.id]);
 
 	useEffect(() => {
 		const fetchRanking = async () => {
@@ -65,7 +66,8 @@ export const Profile = () => {
 			}
 		};
 		fetchRanking();
-	}, []);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user?.id]);
 
 	let joinedText = '';
 	if (createdAt) {
@@ -93,7 +95,11 @@ export const Profile = () => {
 				<div className='w-full flex items-center justify-center py-4 bg-[#fafafa]'>
 					{' '}
 					{/* Added py-4 for top/bottom spacing */}
-					<div className='flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 max-w-xl'>
+					<div
+						className='flex items-center gap-3 text-green-700 bg-green-50 border border-green-200 rounded-lg px-4 py-3 max-w-xl'
+						tabIndex={0}
+						role='status'
+					>
 						<img src='/check-circle.png' alt='Success' className='w-6 h-6' />
 						<span>{profileUpdateMessage}</span>
 					</div>
@@ -111,7 +117,7 @@ export const Profile = () => {
 									>
 										Profile
 									</h1>
-									<p className='text-sm text-[#57788f]'>
+									<p className='text-sm text-[#57788f]' tabIndex={0}>
 										Here you can view and customize your learning experience. In your
 										profile, you'll find information about your progress, achievements,
 										and statistics, as well as the option to adjust your preferences to
@@ -125,6 +131,7 @@ export const Profile = () => {
 										<img
 											className='w-24 h-24 md:w-32 md:h-32 rounded-full object-cover min-h-[96px] md:min-h-[128px] border border-[#d4dee3]'
 											alt='Profile picture'
+											tabIndex={0}
 											src={
 												user.profilePicture &&
 												user.profilePicture.startsWith('profile-pictures/')
@@ -139,10 +146,12 @@ export const Profile = () => {
 											>
 												{username}
 											</h2>
-											<div className='leading-6'>
+											<div className='leading-6' tabIndex={0}>
 												Level {level} ({scoreInLevel}/500 score)
 											</div>
-											<div className='leading-6'>{joinedText}</div>
+											<div className='leading-6' tabIndex={0}>
+												{joinedText}
+											</div>
 										</div>
 									</div>
 									<nav
@@ -181,28 +190,34 @@ export const Profile = () => {
 										className='flex-1 rounded-lg border-[#d4dee3] border-solid border-[1px] box-border flex flex-col items-start justify-start p-3 gap-2 min-w-[111px] bg-white shadow-sm'
 										aria-label='Games Played'
 									>
-										<b className='text-2xl leading-[30px]'>
+										<b className='text-2xl leading-[30px]' tabIndex={0}>
 											{loading ? '...' : progress.gamesPlayed}
 										</b>
-										<span className='text-sm text-[#57788f]'>Games Played</span>
+										<span className='text-sm text-[#57788f]' tabIndex={0}>
+											Games Played
+										</span>
 									</article>
 									<article
 										className='flex-1 rounded-lg border-[#d4dee3] border-solid border-[1px] box-border flex flex-col items-start justify-start p-3 gap-2 min-w-[111px] bg-white shadow-sm'
 										aria-label='Average Score'
 									>
-										<b className='text-2xl leading-[30px]'>
+										<b className='text-2xl leading-[30px]' tabIndex={0}>
 											{loading ? '...' : progress.averageScore}
 										</b>
-										<span className='text-sm text-[#57788f]'>Average Score</span>
+										<span className='text-sm text-[#57788f]' tabIndex={0}>
+											Average Score
+										</span>
 									</article>
 									<article
 										className='flex-1 rounded-lg border-[#d4dee3] border-solid border-[1px] box-border flex flex-col items-start justify-start p-3 gap-2 min-w-[111px] bg-white shadow-sm'
 										aria-label='Ranking'
 									>
-										<b className='text-2xl leading-[30px]'>
+										<b className='text-2xl leading-[30px]' tabIndex={0}>
 											{loading || ranking == null ? '...' : `#${ranking}`}
 										</b>
-										<span className='text-sm text-[#57788f]'>Ranking</span>
+										<span className='text-sm text-[#57788f]' tabIndex={0}>
+											Ranking
+										</span>
 									</article>
 								</div>
 							</section>
@@ -216,13 +231,13 @@ export const Profile = () => {
 										<caption className='sr-only'>Game history table</caption>
 										<thead>
 											<tr>
-												<th scope='col' className='py-3 px-4 font-medium'>
+												<th scope='col' className='py-3 px-4 font-medium' tabIndex={0}>
 													Game
 												</th>
-												<th scope='col' className='py-3 px-4 font-medium'>
+												<th scope='col' className='py-3 px-4 font-medium' tabIndex={0}>
 													Date
 												</th>
-												<th scope='col' className='py-3 px-4 font-medium'>
+												<th scope='col' className='py-3 px-4 font-medium' tabIndex={0}>
 													Score
 												</th>
 											</tr>
@@ -230,13 +245,13 @@ export const Profile = () => {
 										<tbody>
 											{loading ? (
 												<tr>
-													<td colSpan={3} className='py-2 px-4 text-center'>
+													<td colSpan={3} className='py-2 px-4 text-center' tabIndex={0}>
 														Loading...
 													</td>
 												</tr>
 											) : progress.history.length === 0 ? (
 												<tr>
-													<td colSpan={3} className='py-2 px-4 text-center'>
+													<td colSpan={3} className='py-2 px-4 text-center' tabIndex={0}>
 														No games played yet.
 													</td>
 												</tr>

@@ -433,13 +433,20 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			/>
 
 			<div className='mb-8 flex flex-col items-center'>
-				<div className='text-base sm:text-lg lg:text-2xl xl:text-3xl font-bold text-gray-800 mb-6 bg-white lg:bg-gray-100 p-4 sm:p-6 rounded-lg w-full max-w-4xl text-center leading-relaxed border border-gray-200 lg:border-0 shadow-sm lg:shadow-none'>
+				<div
+					className='text-base sm:text-lg lg:text-2xl xl:text-3xl font-bold text-gray-800 mb-6 bg-white lg:bg-gray-100 p-4 sm:p-6 rounded-lg w-full max-w-4xl text-center leading-relaxed border border-gray-200 lg:border-0 shadow-sm lg:shadow-none'
+					tabIndex={0}
+				>
 					{currentSentence}
 				</div>
 				{hasRecorded && currentTranscript && (
 					<div className='mb-4 p-4 bg-blue-50 rounded-lg border border-blue-200'>
-						<p className='text-sm text-gray-600 mb-2'>Your pronunciation:</p>
-						<p className='text-lg font-medium text-blue-800'>"{currentTranscript}"</p>
+						<p className='text-sm text-gray-600 mb-2' tabIndex={0}>
+							Your pronunciation:
+						</p>
+						<p className='text-lg font-medium text-blue-800' tabIndex={0}>
+							"{currentTranscript}"
+						</p>
 					</div>
 				)}
 
@@ -452,7 +459,9 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 						aria-expanded={showAudioControls}
 						aria-controls='audio-controls-panel'
 					>
-						<span className='text-sm font-medium text-gray-700'>🎛️ Audio Settings</span>
+						<span className='text-sm font-medium text-gray-700' tabIndex={0}>
+							🎛️ Audio Settings
+						</span>
 						<svg
 							className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
 								showAudioControls ? 'rotate-180' : ''
@@ -483,6 +492,7 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 								<label
 									htmlFor='volume-control'
 									className='block text-sm font-medium text-gray-700 mb-2'
+									tabIndex={0}
 								>
 									🔊 Volume: {Math.round(volume * 100)}%
 								</label>
@@ -504,6 +514,7 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 								<label
 									htmlFor='speed-control'
 									className='block text-sm font-medium text-gray-700 mb-2'
+									tabIndex={0}
 								>
 									⚡ Speed: {speechRate}x
 								</label>
@@ -519,9 +530,9 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 									aria-label='Speech speed control'
 								/>
 								<div className='flex justify-between text-xs text-gray-500 mt-1'>
-									<span>Slow</span>
-									<span>Normal</span>
-									<span>Fast</span>
+									<span tabIndex={0}>Slow</span>
+									<span tabIndex={0}>Normal</span>
+									<span tabIndex={0}>Fast</span>
 								</div>
 							</div>
 
@@ -581,7 +592,12 @@ const PronunciationGameScreen = ({ onGameOver, isSupported }) => {
 			</div>
 
 			<div className='h-16 flex flex-col items-center justify-center p-4 rounded-lg bg-gray-100 text-lg'>
-				<div dangerouslySetInnerHTML={{ __html: statusMessage }} />
+				<div
+					dangerouslySetInnerHTML={{ __html: statusMessage }}
+					tabIndex={0}
+					role='status'
+					aria-live='polite'
+				/>
 			</div>
 		</div>
 	);
@@ -614,23 +630,29 @@ const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
 
 	return (
 		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-4 sm:p-8 md:p-12 text-left'>
-			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center'>
+			<h1
+				className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center'
+				tabIndex={0}
+			>
 				Challenge Complete!
 			</h1>
 
 			{/* Resumen de puntaje principal */}
 			<div className='text-center mb-8'>
 				{/* Etiqueta para el puntaje */}
-				<div className='text-lg font-medium text-gray-600 mb-1'>Score</div>
+				<div className='text-lg font-medium text-gray-600 mb-1' tabIndex={0}>
+					Score
+				</div>
 
 				{/* Resultado del puntaje */}
-				<div className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2'>
+				<div className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2' tabIndex={0}>
 					{finalScore}
 				</div>
 
 				{/* Nivel de rendimiento */}
 				<div
 					className={`inline-block px-4 py-2 rounded-full font-semibold ${performance.bg} ${performance.color}`}
+					tabIndex={0}
 				>
 					{performance.level}
 				</div>
@@ -639,22 +661,32 @@ const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
 			{/* Estadísticas detalladas */}
 			<div className='grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8'>
 				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>
+					<div className='text-2xl font-bold text-gray-800' tabIndex={0}>
 						{correctAnswers.length}/{results.length}
 					</div>
-					<div className='text-sm text-gray-600'>Correct Pronunciations</div>
+					<div className='text-sm text-gray-600' tabIndex={0}>
+						Correct Pronunciations
+					</div>
 				</div>
 				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>{accuracy}%</div>
-					<div className='text-sm text-gray-600'>Accuracy Rate</div>
+					<div className='text-2xl font-bold text-gray-800' tabIndex={0}>
+						{accuracy}%
+					</div>
+					<div className='text-sm text-gray-600' tabIndex={0}>
+						Accuracy Rate
+					</div>
 				</div>
 				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>{avgConfidence}%</div>
-					<div className='text-sm text-gray-600'>Avg. Confidence</div>
+					<div className='text-2xl font-bold text-gray-800' tabIndex={0}>
+						{avgConfidence}%
+					</div>
+					<div className='text-sm text-gray-600' tabIndex={0}>
+						Avg. Confidence
+					</div>
 				</div>
 			</div>
 
-			<p className='text-gray-600 text-center mb-8 sm:mb-10'>
+			<p className='text-gray-600 text-center mb-8 sm:mb-10' tabIndex={0}>
 				Let's review your pronunciation performance. Use this feedback to improve your
 				speaking skills.
 			</p>
@@ -663,7 +695,10 @@ const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
 				{/* Sección de respuestas correctas */}
 				{correctAnswers.length > 0 && (
 					<section>
-						<h2 className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center'>
+						<h2
+							className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center'
+							tabIndex={0}
+						>
 							<span className='bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>
 								✓
 							</span>
@@ -676,18 +711,23 @@ const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
 									className='p-4 bg-green-50 border border-green-200 rounded-lg'
 								>
 									<div className='flex items-start gap-3'>
-										<div className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+										<div
+											className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'
+											tabIndex={0}
+										>
 											{results.indexOf(r) + 1}
 										</div>
 										<div>
-											<p className='font-semibold text-gray-900 mb-1'>"{r.sentence}"</p>
-											<p className='text-sm text-gray-600'>
+											<p className='font-semibold text-gray-900 mb-1' tabIndex={0}>
+												"{r.sentence}"
+											</p>
+											<p className='text-sm text-gray-600' tabIndex={0}>
 												Your pronunciation:{' '}
 												<span className='font-medium text-green-700'>
 													"{r.transcript}"
 												</span>
 											</p>
-											<div className='flex gap-4 text-xs text-gray-500 mt-1'>
+											<div className='flex gap-4 text-xs text-gray-500 mt-1' tabIndex={0}>
 												<span>Confidence: {Math.round((r.confidence || 0) * 100)}%</span>
 												<span>
 													Word Match: {Math.round((r.wordSimilarity || 0) * 100)}%
@@ -704,7 +744,10 @@ const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
 				{/* Sección de respuestas incorrectas (con colores ajustados) */}
 				{incorrectAnswers.length > 0 && (
 					<section>
-						<h2 className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center'>
+						<h2
+							className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center'
+							tabIndex={0}
+						>
 							<span className='bg-gray-200 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>
 								✗
 							</span>
@@ -714,24 +757,32 @@ const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
 							{incorrectAnswers.map((r, i) => (
 								<div key={i} className='p-4 bg-gray-50 border border-gray-200 rounded-lg'>
 									<div className='flex items-start gap-3'>
-										<div className='flex-shrink-0 bg-gray-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+										<div
+											className='flex-shrink-0 bg-gray-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'
+											tabIndex={0}
+										>
 											{results.indexOf(r) + 1}
 										</div>
 										<div>
-											<p className='font-semibold text-gray-900 mb-1'>"{r.sentence}"</p>
-											<p className='text-sm text-gray-600 mb-2'>
+											<p className='font-semibold text-gray-900 mb-1' tabIndex={0}>
+												"{r.sentence}"
+											</p>
+											<p className='text-sm text-gray-600 mb-2' tabIndex={0}>
 												Your pronunciation:{' '}
 												<span className='font-medium text-blue-700'>
 													"{r.transcript || 'No speech detected'}"
 												</span>
 											</p>
-											<div className='flex gap-4 text-xs text-gray-500 mb-2'>
+											<div className='flex gap-4 text-xs text-gray-500 mb-2' tabIndex={0}>
 												<span>Confidence: {Math.round((r.confidence || 0) * 100)}%</span>
 												<span>
 													Word Match: {Math.round((r.wordSimilarity || 0) * 100)}%
 												</span>
 											</div>
-											<p className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300'>
+											<p
+												className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300'
+												tabIndex={0}
+											>
 												💡 Tip: Try pronouncing each word slowly and clearly. Focus on
 												consonant clusters and vowel sounds.
 											</p>
@@ -746,7 +797,7 @@ const PronunciationGameOverScreen = ({ finalScore, results, onPlayAgain }) => {
 
 			{/* Mensaje motivacional basado en el rendimiento */}
 			<div className={`mt-8 p-4 rounded-lg ${performance.bg} border border-opacity-30`}>
-				<div className={`text-center ${performance.color} font-semibold`}>
+				<div className={`text-center ${performance.color} font-semibold`} tabIndex={0}>
 					{finalScore >= 90 &&
 						'🎉 Outstanding! Your pronunciation is excellent. Keep up the great work!'}
 					{finalScore >= 75 &&
@@ -825,7 +876,11 @@ export const PronunciationChallenge = () => {
 	if (!isSupported) {
 		return (
 			<div className='w-full flex-grow flex items-center justify-center p-4'>
-				<p className='text-red-600 text-lg font-semibold text-center'>
+				<p
+					className='text-red-600 text-lg font-semibold text-center'
+					tabIndex={0}
+					role='alert'
+				>
 					Sorry, your browser does not fully support the required Speech Synthesis and
 					Speech Recognition features for this game.
 					<br />

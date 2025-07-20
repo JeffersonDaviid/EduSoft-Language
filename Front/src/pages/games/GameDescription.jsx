@@ -12,10 +12,12 @@ export const GameDescription = ({
 	return (
 		<section className='w-full max-w-4xl mx-auto flex flex-col gap-4 md:gap-6 p-2 md:p-4'>
 			<header className='w-full flex flex-col gap-2 md:gap-3 px-2 md:px-4'>
-				<h1 className='text-neutral-900 text-2xl md:text-3xl lg:text-4xl font-bold font-lexend leading-tight break-words'>
+				<h1 className='text-neutral-900 text-2xl md:text-3xl lg:text-4xl font-bold font-lexend leading-tight break-words'
+				tabIndex={0}>
 					{title}
 				</h1>
-				<p className='text-slate-500 text-sm md:text-base font-normal font-lexend leading-tight'>
+				<p className='text-slate-500 text-sm md:text-base font-normal font-lexend leading-tight'
+				tabIndex={0}>
 					{description}
 				</p>
 			</header>
@@ -24,6 +26,7 @@ export const GameDescription = ({
 					src={img}
 					alt={altImg}
 					className='w-full max-w-[928px] h-auto md:h-[50vh] rounded-xl object-cover shadow-sm'
+					tabIndex={0}
 				/>
 			</div>
 			<div className='w-full flex flex-col sm:flex-row gap-3 justify-center items-center px-2 md:px-4'>

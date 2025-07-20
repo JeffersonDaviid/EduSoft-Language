@@ -219,7 +219,8 @@ const GameScreen = ({ onGameOver }) => {
 			/>
 
 			<div className='my-8 flex flex-col items-center'>
-				<p className='text-2xl sm:text-3xl text-gray-800 mb-4 bg-gray-100 p-4 rounded-lg'>
+				<p className='text-2xl sm:text-3xl text-gray-800 mb-4 bg-gray-100 p-4 rounded-lg'
+				tabIndex={0}>
 					{currentSentence.display}
 				</p>
 
@@ -359,7 +360,8 @@ const GameScreen = ({ onGameOver }) => {
 				</button>
 			</form>
 			<div className='h-16 flex flex-col items-center justify-center p-4 rounded-lg bg-gray-100'>
-				<div dangerouslySetInnerHTML={{ __html: statusMessage }} />
+				<div dangerouslySetInnerHTML={{ __html: statusMessage }}
+				tabIndex={0} />
 			</div>
 			{isRoundComplete && (
 				<button
@@ -406,23 +408,25 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
 
 	return (
 		<div className='w-full max-w-4xl mx-auto my-16 bg-white shadow-2xl rounded-2xl p-4 sm:p-8 md:p-12 text-left'>
-			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center'>
+			<h1 className='text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-4 text-center'
+			tabIndex={0}>
 				Challenge Complete!
 			</h1>
 
 			{/* Resumen de puntaje principal */}
 			<div className='text-center mb-8'>
 				{/* Etiqueta para el puntaje */}
-				<div className='text-lg font-medium text-gray-600 mb-1'>Score</div>
+				<div className='text-lg font-medium text-gray-600 mb-1' tabIndex={0}>Score</div>
 
 				{/* Resultado del puntaje */}
-				<div className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2'>
+				<div className='text-4xl sm:text-5xl font-bold text-blue-600 mb-2' tabIndex={0}>
 					{finalScore}
 				</div>
 
 				{/* Nivel de rendimiento */}
 				<div
 					className={`inline-block px-4 py-2 rounded-full font-semibold ${performance.bg} ${performance.color}`}
+					tabIndex={0}
 				>
 					{performance.level}
 				</div>
@@ -431,22 +435,23 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
 			{/* Estadísticas detalladas */}
 			<div className='grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8'>
 				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>
+					<div className='text-2xl font-bold text-gray-800' tabIndex={0}>
 						{correctAnswers.length}/{results.length}
 					</div>
-					<div className='text-sm text-gray-600'>Correct Answers</div>
+					<div className='text-sm text-gray-600' tabIndex={0}>Correct Answers</div>
 				</div>
 				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>{accuracy}%</div>
-					<div className='text-sm text-gray-600'>Accuracy Rate</div>
+					<div className='text-2xl font-bold text-gray-800' tabIndex={0}>{accuracy}%</div>
+					<div className='text-sm text-gray-600' tabIndex={0}>Accuracy Rate</div>
 				</div>
 				<div className='bg-gray-50 p-4 rounded-lg text-center'>
-					<div className='text-2xl font-bold text-gray-800'>{results.length}</div>
-					<div className='text-sm text-gray-600'>Total Questions</div>
+					<div className='text-2xl font-bold text-gray-800' tabIndex={0}>{results.length}</div>
+					<div className='text-sm text-gray-600' tabIndex={0}>Total Questions</div>
 				</div>
 			</div>
 
-			<p className='text-gray-600 text-center mb-8 sm:mb-10'>
+			<p className='text-gray-600 text-center mb-8 sm:mb-10'
+			tabIndex={0}>
 				Let's review your listening comprehension performance. Use this feedback to
 				improve your auditory skills.
 			</p>
@@ -455,7 +460,8 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
 				{/* Sección de respuestas correctas */}
 				{correctAnswers.length > 0 && (
 					<section>
-						<h2 className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center'>
+						<h2 className='text-xl sm:text-2xl font-bold text-green-700 mb-4 flex items-center'
+						tabIndex={0}>
 							<span className='bg-green-100 text-green-600 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>
 								✓
 							</span>
@@ -468,14 +474,15 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
 									className='p-4 bg-green-50 border border-green-200 rounded-lg'
 								>
 									<div className='flex items-start gap-3'>
-										<div className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+										<div className='flex-shrink-0 bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'
+										tabIndex={0}>
 											{results.indexOf(r) + 1}
 										</div>
-										<div>
+										<div tabIndex={0}>
 											{renderQuestion(r.question, r.correctAnswer)}
-											<p className='text-sm text-gray-600'>
+											<p className='text-sm text-gray-600' tabIndex={0}>
 												Your answer:{' '}
-												<span className='font-medium text-green-700'>{r.userAnswer}</span>
+												<span className='font-medium text-green-700' tabIndex={0}>{r.userAnswer}</span>
 											</p>
 										</div>
 									</div>
@@ -488,7 +495,8 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
 				{/* Sección de respuestas incorrectas */}
 				{incorrectAnswers.length > 0 && (
 					<section>
-						<h2 className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center'>
+						<h2 className='text-xl sm:text-2xl font-bold text-blue-700 mb-4 flex items-center'
+						tabIndex={0}>
 							<span className='bg-gray-200 text-gray-700 rounded-full w-8 h-8 flex items-center justify-center mr-3 text-lg'>
 								✗
 							</span>
@@ -498,22 +506,26 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
 							{incorrectAnswers.map((r, i) => (
 								<div key={i} className='p-4 bg-gray-50 border border-gray-200 rounded-lg'>
 									<div className='flex items-start gap-3'>
-										<div className='flex-shrink-0 bg-gray-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'>
+										<div className='flex-shrink-0 bg-gray-500 text-white rounded-full h-6 w-6 flex items-center justify-center font-bold text-sm'
+										tabIndex={0}>
 											{results.indexOf(r) + 1}
 										</div>
 										<div>
-											{renderQuestion(r.question, r.correctAnswer)}
-											<p className='text-sm text-gray-600 mb-2'>
+											<p tabIndex={0}>{renderQuestion(r.question, r.correctAnswer)} </p>
+											<p className='text-sm text-gray-600 mb-2'
+											tabIndex={0}>
 												Correct answer:{' '}
-												<span className='font-medium text-blue-700'>
+												<span className='font-medium text-blue-700' tabIndex={0}>
 													{r.correctAnswer}
 												</span>
 											</p>
-											<p className='text-sm text-gray-600 mb-2'>
+											<p className='text-sm text-gray-600 mb-2'
+											tabIndex={0}>
 												Your answer:{' '}
-												<span className='font-medium text-blue-700'>{r.userAnswer}</span>
+												<span className='font-medium text-blue-700' tabIndex={0}>{r.userAnswer}</span>
 											</p>
-											<p className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300'>
+											<p className='text-xs text-blue-700 bg-blue-50 p-2 rounded border-l-2 border-blue-300'
+											tabIndex={0}>
 												💡 Tip: Listen carefully to the pronunciation and context. Try to
 												understand the meaning of the sentence to identify the missing
 												word.
@@ -529,7 +541,7 @@ const GameOverScreen = ({ results, onPlayAgain }) => {
 
 			{/* Mensaje motivacional basado en el rendimiento */}
 			<div className={`mt-8 p-4 rounded-lg ${performance.bg} border border-opacity-30`}>
-				<div className={`text-center ${performance.color} font-semibold`}>
+				<div className={`text-center ${performance.color} font-semibold`} tabIndex={0}>
 					{finalScore >= 90 &&
 						'🎉 Outstanding! Your listening skills are excellent. Keep up the great work!'}
 					{finalScore >= 75 &&

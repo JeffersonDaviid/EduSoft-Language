@@ -90,7 +90,8 @@ export const Register = () => {
 				<section className='w-full flex flex-row items-center justify-center py-5 px-4 md:px-16 lg:px-40 box-border text-left text-base'>
 					<div className='w-full max-w-[960px] overflow-hidden shrink-0 flex flex-col items-center justify-start py-5 px-0 box-border'>
 						<header className='self-stretch flex flex-col items-center justify-start pt-5 px-2 md:px-4 pb-3 text-center text-2xl md:text-[28px]'>
-							<h1 className='self-stretch leading-[35px] font-bold'>
+							<h1 className='self-stretch leading-[35px] font-bold'
+							tabIndex={0}>
 								Sign up for Edusoft
 							</h1>
 						</header>
@@ -112,7 +113,8 @@ export const Register = () => {
 								</div>
 							)}
 							<div className='flex flex-col items-start'>
-								<label htmlFor='email' className='leading-6 font-medium'>
+								<label htmlFor='email' className='leading-6 font-medium'
+								tabIndex={0}>
 									Email{' '}
 									<span className='text-red-600' aria-hidden='true'>
 										*
@@ -136,7 +138,8 @@ export const Register = () => {
 								)}
 							</div>
 							<div className='flex flex-col items-start'>
-								<label htmlFor='username' className='leading-6 font-medium'>
+								<label htmlFor='username' className='leading-6 font-medium'
+								tabIndex={0}>
 									Username{' '}
 									<span className='text-red-600' aria-hidden='true'>
 										*
@@ -162,7 +165,8 @@ export const Register = () => {
 								)}
 							</div>
 							<div className='flex flex-col items-start relative'>
-								<label htmlFor='password' className='leading-6 font-medium'>
+								<label htmlFor='password' className='leading-6 font-medium'
+								tabIndex={0}>
 									Password{' '}
 									<span className='text-red-600' aria-hidden='true'>
 										*
@@ -183,7 +187,7 @@ export const Register = () => {
 								/>
 								<button
 									type='button'
-									tabIndex={-1}
+									tabIndex={0}
 									onClick={() => setShowPassword((v) => !v)}
 									className='absolute right-3 top-[32px] md:top-[36px] p-1 bg-transparent border-none outline-none'
 									aria-label={showPassword ? 'Hide password' : 'Show password'}
@@ -201,7 +205,8 @@ export const Register = () => {
 								)}
 							</div>
 							<div className='flex flex-col items-start relative'>
-								<label htmlFor='confirmPassword' className='leading-6 font-medium'>
+								<label htmlFor='confirmPassword' className='leading-6 font-medium'
+								tabIndex={0}>
 									Confirm Password{' '}
 									<span className='text-red-600' aria-hidden='true'>
 										*
@@ -222,7 +227,7 @@ export const Register = () => {
 								/>
 								<button
 									type='button'
-									tabIndex={-1}
+									tabIndex={0}
 									onClick={() => setShowConfirmPassword((v) => !v)}
 									className='absolute right-3 top-[30px] md:top-[36px] p-1 bg-transparent border-none outline-none'
 									aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
@@ -240,7 +245,8 @@ export const Register = () => {
 								)}
 							</div>
 							<div className='flex flex-col items-start'>
-								<label htmlFor='answerSecret' className='leading-6 font-medium'>
+								<label htmlFor='answerSecret' className='leading-6 font-medium'
+								tabIndex={0}>
 									Secret Answer (for password recovery){' '}
 									<span className='text-red-600' aria-hidden='true'>
 										*
@@ -272,7 +278,7 @@ export const Register = () => {
 								Sign Up
 							</button>
 							<div className='self-stretch text-center text-[#4C7490]'>
-								<span>Already have an account? </span>
+								<span tabIndex={0}>Already have an account? </span>
 								<Link to='/login' className='font-medium underline'>
 									Log in
 								</Link>

@@ -58,10 +58,11 @@ export const About = () => {
 				<header className='w-full flex flex-col items-center justify-center py-5 px-4 md:px-10 lg:px-40 box-border text-left'>
 					<div className='w-full max-w-[960px] flex flex-col items-start justify-start'>
 						<div className='w-full flex flex-col gap-3 p-2 md:p-4'>
-							<h1 className='leading-10 font-bold text-2xl md:text-3xl lg:text-4xl mb-2'>
+							<h1 className='leading-10 font-bold text-2xl md:text-3xl lg:text-4xl mb-2' tabIndex={0}>
 								About us & Help
 							</h1>
-							<p className='leading-[21px] text-sm text-[#517085]'>
+							<p className='leading-[21px] text-sm text-[#517085]'
+							tabIndex={0}>
 								Learn a little more about the team that developed this application. You
 								can also send us an email to find out more details or answer any questions
 								you may have.
@@ -70,15 +71,18 @@ export const About = () => {
 					</div>
 				</header>
 				<section className='w-full flex flex-col items-center justify-start'>
-					<h2 className='w-full max-w-[960px] leading-7 font-bold pt-5 px-4 pb-3 text-left text-lg md:text-xl'>
+					<h2 className='w-full max-w-[960px] leading-7 font-bold pt-5 px-4 pb-3 text-left text-lg md:text-xl'
+					tabIndex={0}>
 						About us
 					</h2>
 					<div className='w-full max-w-[960px] flex flex-col items-start justify-start p-4 text-sm'>
 						<article className='w-full rounded-lg bg-[#fafafa] border-[#d4dee3] border-solid border-[1px] box-border flex flex-col items-start justify-start py-3 px-4 md:py-4 md:px-6 shadow-sm'>
-							<h3 className='leading-[21px] font-medium py-2 text-base md:text-lg text-left w-full'>
+							<h3 className='leading-[21px] font-medium py-2 text-base md:text-lg text-left w-full'
+							tabIndex={0}>
 								Edusoft
 							</h3>
-							<p className='leading-[21px] text-[#517085] text-left w-full'>
+							<p className='leading-[21px] text-[#517085] text-left w-full'
+							tabIndex={0}>
 								Edusoft is a development team that focuses on the recreational field of
 								the English language, focusing on the language in the academic aspect so
 								that you can improve your English vocabulary and listening skills. We
@@ -87,7 +91,8 @@ export const About = () => {
 							</p>
 						</article>
 					</div>
-					<h2 className='w-full max-w-[960px] leading-7 font-bold pt-5 px-4 pb-3 text-left text-lg md:text-xl'>
+					<h2 className='w-full max-w-[960px] leading-7 font-bold pt-5 px-4 pb-3 text-left text-lg md:text-xl'
+					tabIndex={0}>
 						Help
 					</h2>
 					<form
@@ -95,7 +100,8 @@ export const About = () => {
 						onSubmit={handleSendEmail}
 					>
 						<div className='flex flex-col items-start w-full'>
-							<label htmlFor='email' className='leading-6 font-medium'>
+							<label htmlFor='email' className='leading-6 font-medium'
+							tabIndex={0}>
 								Your Email{' '}
 								<span className='text-red-600' aria-hidden='true'>
 									*
@@ -119,7 +125,8 @@ export const About = () => {
 							)}
 						</div>
 						<div className='flex flex-col items-start w-full'>
-							<label htmlFor='message' className='leading-6 font-medium'>
+							<label htmlFor='message' className='leading-6 font-medium'
+							tabIndex={0}>
 								Your Message{' '}
 								<span className='text-red-600' aria-hidden='true'>
 									*
