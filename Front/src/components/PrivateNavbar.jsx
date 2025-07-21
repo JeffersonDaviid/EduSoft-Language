@@ -88,12 +88,13 @@ const PrivateNavbar = () => {
 				<li className='flex justify-center py-2'>
 					<img
 						className='w-10 rounded-full h-10 object-cover border border-[#e6e8eb]'
-						alt='Avatar profile'
+						alt='Profile profile'
 						src={
 							profilePicture.startsWith('profile-pictures/')
 								? `${API_URL}/${profilePicture}`
 								: '/default-profile-picture.jpg'
 						}
+						tabIndex={0}
 					/>
 				</li>
 			</ul>
