@@ -17,6 +17,7 @@ import { Login } from './pages/public/auth/Login';
 import { RecoverPassword } from './pages/public/auth/RecoverPassword';
 import { Register } from './pages/public/auth/Register';
 import { Home } from './pages/public/Home';
+import Accessibility from './pages/public/Accesibility';
 
 const RouterProviders = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -35,6 +36,7 @@ const RouterProviders = () => {
 			<Routes>
 				<Route element={<App isAuthenticated={isAuthenticated} />}>
 					<Route index element={<Home />} />
+					<Route path='accessibility' element={<Accessibility />} />
 					<Route path='about' element={<About />} />
 					<Route path='register' element={<Register />} />
 					<Route path='login' element={<Login />} />
