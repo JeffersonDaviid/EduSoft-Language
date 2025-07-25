@@ -59,6 +59,21 @@ export const Login = () => {
 		}
 	};
 
+	const handleKeyDown = (e, action) => {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			action();
+		}
+	};
+
+	const handleForgotPassword = () => {
+		navigate('/recover-password');
+	};
+
+	const handleSignUp = () => {
+		navigate('/register');
+	};
+
 	return (
 		<main className='w-full relative bg-[#fff] flex flex-col items-center justify-start text-center text-sm text-[#0f141a] font-lexend min-h-screen'>
 			<section className='w-full max-w-[1280px] bg-[#f7fafc] flex flex-col items-center justify-start min-h-[600px] md:min-h-[700px] lg:min-h-[800px]'>
@@ -66,7 +81,7 @@ export const Login = () => {
 					<div className='w-full max-w-[960px] overflow-hidden shrink-0 flex flex-col items-center justify-start py-5 px-0 box-border'>
 						<header className='self-stretch flex flex-col items-center justify-start pt-5 px-2 md:px-4 pb-3 text-2xl md:text-[28px]'>
 							<h1 className='self-stretch leading-[35px] font-bold'
-							tabIndex={0}>
+								tabIndex={0}>
 								Welcome back to Edusoft
 							</h1>
 						</header>
@@ -77,7 +92,7 @@ export const Login = () => {
 						>
 							<div className='flex flex-col items-start'>
 								<label htmlFor='email' className='leading-6 font-medium'
-								tabIndex={0}>
+									tabIndex={0}>
 									Email{' '}
 									<span className='text-red-600' aria-hidden='true'>
 										*
@@ -90,9 +105,8 @@ export const Login = () => {
 									type='email'
 									value={form.email}
 									onChange={handleChange}
-									className={`self-stretch rounded-xl bg-[#f7fafc] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg ${
-										fieldErrors.email ? 'border-red-500' : 'border-[#d1dee8]'
-									}`}
+									className={`self-stretch rounded-xl bg-[#f7fafc] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg ${fieldErrors.email ? 'border-red-500' : 'border-[#d1dee8]'
+										}`}
 									placeholder='Enter your email'
 									aria-invalid={!!fieldErrors.email}
 								/>
@@ -102,7 +116,7 @@ export const Login = () => {
 							</div>
 							<div className='flex flex-col items-start relative'>
 								<label htmlFor='password' className='leading-6 font-medium'
-								tabIndex={0}>
+									tabIndex={0}>
 									Password{' '}
 									<span className='text-red-600' aria-hidden='true'>
 										*
@@ -115,9 +129,8 @@ export const Login = () => {
 									type={showPassword ? 'text' : 'password'}
 									value={form.password}
 									onChange={handleChange}
-									className={`self-stretch rounded-xl bg-[#f7fafc] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg pr-12 ${
-										fieldErrors.password ? 'border-red-500' : 'border-[#d1dee8]'
-									}`}
+									className={`self-stretch rounded-xl bg-[#f7fafc] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg pr-12 ${fieldErrors.password ? 'border-red-500' : 'border-[#d1dee8]'
+										}`}
 									placeholder='Enter your password'
 									aria-invalid={!!fieldErrors.password}
 								/>
@@ -141,13 +154,16 @@ export const Login = () => {
 								)}
 							</div>
 							<div className='self-stretch text-left text-[#4C7490]'>
-								<span
-									className='leading-[21px] cursor-pointer underline'
-									onClick={() => navigate('/recover-password')}
+								<button
+									type='button'
+									className='leading-[21px] cursor-pointer underline bg-transparent border-none p-0 text-[#4C7490] font-inherit'
+									onClick={handleForgotPassword}
+									onKeyDown={(e) => handleKeyDown(e, handleForgotPassword)}
 									tabIndex={0}
+									aria-label='Go to forgot password page'
 								>
 									Forgot password?
-								</span>
+								</button>
 							</div>
 							{error && (
 								<div className='flex items-center gap-3 text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-2 mt-1'>
@@ -163,13 +179,16 @@ export const Login = () => {
 							</button>
 							<div className='self-stretch text-center text-[#4C7490]'>
 								<span tabIndex={0}>Don't have an account? </span>
-								<span
-									className='font-medium underline cursor-pointer'
-									onClick={() => navigate('/register')}
+								<button
+									type='button'
+									className='font-medium underline cursor-pointer bg-transparent border-none p-0 text-[#4C7490] font-inherit'
+									onClick={handleSignUp}
+									onKeyDown={(e) => handleKeyDown(e, handleSignUp)}
 									tabIndex={0}
+									aria-label='Go to sign up page'
 								>
 									Sign up
-								</span>
+								</button>
 							</div>
 						</form>
 					</div>

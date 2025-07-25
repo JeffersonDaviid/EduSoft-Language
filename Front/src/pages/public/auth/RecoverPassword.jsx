@@ -79,6 +79,18 @@ export const RecoverPassword = () => {
         }
     };
 
+    // Función para manejar eventos de teclado
+    const handleKeyDown = (e, action) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            action();
+        }
+    };
+
+    const handleBackToLogin = () => {
+        navigate('/login');
+    };
+
     return (
         <main className='w-full relative bg-[#fff] flex flex-col items-center justify-start text-center text-sm text-[#0f141a] font-lexend min-h-screen'>
             <section className='w-full max-w-[1280px] bg-[#fafafa] flex flex-col items-center justify-start min-h-[600px] md:min-h-[700px] lg:min-h-[800px]'>
@@ -86,7 +98,7 @@ export const RecoverPassword = () => {
                     <div className='w-full max-w-[480px] overflow-hidden shrink-0 flex flex-col items-center justify-start py-5 px-0 box-border'>
                         <header className='self-stretch flex flex-col items-center justify-start pt-5 px-2 md:px-4 pb-3 text-center text-2xl md:text-[28px]'>
                             <h1 className='self-stretch leading-[35px] font-bold'
-                            tabIndex={0}>
+                                tabIndex={0}>
                                 Recover your password
                             </h1>
                         </header>
@@ -105,7 +117,7 @@ export const RecoverPassword = () => {
                             )}
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='email' className='leading-6 font-medium'
-                                tabIndex={0}>
+                                    tabIndex={0}>
                                     Email <span className="text-red-600" aria-hidden="true">*</span>
                                     <span className="sr-only">(required)</span>
                                 </label>
@@ -125,7 +137,7 @@ export const RecoverPassword = () => {
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='answerSecret' className='leading-6 font-medium'
-                                tabIndex={0}>
+                                    tabIndex={0}>
                                     Secret Answer <span className="text-red-600" aria-hidden="true">*</span>
                                     <span className="sr-only">(required)</span>
                                 </label>
@@ -145,7 +157,7 @@ export const RecoverPassword = () => {
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='newPassword' className='leading-6 font-medium'
-                                tabIndex={0}>
+                                    tabIndex={0}>
                                     New Password <span className="text-red-600" aria-hidden="true">*</span>
                                     <span className="sr-only">(required)</span>
                                 </label>
@@ -165,7 +177,7 @@ export const RecoverPassword = () => {
                             </div>
                             <div className='flex flex-col items-start'>
                                 <label htmlFor='confirmNewPassword' className='leading-6 font-medium'
-                                tabIndex={0}>
+                                    tabIndex={0}>
                                     Confirm New Password <span className="text-red-600" aria-hidden="true">*</span>
                                     <span className="sr-only">(required)</span>
                                 </label>
@@ -191,13 +203,16 @@ export const RecoverPassword = () => {
                                 Update Password
                             </button>
                             <div className='w-full text-center text-[#4C7490]'>
-                                <span
-                                    className='leading-[21px] cursor-pointer underline'
-                                    onClick={() => navigate('/login')}
+                                <button
+                                    type='button'
+                                    className='leading-[21px] cursor-pointer underline bg-transparent border-none p-0 text-[#4C7490] font-inherit'
+                                    onClick={handleBackToLogin}
+                                    onKeyDown={(e) => handleKeyDown(e, handleBackToLogin)}
                                     tabIndex={0}
+                                    aria-label='Go back to login page'
                                 >
                                     Back to Log in
-                                </span>
+                                </button>
                             </div>
                         </form>
                     </div>

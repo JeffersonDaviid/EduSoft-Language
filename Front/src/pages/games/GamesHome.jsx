@@ -172,73 +172,108 @@ const gamesData = [
 ];
 
 export const GamesHome = () => {
-	const [selectedGame, setSelectedGame] = useState(null);
+    const [selectedGame, setSelectedGame] = useState(null);
 
-	if (selectedGame) {
-		return (
-			<main className='w-full min-h-screen bg-[#fff] flex flex-col items-center  font-lexend'>
-				<GameDescription
-					title={selectedGame.title}
-					description={selectedGame.desc}
-					link={selectedGame.path}
-					img={selectedGame.src}
-					altImg={selectedGame.altImg}
-					setSelectedGame={setSelectedGame}
-					enable={selectedGame.enable}
-				/>
-			</main>
-		);
-	}
+    // Función para manejar eventos de teclado
+    const handleKeyDown = (e, action) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            action();
+        }
+    };
 
-	return (
-		<main className='w-full min-h-screen bg-[#fff] text-left text-sm text-[#0f141a] flex flex-col items-center font-lexend'>
-			<section className='w-full max-w-[1280px] bg-[#fafafa] flex-1 flex flex-col items-center justify-center min-h-[600px] md:min-h-[700px] lg:min-h-[800px]'>
-				<header className='w-full flex flex-col items-center justify-start py-5 px-4 md:px-16 lg:px-40 box-border'>
-					<div className='w-full max-w-[960px] flex flex-col gap-6'>
-						<div className='flex flex-col gap-3'>
-							<h1 className='text-2xl md:text-4xl lg:text-5xl font-bold leading-10 mb-2'
-                            tabIndex={0}>
-								Our Games
-							</h1>
-							<p className='text-sm md:text-base text-[#57778E]'
-                            tabIndex={0}>
-								Learn English by playing! At EduSoft Language, our games are designed to
-								make learning a fun and educational experience. Through multiple-choice
-								questions, you can test and expand your English vocabulary in an
-								interactive way.
-							</p>
-						</div>
-						{gamesData.map(({ category, games }) => (
-							<section key={category} className='pt-4 pb-2'>
-								<h2 className='text-lg md:text-xl font-bold mb-2' tabIndex={0}>{category}</h2>
-								<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-									{games.map((game, idx) => (
-										<article
-											key={game.title + idx}
-											className='rounded-lg flex flex-col items-start justify-start gap-4 bg-white shadow-md p-3 cursor-pointer hover:shadow-lg transition-shadow duration-150'
-											onClick={() => setSelectedGame(game)}
-										>
-											<img
-												className='w-full rounded-xl max-w-full h-48 md:h-[301px] object-cover'
-												alt={game.altImg}
-												src={game.src}
+    const handleGameSelect = (game) => {
+        setSelectedGame(game);
+    };
+
+    if (selectedGame) {
+        return (
+            <main className='w-full min-h-screen bg-[#fff] flex flex-col items-center  font-lexend'>
+                <GameDescription
+                    title={selectedGame.title}
+                    description={selectedGame.desc}
+                    link={selectedGame.path}
+                    img={selectedGame.src}
+                    altImg={selectedGame.altImg}
+                    setSelectedGame={setSelectedGame}
+                    enable={selectedGame.enable}
+                />
+            </main>
+        );
+    }
+
+    return (
+        <main className='w-full min-h-screen bg-[#fff] text-left text-sm text-[#0f141a] flex flex-col items-center font-lexend'>
+            <section className='w-full max-w-[1280px] bg-[#fafafa] flex-1 flex flex-col items-center justify-center min-h-[600px] md:min-h-[700px] lg:min-h-[800px]'>
+                <header className='w-full flex flex-col items-center justify-start py-5 px-4 md:px-16 lg:px-40 box-border'>
+                    <div className='w-full max-w-[960px] flex flex-col gap-6'>
+                        <div className='flex flex-col gap-3'>
+                            <h1 className='text-2xl md:text-4xl lg:text-5xl font-bold leading-10 mb-2'
+                                tabIndex={0}>
+                                Our Games
+                            </h1>
+                            <p className='text-sm md:text-base text-[#57778E]'
+                                tabIndex={0}>
+                                Learn English by playing! At EduSoft Language, our games are designed to
+                                make learning a fun and educational experience. Through multiple-choice
+                                questions, you can test and expand your English vocabulary in an
+                                interactive way.
+                            </p>
+                        </div>
+                        {gamesData.map(({ category, games }) => (
+                            <section key={category} className='pt-4 pb-2'>
+                                <h2 className='text-lg md:text-xl font-bold mb-2' tabIndex={0}>{category}</h2>
+                                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
+                                    {games.map((game, idx) => (
+                                        <article
+                                            key={game.title + idx}
+                                            className='rounded-lg flex flex-col items-start justify-start gap-4 bg-white shadow-md p-3 cursor-pointer hover:shadow-lg transition-shadow duration-150 focus:outline-2 focus:outline-[#0d171c] focus:outline-offset-2'
+                                            onClick={() => handleGameSelect(game)}
+                                            onKeyDown={(e) => handleKeyDown(e, () => handleGameSelect(game))}
+                                            tabIndex={0}
+                                            role="button"
+                                            aria-label={`Play ${game.title} - ${game.desc}`}
+                                        >
+                                            <img
+                                                className='w-full rounded-xl max-w-full h-48 md:h-[301px] object-cover cursor-pointer focus:outline-2 focus:outline-[#0d171c] focus:outline-offset-2'
+                                                alt={game.altImg}
+                                                src={game.src}
                                                 tabIndex={0}
-											/>
-											<div className='flex flex-col items-start'>
-												<h3 className='leading-6 font-medium text-base md:text-lg'
-                                                tabIndex={0}>
-													{game.title}
-												</h3>
-												<p className='text-sm text-[#57778E]' tabIndex={0}>{game.desc}</p>
-											</div>
-										</article>
-									))}
-								</div>
-							</section>
-						))}
-					</div>
-				</header>
-			</section>
-		</main>
-	);
+                                                onClick={() => handleGameSelect(game)}
+                                                onKeyDown={(e) => handleKeyDown(e, () => handleGameSelect(game))}
+                                                role="button"
+                                                aria-label={`Play ${game.title}`}
+                                            />
+                                            <div className='flex flex-col items-start'>
+                                                <h3
+                                                    className='leading-6 font-medium text-base md:text-lg cursor-pointer focus:outline-2 focus:outline-[#0d171c] focus:outline-offset-2'
+                                                    tabIndex={0}
+                                                    onClick={() => handleGameSelect(game)}
+                                                    onKeyDown={(e) => handleKeyDown(e, () => handleGameSelect(game))}
+                                                    role="button"
+                                                    aria-label={`Play ${game.title}`}
+                                                >
+                                                    {game.title}
+                                                </h3>
+                                                <p
+                                                    className='text-sm text-[#57778E] cursor-pointer focus:outline-2 focus:outline-[#0d171c] focus:outline-offset-2'
+                                                    tabIndex={0}
+                                                    onClick={() => handleGameSelect(game)}
+                                                    onKeyDown={(e) => handleKeyDown(e, () => handleGameSelect(game))}
+                                                    role="button"
+                                                    aria-label={`${game.desc} - Click to play ${game.title}`}
+                                                >
+                                                    {game.desc}
+                                                </p>
+                                            </div>
+                                        </article>
+                                    ))}
+                                </div>
+                            </section>
+                        ))}
+                    </div>
+                </header>
+            </section>
+        </main>
+    );
 };
