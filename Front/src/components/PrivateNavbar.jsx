@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
 import logoApp from '../../public/logo.png';
 import burgerIcon from '../assets/burger-icon.svg';
@@ -16,9 +16,18 @@ const navLinks = [
 
 const PrivateNavbar = () => {
 	const { user } = useAuth();
+	const location = useLocation();
 	const profilePicture = user?.profilePicture || 'default-profile-picture.jpg';
 
 	const [menuOpen, setMenuOpen] = useState(false);
+
+	// Función para verificar si el link está activo
+	const isActiveLink = (path) => {
+		if (path === '/home') {
+			return location.pathname === '/home' || location.pathname === '/';
+		}
+		return location.pathname.startsWith(path);
+	};
 
 	return (
 		<nav className='w-full border-b border-[#e6e8eb] bg-white'>
@@ -47,7 +56,11 @@ const PrivateNavbar = () => {
 						<li key={link.to} className='h-10 flex items-center'>
 							<Link
 								to={link.to}
-								className='text-[#397DA7] hover:text-[#1d7fc1] relative leading-[21px] font-medium px-2 py-1 rounded transition-colors duration-150'
+								className={`relative leading-[21px] font-medium px-3 py-2 rounded-lg transition-colors duration-150 ${
+									isActiveLink(link.to)
+										? 'bg-[#e8edf2] text-[#1d7fc1] hover:bg-[#d1dee8]'
+										: 'text-[#397DA7] hover:text-[#1d7fc1] hover:bg-[#f7fafc]'
+								}`}
 							>
 								{link.label}
 							</Link>
@@ -78,7 +91,11 @@ const PrivateNavbar = () => {
 					<li key={link.to} className='w-full'>
 						<Link
 							to={link.to}
-							className='block w-full text-[#397DA7] hover:text-[#1d7fc1] px-2 py-3 text-base font-medium rounded transition-colors duration-150 text-center'
+							className={`block w-full px-3 py-3 text-base font-medium rounded-lg transition-colors duration-150 text-center ${
+								isActiveLink(link.to)
+									? 'bg-[#e8edf2] text-[#1d7fc1] hover:bg-[#d1dee8]'
+									: 'text-[#397DA7] hover:text-[#1d7fc1] hover:bg-[#f7fafc]'
+							}`}
 							onClick={() => setMenuOpen(false)}
 						>
 							{link.label}

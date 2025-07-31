@@ -73,7 +73,7 @@ export const ConfirmationModal = ({ isOpen, title, message, onConfirm, onCancel,
 			>
 				<h3 
 					id="modal-title"
-					className="text-lg font-semibold text-gray-900 mb-4" 
+					className="text-lg font-semibold text-gray-900 mb-4 text-center" 
 					ref={firstFocusableRef}
 					tabIndex={0}
 				>
@@ -81,12 +81,12 @@ export const ConfirmationModal = ({ isOpen, title, message, onConfirm, onCancel,
 				</h3>
 				<p 
 					id="modal-description"
-					className="text-gray-600 mb-6" 
+					className="text-gray-600 mb-6 text-center" 
 					tabIndex={0}
 				>
 					{message}
 				</p>
-				<div className="flex gap-4 justify-end">
+				<div className="flex gap-4 justify-center">
 					<button
 						onClick={onCancel}
 						onKeyDown={(e) => handleKeyDown(e, onCancel)}
