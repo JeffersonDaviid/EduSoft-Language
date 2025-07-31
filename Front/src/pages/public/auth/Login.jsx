@@ -107,7 +107,7 @@ export const Login = () => {
 									onChange={handleChange}
 									className={`self-stretch rounded-xl bg-[#f7fafc] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg ${fieldErrors.email ? 'border-red-500' : 'border-[#d1dee8]'
 										}`}
-									placeholder='Enter your email'
+									placeholder='student@example.com'
 									aria-invalid={!!fieldErrors.email}
 								/>
 								{fieldErrors.email && (
@@ -131,15 +131,15 @@ export const Login = () => {
 									onChange={handleChange}
 									className={`self-stretch rounded-xl bg-[#f7fafc] border-solid border-[1px] box-border h-12 md:h-14 p-3 md:p-[15px] text-[#4C7490] text-base md:text-lg pr-12 ${fieldErrors.password ? 'border-red-500' : 'border-[#d1dee8]'
 										}`}
-									placeholder='Enter your password'
+									placeholder='123Password'
 									aria-invalid={!!fieldErrors.password}
 								/>
 								<button
 									type='button'
-									tabIndex={0}
 									onClick={() => setShowPassword((v) => !v)}
-									className='absolute right-3 top-[32px] md:top-[36px] p-1 bg-transparent border-none outline-none'
+									className='absolute right-3 top-[32px] md:top-[36px] p-1 bg-transparent border-none outline-none focus:outline-2 focus:outline-blue-500 focus:ring-2 focus:ring-blue-300 rounded hover:bg-gray-100 transition-all duration-150'
 									aria-label={showPassword ? 'Hide password' : 'Show password'}
+									title={showPassword ? 'Hide password' : 'Show password'}
 								>
 									<img
 										src={showPassword ? '/eye-slash.png' : '/eye.png'}

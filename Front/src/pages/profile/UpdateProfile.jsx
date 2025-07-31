@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../../context/AuthContext';
 import { API_URL } from '../../API';
+import { ConfirmationModal } from '../../components/ConfirmationModal';
 
 export const UpdateProfile = () => {
 	const navigate = useNavigate();
@@ -28,6 +29,7 @@ export const UpdateProfile = () => {
 	const [error, setError] = useState('');
 	// eslint-disable-next-line no-unused-vars
 	const [success, setSuccess] = useState('');
+	const [showConfirmModal, setShowConfirmModal] = useState(false);
 
 	const [showNewPassword, setShowNewPassword] = useState(false);
 	const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
@@ -86,6 +88,12 @@ export const UpdateProfile = () => {
 			setError('Please fix the errors before submitting.');
 			return;
 		}
+
+		setShowConfirmModal(true);
+	};
+
+	const confirmSubmit = async () => {
+		setShowConfirmModal(false);
 
 		try {
 			let updatedProfilePicture = profilePicture;
@@ -189,7 +197,7 @@ export const UpdateProfile = () => {
 										name='email'
 										type='email'
 										autoComplete='email'
-										placeholder='Enter your email'
+										placeholder='student@example.com'
 										className='self-stretch rounded-xl bg-[#e8edf2] h-10 p-2 focus:outline-2 focus:outline-blue-400'
 										aria-required='true'
 										value={form.email}
@@ -209,7 +217,7 @@ export const UpdateProfile = () => {
 										name='username'
 										type='text'
 										autoComplete='username'
-										placeholder='Enter your username'
+										placeholder='john_student'
 										className='self-stretch rounded-xl bg-[#e8edf2] h-10 p-2 focus:outline-2 focus:outline-blue-400'
 										aria-required='true'
 										value={form.username}
@@ -229,7 +237,7 @@ export const UpdateProfile = () => {
 										name='newPassword'
 										type={showNewPassword ? 'text' : 'password'}
 										autoComplete='new-password'
-										placeholder='Enter new password'
+										placeholder='123Password'
 										className={`self-stretch rounded-xl bg-[#e8edf2] h-10 p-2 pr-10 focus:outline-2 focus:outline-blue-400 ${
 											fieldErrors.newPassword ? 'border border-red-500' : ''
 										}`}
@@ -239,10 +247,10 @@ export const UpdateProfile = () => {
 									/>
 									<button
 										type='button'
-										tabIndex={0}
 										onClick={() => setShowNewPassword((v) => !v)}
-										className='absolute right-3 top-[32px] md:top-[28px] p-1 bg-transparent border-none outline-none'
+										className='absolute right-3 top-[32px] md:top-[28px] p-1 bg-transparent border-none outline-none focus:outline-2 focus:outline-blue-500 focus:ring-2 focus:ring-blue-300 rounded hover:bg-gray-100 transition-all duration-150'
 										aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+										title={showNewPassword ? 'Hide password' : 'Show password'}
 									>
 										<img
 											src={showNewPassword ? '/eye-slash.png' : '/eye.png'}
@@ -269,7 +277,7 @@ export const UpdateProfile = () => {
 										name='confirmNewPassword'
 										type={showConfirmNewPassword ? 'text' : 'password'}
 										autoComplete='new-password'
-										placeholder='Confirm new password'
+										placeholder='123Password'
 										className={`self-stretch rounded-xl bg-[#e8edf2] h-10 p-2 pr-10 focus:outline-2 focus:outline-blue-400 ${
 											fieldErrors.confirmNewPassword ? 'border border-red-500' : ''
 										}`}
@@ -279,10 +287,12 @@ export const UpdateProfile = () => {
 									/>
 									<button
 										type='button'
-										tabIndex={0}
 										onClick={() => setShowConfirmNewPassword((v) => !v)}
-										className='absolute right-3 top-[32px] md:top-[28px] p-1 bg-transparent border-none outline-none'
+										className='absolute right-3 top-[32px] md:top-[28px] p-1 bg-transparent border-none outline-none focus:outline-2 focus:outline-blue-500 focus:ring-2 focus:ring-blue-300 rounded hover:bg-gray-100 transition-all duration-150'
 										aria-label={
+											showConfirmNewPassword ? 'Hide password' : 'Show password'
+										}
+										title={
 											showConfirmNewPassword ? 'Hide password' : 'Show password'
 										}
 									>
@@ -290,7 +300,6 @@ export const UpdateProfile = () => {
 											src={showConfirmNewPassword ? '/eye-slash.png' : '/eye.png'}
 											alt={showConfirmNewPassword ? 'Hide password' : 'Show password'}
 											className='w-6 h-6'
-                                            tabIndex={0}
 										/>
 									</button>
 									{fieldErrors.confirmNewPassword && (
@@ -321,6 +330,16 @@ export const UpdateProfile = () => {
 					</header>
 				</section>
 			</section>
+			
+			<ConfirmationModal
+				isOpen={showConfirmModal}
+				title="Update Profile"
+				message="Are you sure you want to save these changes to your profile?"
+				onConfirm={confirmSubmit}
+				onCancel={() => setShowConfirmModal(false)}
+				confirmText="Save Changes"
+				cancelText="Cancel"
+			/>
 		</main>
 	);
 };

@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../../context/AuthContext';
 import { API_URL } from '../../API';
 import FontControls from '../../components/FontControl';
+import { ConfirmationModal } from '../../components/ConfirmationModal';
 
 export const Profile = () => {
 	const [profileUpdateMessage, setProfileUpdateMessage] = useState('');
 	const { logout } = useAuth();
 	const navigate = useNavigate();
+	const [showLogoutModal, setShowLogoutModal] = useState(false);
 
 	const user = JSON.parse(localStorage.getItem('user') || '{}');
 	const username = user?.username || 'Your Profile';
@@ -85,6 +87,11 @@ export const Profile = () => {
 	}
 
 	const handleLogout = () => {
+		setShowLogoutModal(true);
+	};
+
+	const confirmLogout = () => {
+		setShowLogoutModal(false);
 		logout();
 		navigate('/');
 	};
@@ -278,6 +285,16 @@ export const Profile = () => {
 					</header>
 				</section>
 			</section>
+			
+			<ConfirmationModal
+				isOpen={showLogoutModal}
+				title="Sign Out"
+				message="Are you sure you want to sign out of your account?"
+				onConfirm={confirmLogout}
+				onCancel={() => setShowLogoutModal(false)}
+				confirmText="Sign Out"
+				cancelText="Cancel"
+			/>
 		</main>
 	);
 };

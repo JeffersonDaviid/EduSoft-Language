@@ -13,6 +13,8 @@ export const RecoverPassword = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [fieldErrors, setFieldErrors] = useState({});
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -128,7 +130,7 @@ export const RecoverPassword = () => {
                                     value={form.email}
                                     onChange={handleChange}
                                     className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 p-3 text-[#57788f] text-base ${fieldErrors.email ? 'border-red-500' : 'border-[#d4dee3]'}`}
-                                    placeholder='Enter your email'
+                                    placeholder='student@example.com'
                                     aria-invalid={!!fieldErrors.email}
                                 />
                                 {fieldErrors.email && (
@@ -148,14 +150,14 @@ export const RecoverPassword = () => {
                                     value={form.answerSecret}
                                     onChange={handleChange}
                                     className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 p-3 text-[#57788f] text-base ${fieldErrors.answerSecret ? 'border-red-500' : 'border-[#d4dee3]'}`}
-                                    placeholder='Enter your secret answer'
+                                    placeholder='Your mother maiden name'
                                     aria-invalid={!!fieldErrors.answerSecret}
                                 />
                                 {fieldErrors.answerSecret && (
                                     <span className="text-red-600 text-xs mt-1">{fieldErrors.answerSecret}</span>
                                 )}
                             </div>
-                            <div className='flex flex-col items-start'>
+                            <div className='flex flex-col items-start relative'>
                                 <label htmlFor='newPassword' className='leading-6 font-medium'
                                     tabIndex={0}>
                                     New Password <span className="text-red-600" aria-hidden="true">*</span>
@@ -164,18 +166,31 @@ export const RecoverPassword = () => {
                                 <input
                                     id='newPassword'
                                     name='newPassword'
-                                    type='password'
+                                    type={showNewPassword ? 'text' : 'password'}
                                     value={form.newPassword}
                                     onChange={handleChange}
-                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 p-3 text-[#57788f] text-base ${fieldErrors.newPassword ? 'border-red-500' : 'border-[#d4dee3]'}`}
-                                    placeholder='Enter your new password'
+                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 p-3 pr-12 text-[#57788f] text-base ${fieldErrors.newPassword ? 'border-red-500' : 'border-[#d4dee3]'}`}
+                                    placeholder='123Password'
                                     aria-invalid={!!fieldErrors.newPassword}
                                 />
+                                <button
+                                    type='button'
+                                    onClick={() => setShowNewPassword(v => !v)}
+                                    className='absolute right-3 top-[32px] p-1 bg-transparent border-none outline-none focus:outline-2 focus:outline-blue-500 focus:ring-2 focus:ring-blue-300 rounded hover:bg-gray-100 transition-all duration-150'
+                                    aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                                    title={showNewPassword ? 'Hide password' : 'Show password'}
+                                >
+                                    <img
+                                        src={showNewPassword ? '/eye-slash.png' : '/eye.png'}
+                                        alt={showNewPassword ? 'Hide password' : 'Show password'}
+                                        className='w-6 h-6'
+                                    />
+                                </button>
                                 {fieldErrors.newPassword && (
                                     <span className="text-red-600 text-xs mt-1">{fieldErrors.newPassword}</span>
                                 )}
                             </div>
-                            <div className='flex flex-col items-start'>
+                            <div className='flex flex-col items-start relative'>
                                 <label htmlFor='confirmNewPassword' className='leading-6 font-medium'
                                     tabIndex={0}>
                                     Confirm New Password <span className="text-red-600" aria-hidden="true">*</span>
@@ -184,13 +199,26 @@ export const RecoverPassword = () => {
                                 <input
                                     id='confirmNewPassword'
                                     name='confirmNewPassword'
-                                    type='password'
+                                    type={showConfirmNewPassword ? 'text' : 'password'}
                                     value={form.confirmNewPassword}
                                     onChange={handleChange}
-                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 p-3 text-[#57788f] text-base ${fieldErrors.confirmNewPassword ? 'border-red-500' : 'border-[#d4dee3]'}`}
-                                    placeholder='Confirm your new password'
+                                    className={`self-stretch rounded-xl bg-[#fafafa] border-solid border-[1px] box-border h-12 p-3 pr-12 text-[#57788f] text-base ${fieldErrors.confirmNewPassword ? 'border-red-500' : 'border-[#d4dee3]'}`}
+                                    placeholder='123Password'
                                     aria-invalid={!!fieldErrors.confirmNewPassword}
                                 />
+                                <button
+                                    type='button'
+                                    onClick={() => setShowConfirmNewPassword(v => !v)}
+                                    className='absolute right-3 top-[32px] p-1 bg-transparent border-none outline-none focus:outline-2 focus:outline-blue-500 focus:ring-2 focus:ring-blue-300 rounded hover:bg-gray-100 transition-all duration-150'
+                                    aria-label={showConfirmNewPassword ? 'Hide password' : 'Show password'}
+                                    title={showConfirmNewPassword ? 'Hide password' : 'Show password'}
+                                >
+                                    <img
+                                        src={showConfirmNewPassword ? '/eye-slash.png' : '/eye.png'}
+                                        alt={showConfirmNewPassword ? 'Hide password' : 'Show password'}
+                                        className='w-6 h-6'
+                                    />
+                                </button>
                                 {fieldErrors.confirmNewPassword && (
                                     <span className="text-red-600 text-xs mt-1">{fieldErrors.confirmNewPassword}</span>
                                 )}

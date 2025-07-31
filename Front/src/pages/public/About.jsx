@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { API_URL } from '../../API';
+import { ConfirmationModal } from '../../components/ConfirmationModal';
 
 export const About = () => {
 	const [form, setForm] = useState({ email: '', message: '' });
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
 	const [fieldErrors, setFieldErrors] = useState({});
+	const [showConfirmModal, setShowConfirmModal] = useState(false);
 
 	const handleChange = (e) => {
 		if (e.target.name === 'email') {
@@ -31,6 +33,12 @@ export const About = () => {
 			return;
 		}
 
+		setShowConfirmModal(true);
+	};
+
+	const confirmSendEmail = async () => {
+		setShowConfirmModal(false);
+		
 		try {
 			const res = await fetch(`${API_URL}/user/send-email`, {
 				method: 'POST',
@@ -138,7 +146,7 @@ export const About = () => {
 								className={`w-full rounded-lg bg-[#fafafa] border-solid border-[1px] box-border min-h-[100px] md:min-h-[144px] p-3 md:p-[15px] focus:outline-2 focus:outline-[#4C7490] ${
 									fieldErrors.message ? 'border-red-500' : 'border-[#d4dee3]'
 								}`}
-								placeholder='Write your message here...'
+								placeholder='I have a question about...'
 								name='message'
 								value={form.message}
 								onChange={handleChange}
@@ -171,6 +179,16 @@ export const About = () => {
 					</form>
 				</section>
 			</section>
+			
+			<ConfirmationModal
+				isOpen={showConfirmModal}
+				title="Send Support Message"
+				message="Are you sure you want to send this message to our support team?"
+				onConfirm={confirmSendEmail}
+				onCancel={() => setShowConfirmModal(false)}
+				confirmText="Send Message"
+				cancelText="Cancel"
+			/>
 		</main>
 	);
 };
