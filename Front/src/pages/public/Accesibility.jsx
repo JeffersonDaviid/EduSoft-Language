@@ -28,7 +28,7 @@ const Accessibility = () => {
                                 <div tabIndex={0}><strong>Esc</strong>: Close modals or dialogs.</div>
                                 <div tabIndex={0}><strong>Ctrl + H</strong>: Go to Home.</div>
                                 <div tabIndex={0}><strong>Ctrl + A</strong>: Go to About Us.</div>
-                                <div tabIndex={0}><strong>Ctrl + C</strong>: Go to Accessibility.</div>
+                                <div tabIndex={0}><strong>Ctrl + B</strong>: Go to Accessibility.</div>
                             </div>
                             <div className='flex-1 flex flex-col gap-2 text-left'>
                                 <div tabIndex={0}><strong>Ctrl + L</strong>: Go to Login (only if not logged in).</div>

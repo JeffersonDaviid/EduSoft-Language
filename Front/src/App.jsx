@@ -21,7 +21,7 @@ const App = () => {
             e.preventDefault();
             navigate('/about');
         	}
-			if (e.ctrlKey && e.key.toLowerCase() === 'c') {
+			if (e.ctrlKey && e.key.toLowerCase() === 'b') {
             e.preventDefault();
             navigate('/accessibility');
         	}
